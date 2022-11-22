@@ -63,7 +63,7 @@
         </div>
     @endif
 
-    <button type="submit" class="btn btn-primary ms-4 position-absolute start-50">回答する</button>
+    <button type="submit" class="btn btn-primary ms-4 position-absolute start-50 mb-2">回答する</button>
 </form>
 </div>
 @endsection
