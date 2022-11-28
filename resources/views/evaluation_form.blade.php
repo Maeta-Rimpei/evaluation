@@ -5,11 +5,11 @@
     <div class="personal-info d-flex flex-row">
         <div class="partition" style="width: 70%;"></div>
         <div class="d-flex flex-column">
-            @foreach (App\Consts\StaffPositionConsts::STAFF_LIST as $auth_user->role => $position)
+            @foreach (App\Consts\StaffPositionConsts::STAFF_LIST as $position => $auth_user->role)
             <div class="p-2">〇職名：{{ $position }}</div>
             @break;
             @endforeach
-            <div class="p-2">〇園名：</div>
+            <div class="p-2">〇所属：</div>
             <div class="p-2">〇氏名：{{ $auth_user['name'] }}</div>
         </div>
     </div>
@@ -37,12 +37,11 @@
                         {{ $auth_user_question['content'] }}</td>
                     <td>
                         @if ($auth_user_question['category'] == 0)
-                            <select class="form-select" name="answer[]" aria-label="Default select example">
-                                <option disabled>クリックして選んでください</option>
-                                <option value="A">A</option>
-                                <option value="B">B</option>
-                                <option value="C">C</option>
-                                <option value="D">D</option>
+                        <select class="form-select" name="answer[]" aria-label="Default select example">
+                            <option disabled>クリックして選んでください</option>
+                                @foreach (array_keys(App\Consts\AnswerOptionConsts::ANSWER_OPTION) as $option)
+                                <option value="$option">{{ $option }}</option>
+                                @endforeach
                             </select>
                         @else
                             <textarea class="form-control" style="width: 100%; height: 150px;" name="answer[]" placeholder="こちらは記述式です"></textarea>

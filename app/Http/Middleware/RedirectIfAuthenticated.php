@@ -23,10 +23,14 @@ class RedirectIfAuthenticated
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
+    
+                // 管理画面へリダイレクト（以下を追加）
+                if ($guard == 'admin') {
+                    return redirect(RouteServiceProvider::ADMIN_HOME); 
+                }
                 return redirect(RouteServiceProvider::HOME);
             }
         }
-
         return $next($request);
     }
 }

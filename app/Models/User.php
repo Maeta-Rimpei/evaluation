@@ -56,5 +56,7 @@ class User extends Authenticatable
             'question_id',
             'role_id',
         );
+        // ->using(Question::class)
+        // ->withPivot('role_id', 'question_id');
     }
 }
