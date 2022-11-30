@@ -26,7 +26,7 @@
         <div class="side-bar">
             <ul class="side-bar-item">
                 <li><a class="" href={{ route('showStaff') }}>職員一覧</a></li>
-                <li><a class="mb-2" href="#">職員登録</a></li>
+                <li><a class="mb-2" href={{ route('register') }}>職員登録</a></li>
                 <li><a class="mb-2" href="#">職員削除</a></li>
                 <li><a href="#">自己評価シート編集</a></li>
             </ul>

@@ -31,9 +31,13 @@ Route::group(['middleware' => ['guest:admin']], function () {
 Route::group(['middleware' => ['auth:admin']], function () {
 
     // -----------------------------------管理画面-----------------------------------
+    // 職員一覧
     Route::get('admin/index', [App\Http\Controllers\Admin\AdminController::class, 'index'])->name('adminIndex');
     Route::get('admin/show_staff', [App\Http\Controllers\Admin\AdminController::class, 'showStaff'])->name('showStaff');
     Route::get('admin/staff_detail/{id}', [App\Http\Controllers\Admin\AdminController::class, 'showStaffDetail'])->name('showStaffDetail');
+    // 職員登録
+    Route::get('register', [App\Http\Controllers\Auth\RegisterController::class, 'showRegistrationForm'])->name('register');
+    Route::post('register_exe', [App\Http\Controllers\Auth\RegisterController::class, 'create'])->name('create');
 
     // ログアウト処理
     Route::get('admin/logout', [App\Http\Controllers\Admin\AdminController::class, 'logout'])->name('adminLogout');

@@ -56,24 +56,67 @@ class AdminController extends Controller
     {
         $user = User::find($id);
 
-        $user_questions_answers = DB::table('users')
-            ->join('question_user', 'users.role_id', '=', 'question_user.role_id')
-            ->join('questions', 'questions.id', '=', 'question_user.question_id')
-            ->join('answers', 'questions.id', '=', 'answers.question_id')
-            ->get();
-
-        $option_qs = [];
-        $desc_qs_as = [];
-
-        foreach ($user_questions_answers as $user_question_answer) {
-            if ($user_question_answer->category == 0) {
-                array_push($option_qs, $user_question_answer->answer);
-            } else {
-                $desc_qs_as[$user_question_answer->content] = $user_question_answer->answer;
-            }
-        }
+        // $user_questions = DB::table('users')
+        // ->where('users.id', '=', $id)
+        // ->where('question_user.role_id', '=', $user->role_id)
+        // ->leftjoin('question_user', 'users.role_id', '=', 'question_user.role_id')
+        // ->leftjoin('questions', 'questions.id', '=', 'question_user.question_id')
+        // ->get();
+        // // dd($user_questions);
         
-        $count_option_qs = array_count_values($option_qs);
-        return view('admin.staff_detail', compact('user', 'user_questions_answers', 'count_option_qs', 'desc_qs_as'));
+        $user_questions_answers = DB::table('users')
+        ->where('users.id', '=', $id)
+        ->where('answers.user_id', '=', $id)
+        ->select(
+        'users.id as user_id',
+        'questions.id as question_id',
+        'questions.content',
+        'questions.category',
+        'answers.answer',
+        )
+        ->leftjoin('answers', 'users.id', '=', 'answers.user_id')
+        ->leftJoin('questions', 'questions.id', '=', 'answers.question_id')
+        ->get();
+
+        // $user_questions_answersをstdClassから配列化
+        $array_user_questions_answers = json_decode(json_encode($user_questions_answers), true);
+            // $t = array_count_values($array_user_questions_answers['answer']);
+
+        // $t = array_count_values($array_user_questions_answers[0]['answer']);
+        //     dd($array_user_questions_answers);
+        //     dd(array_column($array_user_questions_answers, 4));
+        // dd($t);
+        // $user_questions_answers = DB::table('users')
+        //     ->where('users.id', '=', $id)
+        //     ->where('answers.user_id', '=', $id)
+        //     ->where('questions.category', '=', $user->role_id)
+        //     ->leftjoin('question_user', 'users.role_id', '=', 'question_user.role_id')
+        //     ->leftjoin('questions', 'questions.id', '=', 'question_user.question_id')
+        //     ->join('answers', 'questions.id', '=', 'answers.question_id')
+        //     ->get();
+
+        // dd($user_questions_answers);
+
+        // $option_qs = [];
+        // $desc_qs_as = [];
+
+        // foreach ($user_questions_answers as $user_question_answer) {
+        //     // 選択式問題の場合
+        //     if ($user_question_answer->category == 0) {
+        //         array_push($option_qs, $user_question_answer->answer);
+        //         // 記述式問題の場合
+        //     } else {
+        //         $desc_qs_as[$user_question_answer->content] = $user_question_answer->answer;
+        //     }
+        // }
+        // $count_option_qs = array_count_values($option_qs);
+
+        return view(
+            'admin.staff_detail',
+            compact(
+                'user',
+                'array_user_questions_answers',
+            )
+        );
     }
 }

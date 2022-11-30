@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\ResgisterRequest;
 
 class RegisterController extends Controller
 {
@@ -38,7 +39,7 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest');
+        $this->middleware('auth:admin');
     }
 
     /**
@@ -50,10 +51,20 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
+            'staff_id' => ['required', 'max:255'],
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'role_id' => ['required', 'int', 'max:1'],
+            'password' => ['required', 'string', 'min:6', 'confirmed'],
+            'password_confirmed' => ['required', 'string', 'min:6', 'confirmed'],
         ]);
+    }
+
+    /**
+     * 職員登録フォーム表示
+     */
+    protected function showRegistrationForm()
+    {
+        return view('admin.show_create_staff');
     }
 
     /**
@@ -62,12 +73,16 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \App\Models\User
      */
-    protected function create(array $data)
+    protected function create(ResgisterRequest $request)
     {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
+        User::create([
+            'staff_id' => $request->staff_id,
+            'name' => $request->name,
+            'role_id' => $request->role_id,
+            'affiliation' => $request->affiliation,
+            'password' => Hash::make($request->password),
         ]);
+
+        return redirect()->route('register');
     }
 }

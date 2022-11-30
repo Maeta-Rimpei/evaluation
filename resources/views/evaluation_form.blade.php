@@ -39,7 +39,7 @@
                         @if ($auth_user_question['category'] == 0)
                         <select class="form-select" name="answer[]" aria-label="Default select example">
                             <option disabled>クリックして選んでください</option>
-                                @foreach (array_keys(App\Consts\AnswerOptionConsts::ANSWER_OPTION) as $option)
+                                @foreach ((App\Consts\AnswerOptionConsts::ANSWER_OPTION) as $option)
                                 <option value="$option">{{ $option }}</option>
                                 @endforeach
                             </select>
