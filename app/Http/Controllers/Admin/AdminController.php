@@ -7,6 +7,7 @@ use App\Models\Question;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Consts\AnswerOptionConsts;
 
 class AdminController extends Controller
 {
@@ -56,14 +57,6 @@ class AdminController extends Controller
     {
         $user = User::find($id);
 
-        // $user_questions = DB::table('users')
-        // ->where('users.id', '=', $id)
-        // ->where('question_user.role_id', '=', $user->role_id)
-        // ->leftjoin('question_user', 'users.role_id', '=', 'question_user.role_id')
-        // ->leftjoin('questions', 'questions.id', '=', 'question_user.question_id')
-        // ->get();
-        // // dd($user_questions);
-        
         $user_questions_answers = DB::table('users')
         ->where('users.id', '=', $id)
         ->where('answers.user_id', '=', $id)
@@ -80,43 +73,9 @@ class AdminController extends Controller
 
         // $user_questions_answersをstdClassから配列化
         $array_user_questions_answers = json_decode(json_encode($user_questions_answers), true);
-            // $t = array_count_values($array_user_questions_answers['answer']);
+        // 解答を集計
+        $answers_count = array_count_values(array_column($array_user_questions_answers, 'answer'));
 
-        // $t = array_count_values($array_user_questions_answers[0]['answer']);
-        //     dd($array_user_questions_answers);
-        //     dd(array_column($array_user_questions_answers, 4));
-        // dd($t);
-        // $user_questions_answers = DB::table('users')
-        //     ->where('users.id', '=', $id)
-        //     ->where('answers.user_id', '=', $id)
-        //     ->where('questions.category', '=', $user->role_id)
-        //     ->leftjoin('question_user', 'users.role_id', '=', 'question_user.role_id')
-        //     ->leftjoin('questions', 'questions.id', '=', 'question_user.question_id')
-        //     ->join('answers', 'questions.id', '=', 'answers.question_id')
-        //     ->get();
-
-        // dd($user_questions_answers);
-
-        // $option_qs = [];
-        // $desc_qs_as = [];
-
-        // foreach ($user_questions_answers as $user_question_answer) {
-        //     // 選択式問題の場合
-        //     if ($user_question_answer->category == 0) {
-        //         array_push($option_qs, $user_question_answer->answer);
-        //         // 記述式問題の場合
-        //     } else {
-        //         $desc_qs_as[$user_question_answer->content] = $user_question_answer->answer;
-        //     }
-        // }
-        // $count_option_qs = array_count_values($option_qs);
-
-        return view(
-            'admin.staff_detail',
-            compact(
-                'user',
-                'array_user_questions_answers',
-            )
-        );
+        return view('admin.staff_detail',compact('user', 'array_user_questions_answers', 'answers_count'));
     }
 }

@@ -16,38 +16,32 @@
                         <tr>
                             <th class="text-center">{{ $user_question_answer['question_id'] }}</th>
                             <td>{{ $user_question_answer['content'] }}</td>
-                            {{-- @if (is_null($user_question_answer->answer)) --}}
-                            {{-- <td class="text-center">-</td> --}}
-                            {{-- @else --}}
                             <td class="text-center">{{ $user_question_answer['answer'] }}</td>
-                            {{-- @endif --}}
                         </tr>
                     @endforeach
                 </tbody>
             </table>
 
             <p class="mt-5">【集計】</p>
-            <p class="mt-0 mb-0">※ 回答数が0の選択肢については表示されません</p>
             <div class="col-5 ml-3">
                 <table class="table table-bordered">
                     <thead>
                         <tr>
                             <th></th>
-                            <th>小計</th>
+                            <th class="text-center">小計</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (array_keys(App\Consts\AnswerOptionConsts::ANSWER_OPTION) as $answer)
-                        {{-- @foreach ($array_user_questions_answers as $index => $user_info) --}}
+                        @for ($i = 0; $i < count(App\Consts\AnswerOptionConsts::ANSWER_OPTION); $i++)
                             <tr>
-                                <th>{{ $answer }}</th>
-                                {{-- @if (in_array($answer, $user_info)) --}}
-                                {{-- <td>{{ array_column($array_user_questions_answers[0]) }}</td> --}}
-                                {{-- @else --}}
-                                {{-- @endif --}}
-                                {{-- @endforeach --}}
+                                <th class="text-center">{{ App\Consts\AnswerOptionConsts::ANSWER_OPTION[$i] }}</th>
+                                @if (array_key_exists(App\Consts\AnswerOptionConsts::ANSWER_OPTION[$i], $answers_count))
+                                    <td class="text-center">{{ $answers_count[App\Consts\AnswerOptionConsts::ANSWER_OPTION[$i]] }}</td>
+                                @else
+                                    <td class="text-center">0</td>
+                                @endif
                             </tr>
-                        @endforeach
+                        @endfor
                     </tbody>
                 </table>
             </div>
