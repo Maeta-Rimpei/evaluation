@@ -38,7 +38,15 @@ Route::group(['middleware' => ['auth:admin']], function () {
     // 職員登録
     Route::get('register', [App\Http\Controllers\Auth\RegisterController::class, 'showRegistrationForm'])->name('register');
     Route::post('register_exe', [App\Http\Controllers\Auth\RegisterController::class, 'create'])->name('create');
-
+    // 職員削除
+    Route::get('show_deleted', [App\Http\Controllers\Admin\AdminController::class, 'showStaffSoftDeleted'])->name('showStaffSoftDeleted');
+    Route::get('exe_deleted/{id}', [App\Http\Controllers\Admin\AdminController::class, 'exeStaffSoftDeleted'])->name('exeStaffSoftDeleted');
+    // 自己評価シート編集
+    Route::get('show_edit', [App\Http\Controllers\Admin\AdminController::class, 'showQuestionEdit'])->name('showQuestionEdit');
+    Route::get('show_detail_edit/{role_id}', [App\Http\Controllers\Admin\AdminController::class, 'showDetailQuestionEdit'])->name('showDetailQuestionEdit');
+    Route::get('edit_form/{question_id}', [App\Http\Controllers\Admin\AdminController::class, 'editForm'])->name('editForm');
+    Route::patch('edit_exe/{question_id}', [App\Http\Controllers\Admin\AdminController::class, 'editExe'])->name('editExe');
+    
     // ログアウト処理
     Route::get('admin/logout', [App\Http\Controllers\Admin\AdminController::class, 'logout'])->name('adminLogout');
 });

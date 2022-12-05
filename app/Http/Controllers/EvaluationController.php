@@ -33,7 +33,7 @@ class EvaluationController extends Controller
         $auth_user_questions = $auth_user->questions;
         $count = count($auth_user_questions);
 
-        for ($i = 0; $i < $count; $i++) {
+        for ($i=0; $i<$count; $i++) {
             // 受け取ったanswerの分だけquestion_idとuser_idを$requestに追加
             $request->merge([
                 'question_id' => $auth_user_questions[$i]->id,

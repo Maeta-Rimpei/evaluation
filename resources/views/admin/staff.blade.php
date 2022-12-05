@@ -18,7 +18,6 @@
         </thead>
         <tbody>
             @foreach ($users as $user)
-                
             <tr>
                 <th scope="row">{{ $user['staff_id'] }}</th>
                 <td></td>
@@ -32,7 +31,6 @@
                 <td><a href={{ route('showStaffDetail', $user['id']) }}>評価</a></td>
             </tr>
             @endforeach
-
         </tbody>
     </table>
 @endsection

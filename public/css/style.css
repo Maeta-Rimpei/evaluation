@@ -25,10 +25,8 @@ html {
 }
 
 .wrapper .side-bar {
-
-/*     border-right: 1px solid #000; */
     box-shadow: 2px 2px 0 2px rgba(0,0,0,0.4);
-    width: 180px
+    width: 200px;
 }
 
 .wrapper .side-bar .side-bar-item {
@@ -55,5 +53,6 @@ html {
 }
 
 .main-wrapper .wrapper .main-content {
-    margin: 30px auto ;
+    margin: 50px auto;
+    width: 50%;
 }

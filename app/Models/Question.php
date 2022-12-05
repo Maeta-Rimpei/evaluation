@@ -19,6 +19,8 @@ class Question extends Model
     // User Modelとのリレーション(多対多)
     public function users()
     {
-        return $this->belongsToMany(User::class,'question_user','question_id','role_id');
+        return $this->belongsToMany(User::class,'question_user','question_id','role_id')
+        ->withPivot('role_id', 'user_id')
+        ->withTimestamps();
     }
 }

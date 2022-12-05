@@ -83,6 +83,6 @@ class RegisterController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        return redirect()->route('register');
+        return redirect()->route('register')->with('createMessage', '職員を登録しました。');
     }
 }
