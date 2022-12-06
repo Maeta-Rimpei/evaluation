@@ -48,6 +48,7 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::patch('edit_exe/{question_id}', [App\Http\Controllers\Admin\AdminController::class, 'editExe'])->name('editExe');
     Route::get('exe_question_deleted/{question_id}', [App\Http\Controllers\Admin\AdminController::class, 'exeQuestionSoftDeleted'])->name('exeQuestionSoftDeleted');
     Route::get('show_create_question', [App\Http\Controllers\Admin\AdminController::class, 'showCreateQuestion'])->name('showCreateQuestion');
+    Route::post('exe_create_question', [App\Http\Controllers\Admin\AdminController::class, 'exeCreateQuestion'])->name('exeCreateQuestion');
     // ログアウト処理
     Route::get('admin/logout', [App\Http\Controllers\Admin\AdminController::class, 'logout'])->name('adminLogout');
 });

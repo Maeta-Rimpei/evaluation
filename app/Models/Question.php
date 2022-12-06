@@ -10,7 +10,7 @@ class Question extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    use \Askedio\SoftCascade\Traits\SoftCascadeTrait;
+    // use \Askedio\SoftCascade\Traits\SoftCascadeTrait;
 
     protected $softCascade = ['questionUser'];
 

@@ -12,6 +12,6 @@ class CategoryConsts
 
     public const CATEGORY_LIST = [
         self::OPTION => '選択式',
-        self::DESCRIPTION => '記述式' 
+        self::DESCRIPTION => '記述式'
     ];
 }

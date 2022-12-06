@@ -37,7 +37,7 @@
                             <td>
                                 <select class="form-select mt-5" name="role_id" id="role_id"
                                     aria-label="Default select example">
-                                    <option disabled>クリックして選んでください</option>
+                                    <option disabled>選択してください</option>
                                     @foreach (App\Consts\StaffPositionConsts::STAFF_LIST as $num => $position)
                                         ;
                                         <option value={{ $num }}>{{ $position }}</option>

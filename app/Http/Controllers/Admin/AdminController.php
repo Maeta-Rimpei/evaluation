@@ -160,7 +160,7 @@ class AdminController extends Controller
         // DB::table('question_user')
         // ->where('question_user.question_id', '=', $question_id)
         // ->where('question_user.role_id', '=', $std_role->role_id)
-        
+
 
         $question = Question::find($question_id);
         $question->delete();
@@ -172,5 +172,19 @@ class AdminController extends Controller
     public function showCreateQuestion()
     {
         return view('admin.show_create_question');
+    }
+
+    public function exeCreateQuestion(Request $request)
+    {
+        $inputs = $request->only(['content', 'category']);
+        Question::create($inputs);
+
+        // dd($inputs);
+        $question->users()->syncWithoutDetaching($request->role_id);
+
+        $question->users()->syncWithoutDetaching($question->id);
+        $question->save();
+
+        return redirect()->route('showCreateQuestion')->with('createQuestionMessage', '質問を作成しました。');
     }
 }
