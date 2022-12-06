@@ -32,7 +32,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @for ($i = 0; $i < count(App\Consts\AnswerOptionConsts::ANSWER_OPTION); $i++)
+                        @for ($i=0; $i<count(App\Consts\AnswerOptionConsts::ANSWER_OPTION); $i++)
                             <tr>
                                 <th class="text-center">{{ App\Consts\AnswerOptionConsts::ANSWER_OPTION[$i] }}</th>
                                 @if (array_key_exists(App\Consts\AnswerOptionConsts::ANSWER_OPTION[$i], $answers_count))

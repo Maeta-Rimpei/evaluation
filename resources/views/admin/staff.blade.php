@@ -2,6 +2,7 @@
 
 @section('content')
     <h2 class="text-center mb-3">職員一覧</h2>
+    <a href="#"><button type="button" class="btn btn-secondary mb-3">職員を検索</button></a>
     <table class="table table-striped">
         <thead>
             <tr>
@@ -28,7 +29,7 @@
                 <td>{{ $user['affiliation'] }}</td>
                 <td></td>
                 <td></td>
-                <td><a href={{ route('showStaffDetail', $user['id']) }}>評価</a></td>
+                <td><a href={{ route('showStaffDetail', $user['id']) }}>回答結果</a></td>
             </tr>
             @endforeach
         </tbody>

@@ -2,10 +2,11 @@
 
 @section('content')
     <h2 class="text-center mb-3">質問区分一覧</h2>
+    <a href="{{ route('showCreateQuestion') }}"><button type="button" class="btn btn-primary mb-3">質問を新規作成</button></a>
+    <a href="#"><button type="button" class="btn btn-secondary ms-2 mb-3">質問を検索</button></a>
     <table class="table table-striped">
         <thead>
             <tr>
-
                 <th scope="col"></th>
                 <th scope="col"></th>
             </tr>

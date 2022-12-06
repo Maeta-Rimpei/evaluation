@@ -4,12 +4,6 @@
     <div class="container mt-3">
         <h2 class="text-center">質問編集</h2>
 
-        @if (session('editMessage'))
-            <div class="alert alert-success text-center">
-                {{ session('editMessage') }}
-            </div>
-        @endif
-
         <form action="{{ route('editExe', $question->question_id) }}" method="post">
             @csrf
             @method('patch')
@@ -48,12 +42,13 @@
                             </th>
                             <td>
                                 <select class="form-select mt-1" name="category" id="category"
-                                    aria-label="Default select example">
-                                    <option disabled>クリックして選んでください</option>
-                                    @foreach (App\Consts\CategoryConsts::CATEGORY_LIST as $num => $category)
-                                        <option value="{{ $num }}">{{ $category }}</option>
-                                    @endforeach
-                                </select>
+                                aria-label="Default select">
+                                <option disabled>クリックして選んでください</option>
+                                @foreach (App\Consts\CategoryConsts::CATEGORY_LIST as $num => $category)
+                                <option value="{{ $num }}">{{ $category }}</option>
+                                @endforeach
+                            </select>
+                            <p class="text-center">現在のカテゴリー：{{ App\Consts\CategoryConsts::CATEGORY_LIST[$question->category] }}</p>
                             </td>
                         </tr>
                     </tbody>

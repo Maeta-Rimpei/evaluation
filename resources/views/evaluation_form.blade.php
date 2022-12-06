@@ -5,11 +5,11 @@
     <div class="personal-info d-flex flex-row">
         <div class="partition" style="width: 70%;"></div>
         <div class="d-flex flex-column">
-            @foreach (App\Consts\StaffPositionConsts::STAFF_LIST as $position => $auth_user->role)
+            @foreach (App\Consts\StaffPositionConsts::STAFF_LIST as $auth_user->role => $position)
             <div class="p-2">〇職名：{{ $position }}</div>
             @break;
             @endforeach
-            <div class="p-2">〇所属：</div>
+            <div class="p-2">〇所属：{{ $auth_user['affiliation'] }}</div>
             <div class="p-2">〇氏名：{{ $auth_user['name'] }}</div>
         </div>
     </div>
@@ -17,6 +17,14 @@
 
 <div class="container text-center">
     <p class="fs-4 mt-5">各項目についてご回答ください。</p>
+    <p>
+        ※1.選択式の問については
+        @foreach (App\Consts\AnswerOptionConsts::ANSWER_OPTION as $option)
+        {{ $option }}
+        @endforeach
+        からお選びください。
+    </p>
+    <p>※2.記述式の問については、文章形式で入力してお答えください。</p>
 </div>
 
 <form method="POST" action={{ route('evaluationStore') }}>

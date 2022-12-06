@@ -7,6 +7,11 @@
         <div class="alert alert-danger text-center">
             {{ session('deleteMessage') }}
         </div>
+    @elseif (session('editMessage'))
+
+        <div class="alert alert-success text-center">
+            {{ session('editMessage') }}
+        </div>
     @endif
 
     <table class="table table-striped">
@@ -37,13 +42,13 @@
                     <td> </td>
                     <td>
                         <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                            data-bs-target="#{{ $user['name'] }}">
+                            data-bs-target="#{{ 'modal' . $user['staff_id'] }}">
                             削除する
                         </button>
 
                         <!-- Modal -->
-                        <div class="modal fade" id="{{ $user['name'] }}" tabindex="-1" aria-labelledby="modalLabel"
-                            aria-hidden="true">
+                        <div class="modal fade" id="{{ 'modal' . $user['staff_id'] }}" tabindex="-1"
+                            aria-labelledby="modalLabel" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">

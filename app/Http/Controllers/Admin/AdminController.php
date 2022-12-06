@@ -86,8 +86,8 @@ class AdminController extends Controller
 
     public function exeStaffSoftDeleted($id)
     {
-        $users = User::find($id);
-        $users->delete();
+        $user = User::find($id);
+        $user->delete();
 
         return redirect()->route('showStaffSoftDeleted')->with('deleteMessage', '削除しました。');
     }
@@ -101,42 +101,44 @@ class AdminController extends Controller
     {
         $questions = DB::table('questions')
             ->where('question_user.role_id', "=", $role_id)
+            ->whereNull('questions.deleted_at')
             ->select(
                 'questions.id as question_id',
                 'questions.content',
-                'questions.category'
+                'questions.category',
+                'question_user.role_id'
             )
             ->leftJoin('question_user', 'questions.id', '=', 'question_id')
             ->get();
-            
-            return view('admin.show_detail_edit', compact('questions'));
-        }
-        
-        public function editForm($question_id){
-            
-            $question = DB::table('questions')
+
+        return view('admin.show_detail_edit', compact('questions'));
+    }
+
+    public function editForm($question_id)
+    {
+        $question = DB::table('questions')
             ->where('question_user.question_id', "=", $question_id)
             ->select(
                 'questions.id as question_id',
                 'questions.content',
-                'questions.category', 
-                'question_user.role_id', 
-                )
-                ->leftJoin('question_user', 'questions.id', '=', 'question_id')
-                ->first();
-                // dd($question);
+                'questions.category',
+                'question_user.role_id',
+            )
+            ->leftJoin('question_user', 'questions.id', '=', 'question_id')
+            ->first();
+        // dd($question);
 
-            return view('admin.edit_form', compact('question'));
+        return view('admin.edit_form', compact('question'));
     }
 
-    public function editExe(Request $request, $question_id) {
+    public function editExe(Request $request, $question_id)
+    {
         $std_role = DB::table('questions')
-        ->where('questions.id', '=', $question_id)
-        ->select('question_user.role_id')
-        ->join('question_user', 'questions.id', '=', 'question_user.question_id')
-        ->first();
+            ->where('questions.id', '=', $question_id)
+            ->select('question_user.role_id')
+            ->join('question_user', 'questions.id', '=', 'question_user.question_id')
+            ->first();
 
-        // dd($role_id);
         $question = Question::find($question_id);
 
         $question->content = $request->content;
@@ -144,5 +146,31 @@ class AdminController extends Controller
         $question->save();
 
         return redirect()->route('showDetailQuestionEdit', $std_role->role_id)->with('editMessage', '質問内容を更新しました。');
+    }
+
+    public function exeQuestionSoftDeleted($question_id)
+    {
+        $std_role = DB::table('questions')
+            ->where('questions.id', '=', $question_id)
+            ->select('question_user.role_id')
+            ->join('question_user', 'questions.id', '=', 'question_user.question_id')
+            ->first();
+
+            // TODO:中間テーブルソフトデリート
+        // DB::table('question_user')
+        // ->where('question_user.question_id', '=', $question_id)
+        // ->where('question_user.role_id', '=', $std_role->role_id)
+        
+
+        $question = Question::find($question_id);
+        $question->delete();
+
+        return redirect()->route('showDetailQuestionEdit', $std_role->role_id)
+            ->with('deleteMessage', '削除しました。');
+    }
+
+    public function showCreateQuestion()
+    {
+        return view('admin.show_create_question');
     }
 }
