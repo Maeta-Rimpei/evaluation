@@ -156,7 +156,7 @@ class AdminController extends Controller
             ->join('question_user', 'questions.id', '=', 'question_user.question_id')
             ->first();
 
-            // TODO:中間テーブルソフトデリート
+        // TODO:中間テーブルソフトデリート
         // DB::table('question_user')
         // ->where('question_user.question_id', '=', $question_id)
         // ->where('question_user.role_id', '=', $std_role->role_id)
@@ -174,17 +174,49 @@ class AdminController extends Controller
         return view('admin.show_create_question');
     }
 
+    // TODO:中間テーブル挿入
     public function exeCreateQuestion(Request $request)
     {
-        $inputs = $request->only(['content', 'category']);
-        Question::create($inputs);
-
+        $question = new Question();
+        $inputs = $request->except(['role_id']);
         // dd($inputs);
-        $question->users()->syncWithoutDetaching($request->role_id);
 
-        $question->users()->syncWithoutDetaching($question->id);
-        $question->save();
+        // $question->create($inputs);
+
+        // $question->users()->attach($request->role_id);
 
         return redirect()->route('showCreateQuestion')->with('createQuestionMessage', '質問を作成しました。');
+    }
+
+    public function searchQuestion(Request $request)
+    {
+        $keyword = $request->keyword;
+        $category = $request->category;
+        $role_id = $request->role_id;
+        
+        $query = Question::query();
+        $p = $query->join('question_user', 'questions.id', 'question_user.question_id')
+        ->select(
+            'questions.id',
+            'questions.content',
+            'questions.category',
+            'question_user.role_id'
+        );
+        
+        $query->when($keyword, function($query) use($keyword) { 
+            return $query->where('questions.content', 'LIKE', '%' . $keyword . '%');
+        });
+
+        $query->when($category, function($query) use($category) {
+            return $query->where('questions.category', '=', $category);
+        });
+        
+        $query->when($role_id, function($query) use($role_id) {
+            return $query->where('question_user.role_id', $role_id);
+        });
+        
+        $search_questions = $query->orderBy('questions.content', 'desc')->paginate(10);
+        // dd($search_questions);
+        return view('admin.show_search_question', compact('search_questions'));
     }
 }

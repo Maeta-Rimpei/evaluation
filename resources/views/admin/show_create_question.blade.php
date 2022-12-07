@@ -3,9 +3,9 @@
 @section('content')
     <h2 class="text-center">質問登録</h2>
 
-    @if (session('createMessage'))
+    @if (session('createQuestionMessage'))
         <div class="alert alert-success text-center">
-            {{ session('createMessage') }}
+            {{ session('createQuestionMessage') }}
         </div>
     @endif
 

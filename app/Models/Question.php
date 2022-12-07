@@ -28,8 +28,4 @@ class Question extends Model
         ->withPivot('role_id', 'user_id')
         ->withTimestamps();
     }
-
-    public function questionUser() {
-        return $this->hasMany(QuestionUser::class);
-    }
 }
