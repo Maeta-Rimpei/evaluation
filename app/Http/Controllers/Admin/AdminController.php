@@ -188,35 +188,78 @@ class AdminController extends Controller
         return redirect()->route('showCreateQuestion')->with('createQuestionMessage', '質問を作成しました。');
     }
 
-    public function searchQuestion(Request $request)
+
+    // public function exeSearchQuestion(Request $request)
+    // {
+    //     $keyword = $request->input('keyword');
+    //     $category = $request->input('category');
+
+    //     $query = Question::query();
+
+    //     if (isset($keyword)) {
+    //         $query->where('content', 'LIKE', '%' . self::escape($keyword) . '%');
+    //     }
+
+    //     if (isset($category)) {
+    //         $query->where('category', '=', $category);
+    //     }
+
+    //     $search_questions = $query->orderBy('content', 'desc')->paginate(10);
+
+    //     return view('admin.show_search_question', compact('keyword', 'category', 'search_questions'));
+    // }
+
+    // public static function escape($str)
+    // {
+    //     return str_replace(['\\', '%', '_'], ['\\\\', '\%', '\_'], $str);
+    // }
+
+    public function searchQuestion(Request $request, $keyword = null, $category = null, $role_id = null)
     {
         $keyword = $request->keyword;
         $category = $request->category;
         $role_id = $request->role_id;
-        
+        // dd($role_id);
         $query = Question::query();
-        $p = $query->join('question_user', 'questions.id', 'question_user.question_id')
-        ->select(
-            'questions.id',
-            'questions.content',
-            'questions.category',
-            'question_user.role_id'
-        );
-        
-        $query->when($keyword, function($query) use($keyword) { 
-            return $query->where('questions.content', 'LIKE', '%' . $keyword . '%');
-        });
+        $p = $query->join('question_user', 'questions.id', '=', 'question_user.question_id')
+            ->select(
+                'questions.id',
+                'questions.content',
+                'questions.category',
+                'question_user.role_id'
+            );
+        // $q=$p->where('question_user.role_id', 0)->get();
 
-        $query->when($category, function($query) use($category) {
-            return $query->where('questions.category', '=', $category);
-        });
+
+$query->where('questions.content', 'LIKE', '%' . $keyword . '%'); 
+        // if (!isset($keyword)) {
+               
+        // }
+
+        // if (!isset($category)) {
+        //     $query->where('category', $category);
+        // }
+//  ->where(function ($query) use(, $role_id) {
+                    
+//                         ->orWhere('question_user.role_id', $role_id);
+             
         
-        $query->when($role_id, function($query) use($role_id) {
-            return $query->where('question_user.role_id', $role_id);
-        });
+            // $query->where('category', $category);
         
+            // $query->when($category, function($query, $category) {
+            //             return $query->where('category', $category);
+            //         });
+
+            // $query->where('question_user.role_id', '=', $role_id);
+    
+
+
+       
+
         $search_questions = $query->orderBy('questions.content', 'desc')->paginate(10);
         // dd($search_questions);
-        return view('admin.show_search_question', compact('search_questions'));
+        $q = $search_questions->all();
+        // ddd($q);
+        return view('admin.show_search_question', compact('keyword', 'category', 'role_id', 'search_questions'));
     }
 }

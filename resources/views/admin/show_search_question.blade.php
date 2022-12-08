@@ -11,20 +11,20 @@
                     <tbody>
                         <tr>
                             <th class="mt-3">
-                                <label class="me-3" for="content">キーワード</label>
+                                <label class="me-3" for="keyword">キーワード</label>
                             </th>
                             <td>
-                                <textarea class="form-control mt-3" name="keyword" id="content" cols="50" rows="3"
-                                    value="@if (isset($keyword)) {{ $keyword }} @endif"></textarea>
+                                <textarea class="form-control mt-3" name="keyword" id="keyword" cols="50" rows="3"
+                                    value="{{ $keyword }}"></textarea>
                             </td>
                         </tr>
                         <tr>
-                            <th>
+                            {{-- <th>
                                 <label class="mt-5 me-3" for="category">カテゴリー</label>
                             </th>
                             <td>
-                                <select class="form-select mt-5" name="category">
-                                    <option value="">指定なし</option>
+                                <select class="form-select mt-5" name="category" id="category">
+                                    <option value=""></option>
                                     @foreach (App\Consts\CategoryConsts::CATEGORY_LIST as $num => $category)
                                         <option value="{{ $num }}">{{ $category }}</option>
                                     @endforeach
@@ -39,11 +39,11 @@
                                 <select class="form-select mt-5" name="role_id" aria-label="Default select example">
                                     <option value="">指定なし</option>
                                     @foreach (App\Consts\StaffPositionConsts::STAFF_LIST as $num => $position)
-                                        <option value={{ $num }}>{{ $position }}</option>
+                                        <option value="{{ $num }}">{{ $position }}</option>
                                     @endforeach
                                 </select>
                             </td>
-                        </tr>
+                        </tr> --}}
                     </tbody>
                 </table>
         </div>
@@ -53,6 +53,7 @@
         </form>
     </div>
 
+    {{-- 以下、検索結果 --}}
     <div class="container mt-5">
         <table class="table">
             <thead>
@@ -64,12 +65,14 @@
                 </tr>
             </thead>
             @forelse ($search_questions as $search_question)
-            <tr>
-                <th scope="row" class="text-center">{{ $search_question->id }}</th>
-                <td>{{ $search_question->content }}</td>
-                <td class="text-center">{{ App\Consts\CategoryConsts::CATEGORY_LIST[$search_question->category] }}</td>
-                <td class="text-center">{{ App\Consts\StaffPositionConsts::STAFF_LIST[$search_question->role_id] }}</td>
-            </tr>
+                <tr>
+                    <th scope="row" class="text-center">{{ $search_question->id }}</th>
+                    <td>{{ $search_question->content }}</td>
+                    <td class="text-center">{{ App\Consts\CategoryConsts::CATEGORY_LIST[$search_question->category] }}
+                    </td>
+                    <td class="text-center">{{ App\Consts\StaffPositionConsts::STAFF_LIST[$search_question->role_id] }}
+                    </td>
+                </tr>
             @empty
                 <p class="mt-5 text-center">検索された質問は見つかりませんでした。</p>
             @endforelse

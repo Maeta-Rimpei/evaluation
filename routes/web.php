@@ -50,6 +50,7 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::get('show_create_question', [App\Http\Controllers\Admin\AdminController::class, 'showCreateQuestion'])->name('showCreateQuestion');
     Route::post('exe_create_question', [App\Http\Controllers\Admin\AdminController::class, 'exeCreateQuestion'])->name('exeCreateQuestion');
     Route::get('show_search_question', [App\Http\Controllers\Admin\AdminController::class, 'searchQuestion'])->name('searchQuestion');
+    // Route::get('exe_search_question', [App\Http\Controllers\Admin\AdminController::class, 'exeSearchQuestion'])->name('exeSearchQuestion');
     
     // ログアウト処理
     Route::get('admin/logout', [App\Http\Controllers\Admin\AdminController::class, 'logout'])->name('adminLogout');
