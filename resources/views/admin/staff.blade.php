@@ -2,7 +2,7 @@
 
 @section('content')
     <h2 class="text-center mb-3">職員一覧</h2>
-    <a href="#"><button type="button" class="btn btn-secondary mb-3">職員を検索</button></a>
+    <a href="{{ route('searchStaff') }}"><button type="button" class="btn btn-secondary mb-3">職員を検索</button></a>
     <table class="table table-striped">
         <thead>
             <tr>

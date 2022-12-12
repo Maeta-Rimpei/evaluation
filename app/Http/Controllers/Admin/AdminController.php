@@ -150,6 +150,10 @@ class AdminController extends Controller
 
     public function exeQuestionSoftDeleted($question_id)
     {
+        $question = Question::find($question_id)->users->get();
+        dd($question);
+        $question->delete();
+
         $std_role = DB::table('questions')
             ->where('questions.id', '=', $question_id)
             ->select('question_user.role_id')
@@ -157,13 +161,7 @@ class AdminController extends Controller
             ->first();
 
         // TODO:中間テーブルソフトデリート
-        // DB::table('question_user')
-        // ->where('question_user.question_id', '=', $question_id)
-        // ->where('question_user.role_id', '=', $std_role->role_id)
 
-
-        $question = Question::find($question_id);
-        $question->delete();
 
         return redirect()->route('showDetailQuestionEdit', $std_role->role_id)
             ->with('deleteMessage', '削除しました。');
@@ -188,37 +186,19 @@ class AdminController extends Controller
         return redirect()->route('showCreateQuestion')->with('createQuestionMessage', '質問を作成しました。');
     }
 
-
-    // public function exeSearchQuestion(Request $request)
-    // {
-    //     $keyword = $request->input('keyword');
-    //     $category = $request->input('category');
-
-    //     $query = Question::query();
-
-    //     if (isset($keyword)) {
-    //         $query->where('content', 'LIKE', '%' . self::escape($keyword) . '%');
-    //     }
-
-    //     if (isset($category)) {
-    //         $query->where('category', '=', $category);
-    //     }
-
-    //     $search_questions = $query->orderBy('content', 'desc')->paginate(10);
-
-    //     return view('admin.show_search_question', compact('keyword', 'category', 'search_questions'));
-    // }
-
-    // public static function escape($str)
-    // {
-    //     return str_replace(['\\', '%', '_'], ['\\\\', '\%', '\_'], $str);
-    // }
-
-    public function searchQuestion(Request $request, $keyword = null, $category = null, $role_id = null)
+    // TODO:何に対してのセキュリティ対策？？
+    public static function escape($str)
     {
-        $keyword = $request->keyword;
-        $category = $request->category;
-        $role_id = $request->role_id;
+        return str_replace(['\\', '%', '_'], ['\\\\', '\%', '\_'], $str);
+    }
+
+    // TODO:最低限の検索OK　キーワードが空の時の処理検討
+    // TODO:Viewでの見せ方→ 現状：未入力の時全部取ってくる
+    public function searchQuestion(Request $request)
+    {
+        $keyword = $request->input('keyword');
+        $category = $request->input('category');
+        $role_id = $request->input('role_id');
         // dd($role_id);
         $query = Question::query();
         $p = $query->join('question_user', 'questions.id', '=', 'question_user.question_id')
@@ -228,38 +208,79 @@ class AdminController extends Controller
                 'questions.category',
                 'question_user.role_id'
             );
-        // $q=$p->where('question_user.role_id', 0)->get();
 
+        if (isset($keyword))
+            $query->when($request, function ($query, $request) {
+                $query->where('content', 'LIKE', '%' . self::escape($request->keyword) . '%');
+            });
 
-$query->where('questions.content', 'LIKE', '%' . $keyword . '%'); 
-        // if (!isset($keyword)) {
-               
-        // }
+        if (isset($category)) {
+            $query->when($request, function ($query, $request) {
+                return $query->where('category', '=', $request->category);
+            });
+        }
 
-        // if (!isset($category)) {
-        //     $query->where('category', $category);
-        // }
-//  ->where(function ($query) use(, $role_id) {
-                    
-//                         ->orWhere('question_user.role_id', $role_id);
-             
-        
-            // $query->where('category', $category);
-        
-            // $query->when($category, function($query, $category) {
-            //             return $query->where('category', $category);
-            //         });
-
-            // $query->where('question_user.role_id', '=', $role_id);
-    
-
-
-       
+        if (isset($role_id)) {
+            $query->when($request, function ($query, $request) {
+                return $query->where('role_id', '=', $request->role_id);
+            });
+        }
 
         $search_questions = $query->orderBy('questions.content', 'desc')->paginate(10);
         // dd($search_questions);
-        $q = $search_questions->all();
+        // $q = $search_questions->all();
         // ddd($q);
         return view('admin.show_search_question', compact('keyword', 'category', 'role_id', 'search_questions'));
+    }
+
+    /**
+     * 職員検索
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function searchStaff(Request $request)
+    {
+        $name = $request->input('name');
+        $staff_id = $request->input('staff_id');
+        $affiliation = $request->input('affiliation');
+        $role_id = $request->input('role_id');
+
+        $user_affiliations = User::get('affiliation');
+
+        $query = User::query();
+
+        if (isset($name)) {
+            $space_conversion = mb_convert_kana($name, 's');
+            // TODO:/[\s,]+/ ←この表現の意味は？
+            $name_push_array = preg_split('/[\s,]+/', $space_conversion, -1, PREG_SPLIT_NO_EMPTY);
+
+            foreach ($name_push_array as $word) {
+                $query->where('name', 'LIKE', '%' . self::escape($word) . '%');
+            }
+        }
+
+        if (isset($staff_id)) {
+            $query->when($request, function ($query, $request) {
+                return $query->where('staff_id', '=', $request->staff_id);
+            });
+        }
+
+        if (isset($affiliation)) {
+            $query->when($request, function ($query, $request) {
+                return $query->where('affiliation', '=', $request->affiliation);
+            });
+        }
+
+        if (isset($request->role_id)) {
+            $query->when($request, function ($query, $request) {
+                return $query->where('role_id', '=', $request->role_id);
+            });
+        }
+
+        $search_staffs = $query->orderBy('users.created_at', 'desc')->paginate(10);
+        // dd($search_questions);
+        $q = $search_staffs->all();
+        // ddd($q);
+        return view('admin.search_staff', compact('name', 'staff_id', 'affiliation', 'user_affiliations', 'role_id', 'search_staffs'));
     }
 }

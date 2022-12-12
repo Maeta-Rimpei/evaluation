@@ -11,8 +11,9 @@ class Question extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    // use \Askedio\SoftCascade\Traits\SoftCascadeTrait;
+    use \Askedio\SoftCascade\Traits\SoftCascadeTrait;
 
+    protected $dates = [ 'deleted_at' ];
     protected $softCascade = ['questionUser'];
 
     // 可変項目設定
@@ -25,8 +26,14 @@ class Question extends Model
     // User Modelとのリレーション(多対多)
     public function users()
     {
-        return $this->belongsToMany(User::class,'question_user','question_id','role_id')
+        return $this->belongsToMany(User::class,'question_user', 'question_id', 'role_id')
+        ->using(QuestionUser::class)
         ->withPivot('role_id', 'user_id')
         ->withTimestamps();
+    }
+
+    public function questionUser()
+    {
+        return $this->belongsTo(questionUser::class);
     }
 }

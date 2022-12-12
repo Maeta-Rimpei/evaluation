@@ -14,6 +14,8 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable;
     use SoftDeletes;
 
+    protected $dates = [ 'deleted_at' ];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -51,14 +53,7 @@ class User extends Authenticatable
     // Question Modelとのリレーション
     public function questions()
     {
-        return $this->belongsToMany(
-            Question::class,
-            'question_user',
-            'role_id',
-            'question_id',
-            'role_id',
-        );
-        // ->using(Question::class)
-        // ->withPivot('role_id', 'question_id');
+        return $this->belongsToMany(Question::class, 'question_user', 'role_id', 'question_id')
+        ->using(QuestionUser::class);
     }
 }

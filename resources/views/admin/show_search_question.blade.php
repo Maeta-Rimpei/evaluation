@@ -14,17 +14,16 @@
                                 <label class="me-3" for="keyword">キーワード</label>
                             </th>
                             <td>
-                                <textarea class="form-control mt-3" name="keyword" id="keyword" cols="50" rows="3"
-                                    value="{{ $keyword }}"></textarea>
+                                <input class="form-control" type="search" name="keyword" id="keyword" value="{{ $keyword }}">
                             </td>
                         </tr>
                         <tr>
-                            {{-- <th>
+                            <th>
                                 <label class="mt-5 me-3" for="category">カテゴリー</label>
                             </th>
                             <td>
                                 <select class="form-select mt-5" name="category" id="category">
-                                    <option value=""></option>
+                                    <option value="">指定なし</option>
                                     @foreach (App\Consts\CategoryConsts::CATEGORY_LIST as $num => $category)
                                         <option value="{{ $num }}">{{ $category }}</option>
                                     @endforeach
@@ -43,7 +42,7 @@
                                     @endforeach
                                 </select>
                             </td>
-                        </tr> --}}
+                        </tr>
                     </tbody>
                 </table>
         </div>

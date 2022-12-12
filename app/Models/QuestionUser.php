@@ -10,6 +10,16 @@ class QuestionUser extends Model
 {
     use HasFactory;
     use SoftDeletes;
+
+    protected $table = 'question_user';
+
+    /**
+     * IDの自動増分を指定する
+     *
+     * @var bool
+     */
+    public $incrementing = true;
+
     // 可変項目設定
     protected $fillable = [
         'id',
@@ -17,11 +27,13 @@ class QuestionUser extends Model
         'question_id',
     ];
 
-    public function user() {
-        return $this->belongsTo(User::class);
+    public function users()
+    {
+        return $this->belongsTo(User::class, );
     }
 
-    public function question() {
+    public function questions()
+    {
         return $this->belongsTo(Question::class);
     }
 }
