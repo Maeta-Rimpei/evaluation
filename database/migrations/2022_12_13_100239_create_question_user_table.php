@@ -15,8 +15,8 @@ class CreateQuestionUserTable extends Migration
     {
         Schema::create('question_user', function (Blueprint $table) {
             $table->id();
-            $table->integer('question_id');
-            $table->integer('role_id');
+            $table->unsignedInteger('role_id');
+            $table->unsignedBigInteger('question_id')->constrained('questions')->onDelete('CASCADE');
             $table->timestamps();
         });
     }

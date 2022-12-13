@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Question;
+use Askedio\Tests\App\Category;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -97,11 +98,10 @@ class AdminController extends Controller
         return view('admin.show_question_edit');
     }
 
-    public function showDetailQuestionEdit($role_id)
+    public function showDetailQuestionEdit($role)
     {
         $questions = DB::table('questions')
-            ->where('question_user.role_id', "=", $role_id)
-            ->whereNull('questions.deleted_at')
+            ->where('question_user.role_id', "=", $role)
             ->select(
                 'questions.id as question_id',
                 'questions.content',
@@ -148,20 +148,17 @@ class AdminController extends Controller
         return redirect()->route('showDetailQuestionEdit', $std_role->role_id)->with('editMessage', '質問内容を更新しました。');
     }
 
-    public function exeQuestionSoftDeleted($question_id)
+    public function exeQuestionDestroyed($question_id)
     {
-        $question = Question::find($question_id)->users->get();
-        dd($question);
-        $question->delete();
-
         $std_role = DB::table('questions')
             ->where('questions.id', '=', $question_id)
             ->select('question_user.role_id')
             ->join('question_user', 'questions.id', '=', 'question_user.question_id')
             ->first();
 
-        // TODO:中間テーブルソフトデリート
-
+        // 中間テーブルを削除→onDeleteCascadeによりリレーション先のquestionsレコードも削除
+        $question = Question::find($question_id);
+        $question->users()->detach();
 
         return redirect()->route('showDetailQuestionEdit', $std_role->role_id)
             ->with('deleteMessage', '削除しました。');
@@ -172,16 +169,21 @@ class AdminController extends Controller
         return view('admin.show_create_question');
     }
 
-    // TODO:中間テーブル挿入
     public function exeCreateQuestion(Request $request)
     {
         $question = new Question();
-        $inputs = $request->except(['role_id']);
-        // dd($inputs);
+        $inputs = $request->only(['content', 'category', 'role_id']);
 
-        // $question->create($inputs);
+        $question->create([
+            'content' => $inputs['content'],
+            'category' => $inputs['category'],
+        ]);
 
-        // $question->users()->attach($request->role_id);
+        // 184～187行目で挿入したquestionのidを取得
+        $question_id = $question->latest('id')->first()->id;
+        $new = $question->find($question_id);
+        // 中間テーブルに挿入
+        $new->users()->attach($inputs['role_id']);
 
         return redirect()->route('showCreateQuestion')->with('createQuestionMessage', '質問を作成しました。');
     }
@@ -201,7 +203,7 @@ class AdminController extends Controller
         $role_id = $request->input('role_id');
         // dd($role_id);
         $query = Question::query();
-        $p = $query->join('question_user', 'questions.id', '=', 'question_user.question_id')
+        $query->join('question_user', 'questions.id', '=', 'question_user.question_id')
             ->select(
                 'questions.id',
                 'questions.content',
@@ -243,7 +245,7 @@ class AdminController extends Controller
         $name = $request->input('name');
         $staff_id = $request->input('staff_id');
         $affiliation = $request->input('affiliation');
-        $role_id = $request->input('role_id');
+        $role_id = $request->input('role');
 
         $user_affiliations = User::get('affiliation');
 

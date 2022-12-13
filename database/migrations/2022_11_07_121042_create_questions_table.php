@@ -18,6 +18,7 @@ class CreateQuestionsTable extends Migration
             $table->text('content')->comment('内容');
             $table->integer('category')->comment('0=選択式, 1=記述式');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

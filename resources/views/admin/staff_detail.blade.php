@@ -7,7 +7,7 @@
                 <thead>
                     <tr>
                         <th class="text-center" scope="col" style="width: 5%">質問ID</th>
-                        <th class="text-center" scope="col" style="width: 70%">項目</th>
+                        <th class="text-center" scope="col" style="width: 70%">質問内容</th>
                         <th class="text-center" scope="col" style="width: 25%">回答欄</th>
                     </tr>
                 </thead>

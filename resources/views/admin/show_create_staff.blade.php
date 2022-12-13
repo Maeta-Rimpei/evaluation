@@ -39,7 +39,6 @@
                                     aria-label="Default select example">
                                     <option disabled>選択してください</option>
                                     @foreach (App\Consts\StaffPositionConsts::STAFF_LIST as $num => $position)
-                                        ;
                                         <option value={{ $num }}>{{ $position }}</option>
                                     @endforeach
                                 </select>

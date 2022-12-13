@@ -9,6 +9,12 @@
             </div>
         @endif
 
+        @if (session('deleteMessage'))
+            <div class="alert alert-danger text-center">
+                {{ session('deleteMessage') }}
+            </div>
+        @endif
+
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -50,7 +56,7 @@
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary"
                                                 data-bs-dismiss="modal">キャンセル</button>
-                                            <a href={{ route('exeQuestionSoftDeleted', $question->question_id) }}>
+                                            <a href={{ route('exeQuestionDestroyed', $question->question_id) }}>
                                                 <button type="button" class="btn btn-danger">削除する</button>
                                             </a>
                                         </div>

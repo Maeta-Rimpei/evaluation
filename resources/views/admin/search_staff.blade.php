@@ -80,6 +80,7 @@
                     </td>
                     <td class="text-center">{{ App\Consts\StaffPositionConsts::STAFF_LIST[$search_staff->role_id] }}
                     </td>
+                    <td><a href={{ route('showStaffDetail', $search_staff->id) }}>回答結果</a></td>
                 </tr>
             @empty
                 <p class="mt-5 text-center">検索された職員は見つかりませんでした。</p>

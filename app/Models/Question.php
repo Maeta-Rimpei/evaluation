@@ -10,12 +10,6 @@ use PHPUnit\TextUI\CliArguments\Builder;
 class Question extends Model
 {
     use HasFactory;
-    use SoftDeletes;
-    use \Askedio\SoftCascade\Traits\SoftCascadeTrait;
-
-    protected $dates = [ 'deleted_at' ];
-    protected $softCascade = ['questionUser'];
-
     // 可変項目設定
     protected $fillable = [
         'id',
@@ -27,8 +21,7 @@ class Question extends Model
     public function users()
     {
         return $this->belongsToMany(User::class,'question_user', 'question_id', 'role_id')
-        ->using(QuestionUser::class)
-        ->withPivot('role_id', 'user_id')
+        ->withPivot('role_id', 'question_id')
         ->withTimestamps();
     }
 
