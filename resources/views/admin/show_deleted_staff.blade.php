@@ -1,7 +1,7 @@
 @extends('admin.index')
 
 @section('content')
-    <h3 class="mb-3">職員情報削除</h3>
+    <h3 class="mb-3">職員削除</h3>
 
     @if (session('deleteMessage'))
         <div class="alert alert-danger text-center">

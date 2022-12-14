@@ -25,10 +25,9 @@
     <div class="wrapper">
         <div class="side-bar">
             <ul class="side-bar-item">
-                <li><a class="" href={{ route('showStaff') }}>職員一覧</a></li>
-                <li><a class="mb-2" href={{ route('register') }}>職員登録</a></li>
-                <li><a class="mb-2" href={{ route('showStaffSoftDeleted') }}>職員削除</a></li>
-                <li><a href={{ route('showQuestionEdit') }}>自己評価シート編集</a></li>
+                <li><a href="{{ route('showStaff') }}">職員一覧</a></li>
+                <li><a href="{{ route('showAdmin') }}">管理者一覧</a></li>
+                <li><a href="{{ route('showQuestionEdit') }}">自己評価シート編集</a></li>
             </ul>
         </div>
 

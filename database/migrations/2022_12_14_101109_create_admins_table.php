@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAdiminsUserTable extends Migration
+class CreateAdminsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -17,6 +17,8 @@ class CreateAdiminsUserTable extends Migration
             $table->id();
             $table->integer('staff_id')->comment('職員コード');
             $table->string('name');
+            $table->string('affiliation')->comment('所属');
+            $table->string('role_id')->comment('職位');
             $table->string('password');
             $table->timestamps();
         });

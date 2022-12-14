@@ -17,6 +17,8 @@ class AdminsTableSeeder extends Seeder
         DB::table('admins')->insert([
             'staff_id' => '1000',
             'name' => 'test_taro',
+            'affiliation' => 'X保育園',
+            'role_id' => '0',
             'password' => \Hash::make('testtest'),
         ]);
     }

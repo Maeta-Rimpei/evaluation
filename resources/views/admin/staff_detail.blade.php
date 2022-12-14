@@ -45,5 +45,10 @@
                     </tbody>
                 </table>
             </div>
+            <div class="eva-btn text-center mt-5">
+                <a href="{{ route('evaForm', $user['id']) }}">
+                    <button type="button" class="btn btn-outline-primary">{{ $user['name'] . 'さんへの評価を作成' }}</button>
+                </a>
+            </div>
     </div>
 @endsection

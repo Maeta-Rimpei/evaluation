@@ -5,10 +5,11 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
+use App\Models\Admin;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Requests\ResgisterRequest;
+use App\Http\Requests\RegisterRequest;
 
 class RegisterController extends Controller
 {
@@ -68,12 +69,36 @@ class RegisterController extends Controller
     }
 
     /**
+     * 管理者登録フォーム表示
+     */
+    protected function showAdminRegistrationForm()
+    {
+        return view('admin.show_create_admin');
+    }
+
+    /**
+     * 職員登録フォーム表示
+     */
+    protected function exeAdminRegistrationForm(RegisterRequest $request)
+    {
+        Admin::create([
+            'staff_id' => $request->staff_id,
+            'name' => $request->name,
+            'role_id' => $request->role_id,
+            'affiliation' => $request->affiliation,
+            'password' => Hash::make($request->password),
+        ]);
+
+        return redirect()->route('adminRegister')->with('createAdminMessage', '管理者を登録しました。');
+    }
+
+    /**
      * Create a new user instance after a valid registration.
      *
      * @param  array  $data
      * @return \App\Models\User
      */
-    protected function create(ResgisterRequest $request)
+    protected function create(RegisterRequest $request)
     {
         User::create([
             'staff_id' => $request->staff_id,

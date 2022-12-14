@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Question;
-use Askedio\Tests\App\Category;
+use App\Models\Admin;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -47,9 +47,14 @@ class AdminController extends Controller
     // --------------------管理者画面操作関係----------------------
     public function showStaff()
     {
-        $users = User::get()->all();
+        $users = User::get();
 
         return view('admin.staff', compact('users'));
+    }
+
+    public function evaForm()
+    {
+        return view('admin.evaluation_form');
     }
 
     public function showStaffDetail($id)
@@ -82,7 +87,7 @@ class AdminController extends Controller
     {
         $users = User::get()->all();
 
-        return view('admin.show_staff_deleted', compact('users'));
+        return view('admin.show_deleted_staff', compact('users'));
     }
 
     public function exeStaffSoftDeleted($id)
@@ -284,5 +289,27 @@ class AdminController extends Controller
         $q = $search_staffs->all();
         // ddd($q);
         return view('admin.search_staff', compact('name', 'staff_id', 'affiliation', 'user_affiliations', 'role_id', 'search_staffs'));
+    }
+
+    public function showAdminSoftDeleted()
+    {
+        $admins = Admin::get();
+
+        return view('admin.show_delete_admin', compact('admins'));
+    }
+
+    public function exeAdminSoftDeleted($id)
+    {
+        $admin = Admin::find($id);
+        $admin->delete();
+
+        return redirect()->route('showAdminSoftDeleted')->with('deleteMessage', '削除しました。');
+    }
+
+    public function showAdmin()
+    {
+        $admins = Admin::get();
+
+        return view('admin.admin', compact('admins'));
     }
 }

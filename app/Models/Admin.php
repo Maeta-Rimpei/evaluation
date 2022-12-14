@@ -15,6 +15,8 @@ class Admin extends Authenticatable
         'id',
         'staff_id',
         'name',
+        'affiliation',
+        'role_id',
         'password',
     ];
 
