@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Question;
 use App\Models\Admin;
-use Illuminate\Foundation\Auth\User;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -52,11 +52,6 @@ class AdminController extends Controller
         return view('admin.staff', compact('users'));
     }
 
-    public function evaForm()
-    {
-        return view('admin.evaluation_form');
-    }
-
     public function showStaffDetail($id)
     {
         $user = User::find($id);
@@ -81,6 +76,22 @@ class AdminController extends Controller
         $answers_count = array_count_values(array_column($array_user_questions_answers, 'answer'));
 
         return view('admin.staff_detail', compact('user', 'array_user_questions_answers', 'answers_count'));
+    }
+
+    public function evaluationStaff($id)
+    {
+        $user = User::find($id);
+        return view('admin.evaluation_staff', compact('user'));
+    }
+
+    public function exeEvaluationStaff($id, Request $request)
+    {
+        $user = User::find($id);
+        $evaluation = $request->only(['evaluation']);
+
+        $user->update($evaluation);
+
+        return redirect()->route('evaluationStaff', $user->id)->with('evaluationMessage', '評価コメントを送信しました。');
     }
 
     public function showStaffSoftDeleted()
@@ -234,9 +245,7 @@ class AdminController extends Controller
         }
 
         $search_questions = $query->orderBy('questions.content', 'desc')->paginate(10);
-        // dd($search_questions);
-        // $q = $search_questions->all();
-        // ddd($q);
+
         return view('admin.show_search_question', compact('keyword', 'category', 'role_id', 'search_questions'));
     }
 
@@ -267,9 +276,11 @@ class AdminController extends Controller
         }
 
         if (isset($staff_id)) {
-            $query->when($request, function ($query, $request) {
-                return $query->where('staff_id', '=', $request->staff_id);
-            });
+            $staff_id_push_array = preg_split('/[\s,]+/', $staff_id, -1, PREG_SPLIT_NO_EMPTY);
+
+            foreach ($staff_id_push_array as $word) {
+                $query->where('staff_id', 'LIKE', '%' . self::escape($staff_id) . '%');
+            }
         }
 
         if (isset($affiliation)) {
@@ -285,9 +296,7 @@ class AdminController extends Controller
         }
 
         $search_staffs = $query->orderBy('users.created_at', 'desc')->paginate(10);
-        // dd($search_questions);
-        $q = $search_staffs->all();
-        // ddd($q);
+
         return view('admin.search_staff', compact('name', 'staff_id', 'affiliation', 'user_affiliations', 'role_id', 'search_staffs'));
     }
 
@@ -312,4 +321,50 @@ class AdminController extends Controller
 
         return view('admin.admin', compact('admins'));
     }
-}
+
+    public function searchAdmin(Request $request)
+    {
+        $name = $request->input('name');
+        $staff_id = $request->input('staff_id');
+        $affiliation = $request->input('affiliation');
+        $role_id = $request->input('role');
+
+        $admin_affiliations = Admin::get('affiliation');
+
+        $query = Admin::query();
+
+        if (isset($name)) {
+            $space_conversion = mb_convert_kana($name, 's');
+            // TODO:/[\s,]+/ ←この表現の意味は？
+            $name_push_array = preg_split('/[\s,]+/', $space_conversion, -1, PREG_SPLIT_NO_EMPTY);
+
+            foreach ($name_push_array as $word) {
+                $query->where('name', 'LIKE', '%' . self::escape($word) . '%');
+            }
+        }
+
+        if (isset($staff_id)) {
+            $staff_id_push_array = preg_split('/[\s,]+/', $staff_id, -1, PREG_SPLIT_NO_EMPTY);
+
+            foreach ($staff_id_push_array as $word) {
+                $query->where('staff_id', 'LIKE', '%' . self::escape($staff_id) . '%');
+            }
+        }
+        
+            if (isset($affiliation)) {
+                $query->when($request, function ($query, $request) {
+                    return $query->where('affiliation', '=', $request->affiliation);
+                });
+            }
+
+            if (isset($request->role_id)) {
+                $query->when($request, function ($query, $request) {
+                    return $query->where('role_id', '=', $request->role_id);
+                });
+            }
+
+            $search_admins = $query->orderBy('admins.created_at', 'desc')->paginate(10);
+
+            return view('admin.search_admin', compact('name', 'staff_id', 'affiliation', 'admin_affiliations', 'role_id', 'search_admins'));
+        }
+    }

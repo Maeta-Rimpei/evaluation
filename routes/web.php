@@ -31,25 +31,28 @@ Route::group(['middleware' => ['guest:admin']], function () {
 Route::group(['middleware' => ['auth:admin']], function () {
 
     // -----------------------------------管理画面-----------------------------------
-    // 職員一覧
+    // インデックス
     Route::get('admin/index', [App\Http\Controllers\Admin\AdminController::class, 'index'])->name('adminIndex');
+    
+    // 職員一覧
     Route::get('admin/show_staff', [App\Http\Controllers\Admin\AdminController::class, 'showStaff'])->name('showStaff');
     Route::get('admin/staff_detail/{id}', [App\Http\Controllers\Admin\AdminController::class, 'showStaffDetail'])->name('showStaffDetail');
     Route::get('admin/search_staff', [App\Http\Controllers\Admin\AdminController::class, 'searchStaff'])->name('searchStaff');
-
+    
     // 職員登録
     Route::get('register', [App\Http\Controllers\Auth\RegisterController::class, 'showRegistrationForm'])->name('register');
     Route::post('exe_register', [App\Http\Controllers\Auth\RegisterController::class, 'create'])->name('create');
     // 職員評価
-    Route::get('evaluation_form', [App\Http\Controllers\Auth\AdminController::class, 'evaForm'])->name('evaForm');
-
+    Route::get('evaluation_staff/{id}', [App\Http\Controllers\Admin\AdminController::class, 'evaluationStaff'])->name('evaluationStaff');
+    Route::patch('exe_evaluation_staff/{id}', [App\Http\Controllers\Admin\AdminController::class, 'exeEvaluationStaff'])->name('exeEvaluationStaff');
 
     // 職員削除
     Route::get('show_deleted', [App\Http\Controllers\Admin\AdminController::class, 'showStaffSoftDeleted'])->name('showStaffSoftDeleted');
     Route::get('exe_deleted/{id}', [App\Http\Controllers\Admin\AdminController::class, 'exeStaffSoftDeleted'])->name('exeStaffSoftDeleted');
 
     // 管理者一覧
-    Route::get('admin/show_admin', [App\Http\Controllers\Admin\AdminController::class, 'showAdmin'])->name('showAdmin');
+    Route::get('show_admin', [App\Http\Controllers\Admin\AdminController::class, 'showAdmin'])->name('showAdmin');
+    Route::get('search_admin', [App\Http\Controllers\Admin\AdminController::class, 'searchAdmin'])->name('searchAdmin');
 
     // 管理者登録
     Route::get('admin_register', [App\Http\Controllers\Auth\RegisterController::class, 'showAdminRegistrationForm'])->name('adminRegister');

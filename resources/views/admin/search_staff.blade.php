@@ -7,14 +7,14 @@
         <div class="form-contents">
             <form action="{{ route('searchStaff') }}" method="GET">
                 @csrf
-                <table class="mt-3">
+                <table class="mt-3 mx-auto">
                     <tbody>
                         <tr>
                             <th class="mt-3">
                                 <label class="me-3" for="name">職員名</label>
                             </th>
                             <td>
-                                <input class="form-control" type="search" name="name" id="name" value="{{ $name }}">
+                                <input class="form-control ms-5" type="search" name="name" id="name" value="{{ $name }}">
                             </td>
                         </tr>
                         <tr>
@@ -22,7 +22,7 @@
                                 <label class="mt-5 me-3" for="staff_id">職員コード</label>
                             </th>
                             <td>
-                                <input class="form-control mt-5" name="staff_id" id="staff_id">
+                                <input class="form-control mt-5 ms-5" name="staff_id" id="staff_id">
                             </td>
                         </tr>
                         <tr>
@@ -30,7 +30,7 @@
                                 <label class="mt-5 me-3" for="affiliation">所属</label>
                             </th>
                             <td>
-                                <select class="form-select mt-5" name="affiliation" id="affiliation">
+                                <select class="form-select mt-5 ms-5" name="affiliation" id="affiliation">
                                     <option value="">指定なし</option>
                                     @foreach ($user_affiliations as $user_affiliation)
                                         <option value="{{ $user_affiliation->affiliation }}">{{ $user_affiliation->affiliation }}</option>
@@ -44,7 +44,7 @@
                                 <label class="mt-5 me-3" for="role_id">職位</label>
                             </th>
                             <td>
-                                <select class="form-select mt-5" name="role_id" aria-label="Default select example">
+                                <select class="form-select mt-5 ms-5" name="role_id" aria-label="Default select example">
                                     <option value="">指定なし</option>
                                     @foreach (App\Consts\StaffPositionConsts::STAFF_LIST as $num => $position)
                                         <option value="{{ $num }}">{{ $position }}</option>

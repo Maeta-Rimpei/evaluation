@@ -8,7 +8,7 @@
                     <tr>
                         <th class="text-center" scope="col" style="width: 5%">質問ID</th>
                         <th class="text-center" scope="col" style="width: 70%">質問内容</th>
-                        <th class="text-center" scope="col" style="width: 25%">回答欄</th>
+                        <th class="text-center" scope="col" style="width: 25%">回答</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -45,10 +45,13 @@
                     </tbody>
                 </table>
             </div>
+
+            @if (!empty($array_user_questions_answers))
             <div class="eva-btn text-center mt-5">
-                <a href="{{ route('evaForm', $user['id']) }}">
+                <a href="{{ route('evaluationStaff', $user['id']) }}">
                     <button type="button" class="btn btn-outline-primary">{{ $user['name'] . 'さんへの評価を作成' }}</button>
                 </a>
             </div>
+            @endif
     </div>
 @endsection

@@ -48,7 +48,7 @@
                         <select class="form-select" name="answer[]" aria-label="Default select example">
                             <option disabled>クリックして選んでください</option>
                                 @foreach ((App\Consts\AnswerOptionConsts::ANSWER_OPTION) as $option)
-                                <option value="$option">{{ $option }}</option>
+                                <option value="{{ $option }}">{{ $option }}</option>
                                 @endforeach
                             </select>
                         @else

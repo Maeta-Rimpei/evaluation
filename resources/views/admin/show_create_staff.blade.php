@@ -12,14 +12,14 @@
         <div class="form-contents">
             <form action={{ route('create') }} method="post">
                 @csrf
-                <table class="mt-3">
+                <table class="mt-3 mx-auto">
                     <tbody>
                         <tr>
                             <th>
-                                <label class="mt-5 me-3" for="staff_id">職員コード</label>
+                                <label class="mt-5" for="staff_id">職員コード</label>
                             </th>
                             <td>
-                                <input type="text" class="mt-5" name="staff_id" id="staff_id" required>
+                                <input type="text" class="form-control mt-5 ms-5" name="staff_id" id="staff_id" required>
                             </td>
                         </tr>
                         <tr>
@@ -27,7 +27,7 @@
                                 <label class="mt-5 me-3" for="name">名前</label>
                             </th>
                             <td>
-                                <input type="text" class="mt-5" name="name" id="name" required>
+                                <input type="text" class="form-control mt-5 ms-5" name="name" id="name" required>
                             </td>
                         </tr>
                         <tr>
@@ -35,7 +35,7 @@
                                 <label class="mt-5 me-3" for="role_id">職位</label>
                             </th>
                             <td>
-                                <select class="form-select mt-5" name="role_id" id="role_id"
+                                <select class="form-select mt-5 ms-5" name="role_id" id="role_id"
                                     aria-label="Default select example">
                                     <option disabled>選択してください</option>
                                     @foreach (App\Consts\StaffPositionConsts::STAFF_LIST as $num => $position)
@@ -49,7 +49,7 @@
                                 <label class="mt-5 me-3" for="affiliation">所属</label>
                             </th>
                             <td>
-                                <input type="text" class="mt-5" name="affiliation" id="affiliation" required>
+                                <input type="text" class="form-control mt-5 ms-5" name="affiliation" id="affiliation" required>
                             </td>
                         </tr>
                         <tr>
@@ -57,7 +57,7 @@
                                 <label class="mt-5 me-3" for="password">パスワード</label>
                             </th>
                             <td>
-                                <input type="password" class="mt-5" name="password" id="password" required>
+                                <input type="password" class="form-control mt-5 ms-5" name="password" id="password" required>
                             </td>
                         </tr>
                         <tr>
@@ -65,7 +65,7 @@
                                 <label class="mt-5 me-3" for="password_confirmation">パスワード(確認)</label>
                             </th>
                             <td>
-                                <input type="password" class="mt-5" name="password_confirmation"
+                                <input type="password" class="form-control mt-5 ms-5" name="password_confirmation"
                                     id="password_confirmation" required
                                     @error('password_confirmation') is-invalid @enderror>
                             </td>

@@ -6,7 +6,7 @@
     <a class="mb-2" style="text-decoration: none;" href="{{ route('adminRegister') }}">
         <button type="button" class="btn btn-primary mb-3 me-2">管理者登録</button>
     </a>
-    <a style="text-decoration: none;" href="">
+    <a style="text-decoration: none;" href="{{ route('searchAdmin') }}">
         <button type="button" class="btn btn-secondary mb-3 me-2">管理者を検索</button>
     </a>
     <a class="mb-2" style="text-decoration: none;" href={{ route('showAdminSoftDeleted') }}>

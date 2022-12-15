@@ -22,6 +22,7 @@ class EvaluationController extends Controller
     {
         $auth_user = \Auth::user();
         $auth_user_questions = $auth_user->questions;
+        // ddd($auth_user_questions);
 
         return view('evaluation_form', compact('auth_user', 'auth_user_questions'));
     }
@@ -47,7 +48,7 @@ class EvaluationController extends Controller
             $answer->answer = $data['answer'][$i];
             $answer->save();
         }
-        return redirect(route('evaluationCompleted'));
+        return redirect()->route('evaluationCompleted');
     }
 
     public function evaluationCompleted()

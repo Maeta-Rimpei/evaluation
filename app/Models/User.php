@@ -53,7 +53,6 @@ class User extends Authenticatable
     // Question Modelとのリレーション
     public function questions()
     {
-        return $this->belongsToMany(Question::class, 'question_user', 'role_id', 'question_id')
-        ->using(QuestionUser::class);
+        return $this->belongsToMany(Question::class, 'question_user', 'role_id', 'question_id', 'role_id');
     }
 }
