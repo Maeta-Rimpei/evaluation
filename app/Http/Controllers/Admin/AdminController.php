@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Question;
 use App\Models\Admin;
 use App\Models\User;
+use App\Models\Answer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -304,7 +305,7 @@ class AdminController extends Controller
     {
         $admins = Admin::get();
 
-        return view('admin.show_delete_admin', compact('admins'));
+        return view('admin.show_deleted_admin', compact('admins'));
     }
 
     public function exeAdminSoftDeleted($id)
@@ -350,21 +351,79 @@ class AdminController extends Controller
                 $query->where('staff_id', 'LIKE', '%' . self::escape($staff_id) . '%');
             }
         }
-        
-            if (isset($affiliation)) {
-                $query->when($request, function ($query, $request) {
-                    return $query->where('affiliation', '=', $request->affiliation);
-                });
-            }
 
-            if (isset($request->role_id)) {
-                $query->when($request, function ($query, $request) {
-                    return $query->where('role_id', '=', $request->role_id);
-                });
-            }
-
-            $search_admins = $query->orderBy('admins.created_at', 'desc')->paginate(10);
-
-            return view('admin.search_admin', compact('name', 'staff_id', 'affiliation', 'admin_affiliations', 'role_id', 'search_admins'));
+        if (isset($affiliation)) {
+            $query->when($request, function ($query, $request) {
+                return $query->where('affiliation', '=', $request->affiliation);
+            });
         }
+
+        if (isset($request->role_id)) {
+            $query->when($request, function ($query, $request) {
+                return $query->where('role_id', '=', $request->role_id);
+            });
+        }
+
+        $search_admins = $query->orderBy('admins.created_at', 'desc')->paginate(10);
+
+        return view('admin.search_admin', compact('name', 'staff_id', 'affiliation', 'admin_affiliations', 'role_id', 'search_admins'));
     }
+
+    public function showEditAnswer()
+    {
+        $users = User::get();
+
+        return view('admin.show_edit_answer', compact('users'));
+    }
+
+    public function exeAllDeletedAnswer($id)
+    {
+        $user_answer = Answer::where('user_id', '=', $id);
+
+        if (!empty($user_answer)) {
+            return redirect()->route('showEditAnswer')->with('errorAnswerEmptyMessage', 'この方はまだ回答していません。');
+        }
+        // dd($user_answer);
+        $user_answer->delete();
+
+        return redirect()->route('showEditAnswer')->with('allDeleteAnswerMessage', '回答を全て削除しました。');
+    }
+
+    public function showPartEditAnswer($id)
+    {
+        $user = User::find($id);
+
+        $user_answers = $user->answers;
+        $user_questions = $user->questions;
+        // dd($user_answers);
+
+        return view('admin.show_part_edit_answer', compact('user', 'user_answers', 'user_questions'));
+    }
+
+    public function exePartDeletedAnswer($answer_id)
+    {
+        $user_answer = Answer::find($answer_id);
+        $user_answer->destroy($answer_id);
+
+        return redirect()->route('showPartDeletedAnswer')->with('partDeleteAnswerMessage', '選択した回答を削除しました。');
+    }
+
+    public function showUpdatedAnswer($answer_id)
+    {
+        $user_answer = Answer::find($answer_id);
+
+        return view('admin.show_updated_answer', compact('user_answer'));
+    }
+
+    public function exeUpdatedAnswer($answer_id, Request $request)
+    {
+        $answer = $request->only(['answer']);
+        $user_answer = Answer::find($answer_id);
+        $user_id = Answer::find($answer_id)->user->id;
+
+        $user_answer->update($answer);
+
+        return redirect()->route('showPartEditAnswer', $user_id)->with('updateAnswerMessage', '回答を修正しました。');
+    }
+
+}

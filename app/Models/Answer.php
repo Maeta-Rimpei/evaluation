@@ -12,6 +12,7 @@ class Answer extends Model
     // 可変項目設定
     protected $fillable = [
         'id',
+        'user_id',
         'question_id',
         'answer',
     ];

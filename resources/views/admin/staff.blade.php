@@ -38,7 +38,11 @@
                 <td>{{ $user['affiliation'] }}</td>
                 <td></td>
                 <td></td>
-                <td><a href={{ route('showStaffDetail', $user['id']) }}>回答結果</a></td>
+                <td>
+                    <a href={{ route('showStaffDetail', $user['id']) }}>
+                    <button class="btn btn-outline-primary">回答結果</button>
+                </a>
+            </td>
             </tr>
             @endforeach
         </tbody>

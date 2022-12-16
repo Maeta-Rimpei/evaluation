@@ -71,7 +71,13 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::post('exe_create_question', [App\Http\Controllers\Admin\AdminController::class, 'exeCreateQuestion'])->name('exeCreateQuestion');
     Route::get('show_search_question', [App\Http\Controllers\Admin\AdminController::class, 'searchQuestion'])->name('searchQuestion');
 
-
+    // 回答編集
+    Route::get('show_edit_answer', [App\Http\Controllers\Admin\AdminController::class, 'showEditAnswer'])->name('showEditAnswer');
+    Route::get('exe_all_deleted_answer/{id}', [App\Http\Controllers\Admin\AdminController::class, 'exeAllDeletedAnswer'])->name('exeAllDeletedAnswer');
+    Route::get('show_part_edit_answer/{id}', [App\Http\Controllers\Admin\AdminController::class, 'showPartEditAnswer'])->name('showPartEditAnswer');
+    Route::get('exe_part_deleted_answer/{answer_id}', [App\Http\Controllers\Admin\AdminController::class, 'exePartDeletedAnswer'])->name('exePartDeletedAnswer');
+    Route::get('show_updated_answer/{answer_id}', [App\Http\Controllers\Admin\AdminController::class, 'showUpdatedAnswer'])->name('showUpdatedAnswer');
+    Route::patch('exe_updated_answer/{answer_id}', [App\Http\Controllers\Admin\AdminController::class, 'exeUpdatedAnswer'])->name('exeUpdatedAnswer');
 
     // ログアウト処理
     Route::get('admin/logout', [App\Http\Controllers\Admin\AdminController::class, 'logout'])->name('adminLogout');

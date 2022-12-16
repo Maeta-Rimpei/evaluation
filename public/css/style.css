@@ -42,14 +42,20 @@ html {
 .wrapper .side-bar .side-bar-item li a {
     text-decoration: none;
     color: black;
-    background-color: #4682b4;
-    box-shadow: 1px 1px 1px 1px rgba(0,0,0,0.4);
-    border-radius: 10%;
+    background-color: #d3d3d3;
+    box-shadow: 0px 5px 1px 1px rgba(0,0,0,0.4);
+    border-radius: 50px;
+    width: 150px;
+    text-align: center;
     padding: 5px;
+    transition: .3s;
+    display: inline-block;
+    margin-right: 20px;
 }
 
 .wrapper .side-bar .side-bar-item li a:hover {
-    background-color: #e6e6fa;
+    box-shadow: none;
+    transform: translateY(5px);
 }
 
 .main-wrapper .wrapper {

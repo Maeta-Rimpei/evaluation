@@ -27,6 +27,7 @@
             <ul class="side-bar-item">
                 <li><a href="{{ route('showStaff') }}">職員一覧</a></li>
                 <li><a href="{{ route('showAdmin') }}">管理者一覧</a></li>
+                <li><a href="{{ route('showEditAnswer') }}">回答管理</a></li>
                 <li><a href="{{ route('showQuestionEdit') }}">自己評価シート編集</a></li>
             </ul>
         </div>

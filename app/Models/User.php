@@ -55,4 +55,11 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Question::class, 'question_user', 'role_id', 'question_id', 'role_id');
     }
+    
+    // Answer Modelとのリレーション
+    public function answers()
+    {
+        return $this->hasMany(Answer::class);
+    }
+
 }
