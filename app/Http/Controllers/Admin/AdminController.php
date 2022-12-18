@@ -89,10 +89,17 @@ class AdminController extends Controller
     {
         $user = User::find($id);
         $evaluation = $request->only(['evaluation']);
-
         $user->update($evaluation);
 
-        return redirect()->route('evaluationStaff', $user->id)->with('evaluationMessage', '評価コメントを送信しました。');
+        return redirect()->route('evaluationStaff', $user->id)->with('evaluationUpdateMessage', 'フィードバックコメントを編集しました。');
+    }
+
+    public function exeEditEvaluationStaff(Request $request)
+    {
+        $evaluation = $request->only(['evaluation']);
+        $user->update($evaluation);
+
+        return redirect()->route('evaluationStaff', $user->id)->with('evaluationMessage', 'フィードバックコメントを編集しました。');
     }
 
     public function showStaffSoftDeleted()
@@ -393,11 +400,23 @@ class AdminController extends Controller
     {
         $user = User::find($id);
 
-        $user_answers = $user->answers;
-        $user_questions = $user->questions;
-        // dd($user_answers);
+        $user_questions_answers = DB::table('users')
+            ->where('answers.user_id', '=', $id)
+            ->select(
+                'users.id as user_id',
+                'questions.id as question_id',
+                'questions.content',
+                'questions.category',
+                'answers.id as answer_id',
+                'answers.answer',
+            )
+            ->leftJoin('answers', 'users.id', '=', 'answers.user_id')
+            ->leftJoin('questions', 'questions.id', '=', 'answers.question_id')
+            ->get()->toArray();
 
-        return view('admin.show_part_edit_answer', compact('user', 'user_answers', 'user_questions'));
+            $array_user_questions_answers = json_decode(json_encode($user_questions_answers), true);
+
+        return view('admin.show_part_edit_answer', compact('user', 'array_user_questions_answers'));
     }
 
     public function exePartDeletedAnswer($answer_id)
@@ -405,7 +424,7 @@ class AdminController extends Controller
         $user_answer = Answer::find($answer_id);
         $user_answer->destroy($answer_id);
 
-        return redirect()->route('showPartDeletedAnswer')->with('partDeleteAnswerMessage', '選択した回答を削除しました。');
+        return redirect()->route('showPartEditAnswer')->with('partDeleteAnswerMessage', '選択した回答を削除しました。');
     }
 
     public function showUpdatedAnswer($answer_id)
@@ -425,5 +444,4 @@ class AdminController extends Controller
 
         return redirect()->route('showPartEditAnswer', $user_id)->with('updateAnswerMessage', '回答を修正しました。');
     }
-
 }

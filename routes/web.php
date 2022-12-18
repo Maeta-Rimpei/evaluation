@@ -33,18 +33,20 @@ Route::group(['middleware' => ['auth:admin']], function () {
     // -----------------------------------管理画面-----------------------------------
     // インデックス
     Route::get('admin/index', [App\Http\Controllers\Admin\AdminController::class, 'index'])->name('adminIndex');
-    
+
     // 職員一覧
     Route::get('admin/show_staff', [App\Http\Controllers\Admin\AdminController::class, 'showStaff'])->name('showStaff');
     Route::get('admin/staff_detail/{id}', [App\Http\Controllers\Admin\AdminController::class, 'showStaffDetail'])->name('showStaffDetail');
     Route::get('admin/search_staff', [App\Http\Controllers\Admin\AdminController::class, 'searchStaff'])->name('searchStaff');
-    
+
     // 職員登録
     Route::get('register', [App\Http\Controllers\Auth\RegisterController::class, 'showRegistrationForm'])->name('register');
     Route::post('exe_register', [App\Http\Controllers\Auth\RegisterController::class, 'create'])->name('create');
     // 職員評価
     Route::get('evaluation_staff/{id}', [App\Http\Controllers\Admin\AdminController::class, 'evaluationStaff'])->name('evaluationStaff');
     Route::patch('exe_evaluation_staff/{id}', [App\Http\Controllers\Admin\AdminController::class, 'exeEvaluationStaff'])->name('exeEvaluationStaff');
+    // 編集
+    Route::patch('exe_edit_evaluation_staff/{id}', [App\Http\Controllers\Admin\AdminController::class, 'exeEditEvaluationStaff'])->name('exeEditEvaluationStaff');
 
     // 職員削除
     Route::get('show_deleted', [App\Http\Controllers\Admin\AdminController::class, 'showStaffSoftDeleted'])->name('showStaffSoftDeleted');

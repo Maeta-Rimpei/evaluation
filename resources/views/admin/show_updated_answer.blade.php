@@ -7,7 +7,7 @@
         <form action="{{ route('exeUpdatedAnswer', $user_answer['id']) }}" method="post">
             @method('patch')
             @csrf
-            <p class="text-center mt-3"><strong>{{ '現在の回答' . $user_answer['answer'] }}</strong></p>
+            <p class="text-center mt-3"><strong>{{ '現在の回答' . ':' . $user_answer['answer'] }}</strong></p>
             <table class="mx-auto mt-5">
                 <tbody>
                     <tr>
@@ -26,7 +26,7 @@
                                     </select>
                                 </div>
                             </div>
-                        </td>    
+                        </td>
                         @else
                             <td>
                                 <textarea class="form-control" name="answer" cols="40" rows="3" required></textarea>
