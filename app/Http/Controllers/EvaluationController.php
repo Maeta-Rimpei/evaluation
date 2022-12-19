@@ -4,10 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\EvaRequest;
 use App\Models\Answer;
-use App\Models\Role;
+use App\Models\User;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Http\Request;
-use App\Models;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests;
 
@@ -15,7 +14,28 @@ class EvaluationController extends Controller
 {
     public function index()
     {
-        return view('home');
+        $user = \Auth::user();
+        $user_answers = $user->answers;
+        // dd($user['evaluation']);
+        return view('home', compact('user', 'user_answers'));
+    }
+    
+    public function confirmAnswers()
+    {
+        $user = \Auth::user();
+        $user_answers = $user->answers;
+        $user_questions = $user->questions;
+
+        return view('confirm_answers', compact('user', 'user_answers', 'user_questions'));
+    }
+    
+    public function confirmFeedback()
+    {
+        $user = \Auth::user();
+        $user_total_evaluation = $user->total_evaluation;
+        $user_evaluation = $user->evaluation;
+
+        return view('confirm_feedback', compact('user_total_evaluation', 'user_evaluation'));
     }
 
     public function evaluationForm()
