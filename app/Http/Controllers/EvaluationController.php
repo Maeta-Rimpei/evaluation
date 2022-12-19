@@ -19,7 +19,7 @@ class EvaluationController extends Controller
         // dd($user['evaluation']);
         return view('home', compact('user', 'user_answers'));
     }
-    
+
     public function confirmAnswers()
     {
         $user = \Auth::user();
@@ -28,14 +28,14 @@ class EvaluationController extends Controller
 
         return view('confirm_answers', compact('user', 'user_answers', 'user_questions'));
     }
-    
+
     public function confirmFeedback()
     {
         $user = \Auth::user();
         $user_total_evaluation = $user->total_evaluation;
         $user_evaluation = $user->evaluation;
 
-        return view('confirm_feedback', compact('user_total_evaluation', 'user_evaluation'));
+        return view('confirm_feedback', compact('user', 'user_total_evaluation', 'user_evaluation'));
     }
 
     public function evaluationForm()

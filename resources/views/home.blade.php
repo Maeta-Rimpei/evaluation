@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container">
-        <div class="card mx-auto" style="width: 60%;">
+        <div class="card mx-auto" style="width: 70%;">
             <div class="card-header">
                 <h3>【職員名】{{ $user['name'] }}</h3>
             </div>
@@ -24,7 +24,7 @@
             </table>
 
             <div class="d-flex flex-row">
-                <div class="btn-action">
+                <div class="btn-action" style="min-width: 30%;">
                     {{-- 回答データ配列の一つ目のanswerプロパティが空の場合の処理 --}}
                     @if (empty($user_answers[0]['answer']))
                         <div class="ms-2 mt-4">
@@ -32,8 +32,8 @@
                                 <button type="button" class="btn btn-outline-primary">回答はこちらから</button>
                             </a>
                         </div>
-                    @else
-                        {{-- 回答データ配列の一つ目のanswerプロパティが存在する場合の処理 --}}
+                    @elseif (empty($user_answers[0]['answer']) Route::has('confirm_feedback'))
+                       {{-- 回答データ配列の一つ目のanswerプロパティが存在する場合の処理 --}}
                         <div class="ms-2 mt-4">
                             <button type="button" class="btn btn-outline-primary disabled"><img class="me-1"
                                     src="{{ asset('storage/image/round_done_outline_black_24dp.png') }}" alt="done"
@@ -49,8 +49,8 @@
 
                     @if (!empty($user['evaluation']) and !empty($user['total_evaluation']))
                         <div class="ms-2 mb-3">
-                            <a href="{{route('confirmFeedback')}}">
-                                <button type="button" class="btn btn-primary">フィードバックを確認する</button>
+                            <a href="{{ route('confirmFeedback') }}">
+                                <button type="button" class="btn btn-primary my-2">フィードバックを確認する</button>
                             </a>
                         </div>
                     @endif
@@ -59,10 +59,10 @@
                     @if (empty($user['evaluation']) and empty($user['total_evaluation']))
                         <p class="ms-2 mt-2">まだ {{ $user['name'] }} さんへのフィードバックはありません。</p>
                     @else
-                        @yield('evalution')
+                    @yield('evaluation')
                     @endif
                 </div>
             </div>
         </div>
     </div>
-@endsection
+    @endsection
