@@ -7,7 +7,7 @@
         <form action="{{ route('exeUpdatedAnswer', $user_answer['id']) }}" method="post">
             @method('patch')
             @csrf
-            <p class="text-center mt-3"><strong>{{ '現在の回答' . ':' . $user_answer['answer'] }}</strong></p>
+            <p class="text-center mt-3"><strong>現在の回答:{{ $user_answer['answer'] }}</strong></p>
             <table class="mx-auto mt-5">
                 <tbody>
                     <tr>

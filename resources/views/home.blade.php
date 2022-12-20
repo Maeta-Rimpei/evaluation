@@ -2,12 +2,13 @@
 
 @section('content')
     <div class="container">
-        <div class="card mx-auto" style="width: 60%;">
+        <div class="card mx-auto" style="width: 70%;">
             <div class="card-header">
                 <h3>【職員名】{{ $user['name'] }}</h3>
             </div>
             <table class="table">
                 <thead>
+                    
                     <tr>
                         <th>【職員コード】</th>
                         <td>{{ $user['staff_id'] }}</td>
@@ -24,16 +25,16 @@
             </table>
 
             <div class="d-flex flex-row">
-                <div class="btn-action">
-                    {{-- 回答データ配列の一つ目のanswerプロパティが空の場合の処理 --}}
-                    @if (empty($user_answers[0]['answer']))
-                        <div class="ms-2 mt-4">
-                            <a href={{ route('evaluationForm') }}>
+                <div class="btn-action" style="min-width: 30%;">
+                    {{-- $user_answersの一つ目のanswerプロパティが空かつ、ルートがhomeの場合 --}}
+                    @if (empty($user_answers[0]['answer']) and Route::is('home'))
+                        <div class="ms-2 mt-2">
+                            <a href="{{ route('evaluationForm') }}">
                                 <button type="button" class="btn btn-outline-primary">回答はこちらから</button>
                             </a>
                         </div>
-                    @else
-                        {{-- 回答データ配列の一つ目のanswerプロパティが存在する場合の処理 --}}
+                        @elseif (!empty($user_answers[0]['answer']) or Route::is('confirmFeedback'))
+                        {{-- $user_answersの一つ目のanswerプロパティが存在するまたは、フィードバック閲覧時の場合 --}}
                         <div class="ms-2 mt-4">
                             <button type="button" class="btn btn-outline-primary disabled"><img class="me-1"
                                     src="{{ asset('storage/image/round_done_outline_black_24dp.png') }}" alt="done"
@@ -47,19 +48,27 @@
                         </div>
                     @endif
 
-                    @if (!empty($user['evaluation']) and !empty($user['total_evaluation']))
-                        <div class="ms-2 mb-3">
+                    @if (!empty($user['evaluation']) and !empty($user['total_evaluation']) and Route::is('home'))
+                        <div class="ms-2 my-2">
                             <a href="{{route('confirmFeedback')}}">
                                 <button type="button" class="btn btn-primary">フィードバックを確認する</button>
+                            </a>
+                        </div>
+                        @elseif (Route::is('confirmFeedback'))
+                        <div class="ms-2 my-2">
+                            <a href="{{route('home')}}">
+                                <button type="button" class="btn btn-secondary"><img class="me-1"
+                                    src="{{ asset('storage/image/outline_disabled_by_default_black_24dp.png') }}" alt="done"
+                                    style="width: 20px;">閉じる</button>
                             </a>
                         </div>
                     @endif
                 </div>
                 <div class="evaluation border-start ms-3">
                     @if (empty($user['evaluation']) and empty($user['total_evaluation']))
-                        <p class="ms-2 mt-2">まだ {{ $user['name'] }} さんへのフィードバックはありません。</p>
+                        <p class="ms-2 mt-2">{{ $user['name'] }} さんへのフィードバックはまだありません。</p>
                     @else
-                        @yield('evalution')
+                        @yield('evaluation')
                     @endif
                 </div>
             </div>

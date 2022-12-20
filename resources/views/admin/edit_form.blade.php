@@ -8,7 +8,6 @@
             @csrf
             @method('patch')
             <div>
-
                 <table class="mt-3">
                     <tbody>
                         <tr>
@@ -25,7 +24,6 @@
                             </th>
                             <td>{{ $question->question_id }}</td>
                         </tr>
-
                         <tr>
                             <th>
                                 <label for="content" class="mt-2 me-3" for="content">質問内容</label>

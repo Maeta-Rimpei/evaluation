@@ -90,12 +90,13 @@ class AdminController extends Controller
         $user = User::find($id);
         $evaluation = $request->only(['evaluation']);
         $user->update($evaluation);
-
+        
         return redirect()->route('evaluationStaff', $user->id)->with('evaluationUpdateMessage', 'フィードバックコメントを編集しました。');
     }
-
-    public function exeEditEvaluationStaff(Request $request)
+    
+    public function exeEditEvaluationStaff($id, Request $request)
     {
+        $user = User::find($id);
         $evaluation = $request->only(['evaluation']);
         $user->update($evaluation);
 

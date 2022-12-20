@@ -10,10 +10,8 @@
                 <div class="card-body">
                     <form method="POST" action={{ route('adminLogin') }}>
                         @csrf
-
                         <div class="row mb-3">
                             <label for="staff_id" class="col-md-4 col-form-label text-md-end">{{ '職員コード' }}</label>
-
                             <div class="col-md-6">
                                 <input id="staff_id" type="staff_id" class="form-control @error('staff_id') is-invalid @enderror" name="staff_id" required autocomplete="staff_id">
 
@@ -27,10 +25,8 @@
 
                         <div class="row mb-3">
                             <label for="password" class="col-md-4 col-form-label text-md-end">{{ 'パスワード' }}</label>
-
                             <div class="col-md-6">
                                 <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
-
                                 @error('password')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>

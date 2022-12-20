@@ -9,6 +9,7 @@
                 {{ session('createMessage') }}
             </div>
         @endif
+        
         <div class="form-contents">
             <form action={{ route('create') }} method="post">
                 @csrf
