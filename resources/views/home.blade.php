@@ -48,6 +48,7 @@
                         </div>
                     @endif
 
+
                     @if (!empty($user['evaluation']) and !empty($user['total_evaluation']) and Route::is('home'))
                         <div class="ms-2 my-2">
                             <a href="{{route('confirmFeedback')}}">
@@ -74,4 +75,4 @@
             </div>
         </div>
     </div>
-@endsection
+    @endsection

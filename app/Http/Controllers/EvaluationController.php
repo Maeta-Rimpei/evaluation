@@ -44,11 +44,12 @@ class EvaluationController extends Controller
             $user = \Auth::user();
         $user_total_evaluation = $user->total_evaluation;
         $user_evaluation = $user->evaluation;
+        
         } catch (\Throwable $e) {
             \Log::error($e);
             throw $e;
         }
-        
+    
         return view('confirm_feedback', compact('user', 'user_total_evaluation', 'user_evaluation'));
     }
 
