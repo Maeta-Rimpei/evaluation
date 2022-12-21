@@ -9,7 +9,7 @@ use App\Models\Admin;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\StaffCreateRequest;
 
 class RegisterController extends Controller
 {
@@ -44,23 +44,6 @@ class RegisterController extends Controller
     }
 
     /**
-     * Get a validator for an incoming registration request.
-     *
-     * @param  array  $data
-     * @return \Illuminate\Contracts\Validation\Validator
-     */
-    protected function validator(array $data)
-    {
-        return Validator::make($data, [
-            'staff_id' => ['required', 'max:255'],
-            'name' => ['required', 'string', 'max:255'],
-            'role_id' => ['required', 'int', 'max:1'],
-            'password' => ['required', 'string', 'min:6', 'confirmed'],
-            'password_confirmed' => ['required', 'string', 'min:6', 'confirmed'],
-        ]);
-    }
-
-    /**
      * 職員登録フォーム表示
      */
     protected function showRegistrationForm()
@@ -79,7 +62,7 @@ class RegisterController extends Controller
     /**
      * 職員登録フォーム表示
      */
-    protected function exeAdminRegistrationForm(RegisterRequest $request)
+    protected function exeAdminRegistrationForm(StaffCreateRequest $request)
     {
         Admin::create([
             'staff_id' => $request->staff_id,
@@ -98,7 +81,7 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \App\Models\User
      */
-    protected function create(RegisterRequest $request)
+    protected function create(StaffCreateRequest $request)
     {
         User::create([
             'staff_id' => $request->staff_id,

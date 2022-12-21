@@ -5,6 +5,7 @@
         <h2 class="text-center">管理者登録</h2>
         <p class="text-center" style="color: red;">※ こちらは管理者登録用フォームです。</p>
 
+        {{-- 登録完了メッセージ --}}
         @if (session('createAdminMessage'))
             <div class="alert alert-success text-center">
                 {{ session('createAdminMessage') }}
@@ -21,55 +22,95 @@
                                 <label class="mt-5 me-3" for="staff_id">職員コード</label>
                             </th>
                             <td>
-                                <input type="text" class="form-control mt-5 ms-5" name="staff_id" id="staff_id" required>
+                                <input type="text" class="form-control @error('staff_id') is-invalid @enderror mt-5 ms-5"
+                                    name="staff_id" value="{{ old('staff_id') }}" id="staff_id">
+                                @error('staff_id')
+                                    <span class="invalid-feedback ms-5" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
                             </td>
                         </tr>
+
                         <tr>
                             <th>
                                 <label class="mt-5 me-3" for="name">名前</label>
                             </th>
                             <td>
-                                <input type="text" class="form-control mt-5 ms-5" name="name" id="name" required>
+                                <input type="text" class="form-control @error('name') is-invalid @enderror mt-5 ms-5"
+                                    name="name" value="{{ old('name') }}" id="name">
+                                @error('name')
+                                    <span class="invalid-feedback ms-5" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
                             </td>
                         </tr>
+
                         <tr>
                             <th>
                                 <label class="mt-5 me-3" for="role_id">職位</label>
                             </th>
                             <td>
-                                <select class="form-select mt-5 ms-5" name="role_id" id="role_id"
-                                    aria-label="Default select example">
+                                <select class="form-select  @error('role_id') is-invalid @enderror mt-5 ms-5" name="role_id"
+                                    id="role_id" aria-label="Default select example">
                                     <option disabled>選択してください</option>
                                     @foreach (App\Consts\StaffPositionConsts::STAFF_LIST as $num => $position)
                                         <option value={{ $num }}>{{ $position }}</option>
                                     @endforeach
                                 </select>
+                                @error('role_id')
+                                    <span class="invalid-feedback ms-5" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
                             </td>
                         </tr>
+
                         <tr>
                             <th>
                                 <label class="mt-5 me-3" for="affiliation">所属</label>
                             </th>
                             <td>
-                                <input type="text" class="form-control mt-5 ms-5" name="affiliation" id="affiliation" required>
+                                <input type="text" class="form-control @error('affiliation') is-invalid @enderror mt-5 ms-5"
+                                    name="affiliation" value="{{ old('affiliation') }}" id="affiliation">
+                                @error('affiliation')
+                                    <span class="invalid-feedback ms-5" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
                             </td>
                         </tr>
+
                         <tr>
                             <th>
                                 <label class="mt-5 me-3" for="password">パスワード</label>
                             </th>
                             <td>
-                                <input type="password" class="form-control mt-5 ms-5" name="password" id="password" required>
+                                <input type="password"
+                                    class="form-control @error('password') is-invalid @enderror mt-5 ms-5" name="password"
+                                    id="password">
+                                @error('password')
+                                    <span class="invalid-feedback ms-5" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
                             </td>
                         </tr>
+
                         <tr>
                             <th>
                                 <label class="mt-5 me-3" for="password_confirmation">パスワード(確認)</label>
                             </th>
                             <td>
-                                <input type="password" class="form-control mt-5 ms-5" name="password_confirmation"
-                                    id="password_confirmation" required
-                                    @error('password_confirmation') is-invalid @enderror>
+                                <input type="password"
+                                    class="form-control @error('password_confirmation') is-invalid @enderror mt-5 ms-5"
+                                    name="password_confirmation" id="password_confirmation">
+                                @error('password_confirmation')
+                                    <span class="invalid-feedback ms-5" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
                             </td>
                         </tr>
                     </tbody>

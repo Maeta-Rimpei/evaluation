@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class EvaRequest extends FormRequest
+class AnswerRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,14 +24,14 @@ class EvaRequest extends FormRequest
     public function rules()
     {
         return [
-            'answer[]' => 'required'
+            'answer' => 'required'
         ];
     }
-
+    
     public function messages()
     {
         return [
-            'answer[].required' => '全ての問に回答してください'
+            'answer.required' => '変更後の回答を入力してください。'
         ];
     }
 }

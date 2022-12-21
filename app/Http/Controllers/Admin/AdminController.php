@@ -8,6 +8,8 @@ use App\Models\Admin;
 use App\Models\User;
 use App\Models\Answer;
 use Illuminate\Http\Request;
+use App\Http\Requests\AnswerRequest;
+use App\Http\Requests\QuestionCreateRequest;
 use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
@@ -194,7 +196,7 @@ class AdminController extends Controller
         return view('admin.show_create_question');
     }
 
-    public function exeCreateQuestion(Request $request)
+    public function exeCreateQuestion(QuestionCreateRequest $request)
     {
         $question = new Question();
         $inputs = $request->only(['content', 'category', 'role_id']);
@@ -435,7 +437,7 @@ class AdminController extends Controller
         return view('admin.show_updated_answer', compact('user_answer'));
     }
 
-    public function exeUpdatedAnswer($answer_id, Request $request)
+    public function exeUpdatedAnswer($answer_id, AnswerRequest $request)
     {
         $answer = $request->only(['answer']);
         $user_answer = Answer::find($answer_id);

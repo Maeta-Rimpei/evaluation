@@ -3,7 +3,7 @@
 @section('content')
     <h2 class="text-center">職員検索</h2>
 
-    <div class="container mt-3">
+    <div class="container mt-5">
         <div class="form-contents">
             <form action="{{ route('searchStaff') }}" method="GET">
                 @csrf
@@ -13,8 +13,9 @@
                             <th class="mt-3">
                                 <label class="me-3" for="name">職員名</label>
                             </th>
-                            <td>
-                                <input class="form-control ms-5" type="search" name="name" id="name" value="{{ $name }}">
+                            <td class="name-search d-flex flex-row position-relative ms-5">
+                                    <input class="form-control" type="search" name="name" id="name"
+                                    value="{{ $name }}" style="background: url( {{ asset('storage/image/baseline_search_black_24dp.png') }}) no-repeat center / auto 100%;">
                             </td>
                         </tr>
                         <tr>
@@ -33,7 +34,8 @@
                                 <select class="form-select mt-5 ms-5" name="affiliation" id="affiliation">
                                     <option value="">指定なし</option>
                                     @foreach ($user_affiliations as $user_affiliation)
-                                        <option value="{{ $user_affiliation->affiliation }}">{{ $user_affiliation->affiliation }}</option>
+                                        <option value="{{ $user_affiliation->affiliation }}">
+                                            {{ $user_affiliation->affiliation }}</option>
                                     @endforeach
 
                                 </select>
@@ -63,6 +65,7 @@
 
     {{-- 以下、検索結果 --}}
     <div class="container mt-5">
+        <h3>検索結果</h3>
         <table class="table">
             <thead>
                 <tr>
@@ -70,6 +73,7 @@
                     <th scope="col" style="width: 30%;" class="text-center">職員名</th>
                     <th scope="col" class="text-center">所属</th>
                     <th scope="col" class="text-center">職位</th>
+                    <th scope="col" class="text-center"></th>
                 </tr>
             </thead>
             @forelse ($search_staffs as $search_staff)
@@ -80,7 +84,11 @@
                     </td>
                     <td class="text-center">{{ App\Consts\StaffPositionConsts::STAFF_LIST[$search_staff->role_id] }}
                     </td>
-                    <td><a href={{ route('showStaffDetail', $search_staff->id) }}>回答結果</a></td>
+                    <td>
+                        <a href={{ route('showStaffDetail', $search_staff->id) }}>
+                            <button class="btn btn-outline-primary">回答結果</button>
+                        </a>
+                    </td>
                 </tr>
             @empty
                 <p class="mt-5 text-center">検索された職員は見つかりませんでした。</p>

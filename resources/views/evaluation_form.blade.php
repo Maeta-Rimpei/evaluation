@@ -6,26 +6,33 @@
         <div class="partition" style="width: 70%;"></div>
         <div class="d-flex flex-column">
             @foreach (App\Consts\StaffPositionConsts::STAFF_LIST as $auth_user->role => $position)
-            <div class="p-2">〇職名：{{ $position }}</div>
+                <div class="p-2">〇職名：{{ $position }}</div>
             @break;
-            @endforeach
-            <div class="p-2">〇所属：{{ $auth_user['affiliation'] }}</div>
-            <div class="p-2">〇氏名：{{ $auth_user['name'] }}</div>
-        </div>
+        @endforeach
+        <div class="p-2">〇所属：{{ $auth_user['affiliation'] }}</div>
+        <div class="p-2">〇氏名：{{ $auth_user['name'] }}</div>
     </div>
+</div>
 </div>
 
 <div class="container text-center">
     <p class="fs-4 mt-5">各項目についてご回答ください。</p>
     <p>
-        ※1.選択式の問については
+        ※1.選択式の問については、選択肢
         @foreach (App\Consts\AnswerOptionConsts::ANSWER_OPTION as $option)
-        {{ $option }}
+            {{ $option }}
         @endforeach
         からお選びください。
     </p>
     <p>※2.記述式の問については、文章形式で入力してお答えください。</p>
 </div>
+
+{{-- バリデーションエラーメッセージ --}}
+@error('answer[]')
+    <div class="alert alert-danger mx-auto" style="width: 60%;">
+        <p class="text-center">{{ $message }}</p>
+    </div>
+@enderror
 
 <form method="POST" action={{ route('evaluationStore') }}>
     @csrf
@@ -45,10 +52,10 @@
                         {{ $auth_user_question['content'] }}</td>
                     <td>
                         @if ($auth_user_question['category'] == 0)
-                        <select class="form-select" name="answer[]" aria-label="Default select example">
-                            <option disabled>クリックして選んでください</option>
-                                @foreach ((App\Consts\AnswerOptionConsts::ANSWER_OPTION) as $option)
-                                <option value="{{ $option }}">{{ $option }}</option>
+                            <select class="form-select @error('answer[]') is-invalid @enderror" name="answer[]" aria-label="Default select example">
+                                <option disabled>クリックして選んでください</option>
+                                @foreach (App\Consts\AnswerOptionConsts::ANSWER_OPTION as $option)
+                                    <option value="{{ $option }}">{{ $option }}</option>
                                 @endforeach
                             </select>
                         @else
@@ -60,17 +67,9 @@
         </tbody>
     </table>
 
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
 
-    <button type="submit" class="btn btn-primary ms-4 position-absolute start-50">回答する</button>
+
+    <button type="submit" class="btn btn-primary mt-4 position-absolute start-50">回答する</button>
 </form>
 </div>
 @endsection
