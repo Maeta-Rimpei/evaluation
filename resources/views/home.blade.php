@@ -21,6 +21,14 @@
                         <th>【職位】</th>
                         <td>{{ App\Consts\StaffPositionConsts::STAFF_LIST[$user['role_id']] }}</td>
                     </tr>
+                    <tr>
+                        <th></th>
+                        <td>
+                            <a href="{{ route('showChangePassword') }}">
+                                <button class="btn btn-secondary">パスワードを変更する</button>
+                            </a>
+                        </td>
+                    </tr>
                 </thead>
             </table>
 
@@ -30,7 +38,7 @@
                     @if (empty($user_answers[0]['answer']) and Route::is('home'))
                         <div class="ms-2 mt-2">
                             <a href="{{ route('evaluationForm') }}">
-                                <button type="button" class="btn btn-outline-primary">回答はこちらから</button>
+                                <button type="button" class="btn btn-outline-primary mb-2">回答はこちらから</button>
                             </a>
                         </div>
                         @elseif (!empty($user_answers[0]['answer']) or Route::is('confirmFeedback'))

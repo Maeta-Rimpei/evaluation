@@ -92,7 +92,8 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\EvaluationController::class, 'index'])->name('home');
 Route::get('/confirm_answers', [App\Http\Controllers\EvaluationController::class, 'confirmAnswers'])->name('confirmAnswers');
 Route::get('/confirm_feedback', [App\Http\Controllers\EvaluationController::class, 'confirmFeedback'])->name('confirmFeedback');
-
+Route::get('/show_change_password', [App\Http\Controllers\EvaluationController::class, 'showChangePassword'])->name('showChangePassword');
+Route::patch('/exe_change_password', [App\Http\Controllers\EvaluationController::class, 'exeChangePassword'])->name('exeChangePassword');
 
 // 回答フォーム
 Route::get('/evaluation_form', [App\Http\Controllers\EvaluationController::class, 'evaluationForm'])->name('evaluationForm');

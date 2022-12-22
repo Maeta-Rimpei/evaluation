@@ -55,7 +55,7 @@
                             <select class="form-select @error('answer[]') is-invalid @enderror" name="answer[]" aria-label="Default select example">
                                 <option disabled>クリックして選んでください</option>
                                 @foreach (App\Consts\AnswerOptionConsts::ANSWER_OPTION as $option)
-                                    <option value="{{ $option }}">{{ $option }}</option>
+                                    <option>{{ $option }}</option>
                                 @endforeach
                             </select>
                         @else
