@@ -9,15 +9,27 @@ use App\Models\User;
 use GrahamCampbell\ResultType\Success;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use PhpParser\Node\Stmt\Catch_;
 
 class EvaluationController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index()
     {
         try {
-            \Auth::checkExistAuthUser();
-            $user_answers = \Auth::user()->answers;
+            $user = Auth::user();
+            $user_answers = $user->answers;
         } catch (\Throwable $e) {
             \Log::error($e);
             throw $e;
@@ -29,7 +41,6 @@ class EvaluationController extends Controller
     public function confirmAnswers()
     {
         try {
-             
             $user = \Auth::user();
             $user_answers = $user->answers;
             $user_questions = $user->questions;
@@ -44,7 +55,6 @@ class EvaluationController extends Controller
     public function confirmFeedback()
     {
         try {
-             
             $user = \Auth::user();
             $user_total_evaluation = $user->total_evaluation;
             $user_evaluation = $user->evaluation;
@@ -64,15 +74,23 @@ class EvaluationController extends Controller
 
     public function exeChangePassword(PasswordRequest $request)
     {
-        
-        $user = \Auth::user();
-        if (!password_verify($request->current_password, $user->password)) {
-            return redirect()->route('showChangePassword')->with('alertDifferentPassword', 'パスワードが一致しません');
-        }
+        try {
+            DB::beginTransaction();
+            $user = \Auth::user();
+            if (!password_verify($request->current_password, $user->password)) {
+                return redirect()->route('showChangePassword')->with('alertDifferentPassword', 'パスワードが一致しません');
+            }
 
-        $new_password = $request->only(['password']);
-        $user->password = bcrypt($new_password['password']);
-        $user->save();
+            $new_password = $request->only(['password']);
+            $user->password = bcrypt($new_password['password']);
+            $user->save();
+            DB::commit();
+
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            \Log::error($e);
+            throw $e;
+        }
 
         return redirect()->route('showChangePassword')->with('successChangePassword', 'パスワードを変更しました');
     }
@@ -80,41 +98,52 @@ class EvaluationController extends Controller
     public function evaluationForm()
     {
         try {
-            \Auth::checkExistAuthUser();
-            $auth_user_questions = \Auth::user()->questions;
+            $user = \Auth::user();
+            $user_questions = \Auth::user()->questions;
 
         } catch (\Throwable $e) {
             \Log::error($e);
             throw $e;
         }
 
-        return view('evaluation_form', compact('auth_user_questions'));
+        return view('evaluation_form', compact('user', 'user_questions'));
     }
 
-    public function evaluationStore(Request $request)
+    public function evaluationStore(EvaRequest $request)
     {
-        
-        $auth_user = \Auth::user();
-        $auth_user_questions = $auth_user->questions;
-        $count = count($auth_user_questions);
+        try {
+            DB::beginTransaction();
+            $auth_user = \Auth::user();
+            $auth_user_questions = $auth_user->questions;
+            $count = count($auth_user_questions);
 
-        for ($i = 0; $i < $count; $i++) {
-            // question_idとuser_idを$requestに追加
-            $request->merge([
-                'question_id' => $auth_user_questions[$i]->id,
-                'user_id' => $auth_user->id
-            ]);
-            $data = $request->only(['answer', 'question_id', 'user_id']); //$request->all() ----> $request->answer[$i]  変更
-            // DB挿入
-            $answer = new Answer;
-            $answer->question_id = $data['question_id'];
-            $answer->user_id = $data['user_id'];
-            $answer->answer = $data['answer'][$i];
-            $answer->save();
+            for ($i = 0; $i < $count; $i++) {
+                // question_idとuser_idを$requestに追加
+                $request->merge([
+                    'question_id' => $auth_user_questions[$i]->id,
+                    'user_id' => $auth_user->id
+                ]);
+
+                $data = $request->only(['answer', 'question_id', 'user_id']); //$request->all() ----> $request->answer[$i]  変更
+                // DB挿入
+                $answer = new Answer;
+                $answer->question_id = $data['question_id'];
+                $answer->user_id = $data['user_id'];
+                $answer->answer = $data['answer'][$i];
+                $answer->save();
+                DB::commit();
+            }
+            
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            \Log::error($e);
+
+            throw $e;
         }
 
         return redirect()->route('evaluationCompleted');
     }
+
 
     public function evaluationCompleted()
     {

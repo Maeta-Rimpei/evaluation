@@ -50,19 +50,6 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    /**
-     * ユーザーのログインチェック
-     * 
-     * @return mixed
-     */
-    // public static function checkExistAuthUser()
-    // {
-    //     $auth_user = User::();
-    //     if ($auth_user == null) {
-    //         return view('login')->with('timeOutMessage', '一定時間が経過したためログアウトしました。再度ログインしてください。');
-    //     }
-    // }
-
     // Question Modelとのリレーション
     public function questions()
     {

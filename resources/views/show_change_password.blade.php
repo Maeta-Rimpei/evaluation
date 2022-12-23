@@ -16,7 +16,6 @@
 
 
         <form action="{{ route('exeChangePassword') }}" method="post">
-            @method('patch')
             @csrf
             <table class="mx-auto mt-5">
                 <tr>
@@ -73,8 +72,8 @@
             </div>
         </form>
         <a href="{{ route('home') }}">
-        <div class="button text-center mt-5">
-            <button class="btn btn-secondary">ホームへ戻る</button>
+            <div class="button text-center mt-5">
+                <button class="btn btn-secondary">ホームへ戻る</button>
         </a>
-        </div>
-    @endsection
+    </div>
+@endsection

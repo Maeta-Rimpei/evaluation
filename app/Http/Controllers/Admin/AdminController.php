@@ -7,6 +7,7 @@ use App\Models\Question;
 use App\Models\Admin;
 use App\Models\User;
 use App\Models\Answer;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Http\Requests\AnswerRequest;
 use App\Http\Requests\QuestionCreateRequest;
@@ -27,82 +28,119 @@ class AdminController extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->only('staff_id', 'password');
+        try {
+            $credentials = $request->only('staff_id', 'password');
 
-        if (\Auth::guard('admin')->attempt($credentials)) {
-            $request->session()->regenerate();
-            return redirect('admin/index');
+            if (\Auth::guard('admin')->attempt($credentials)) {
+                $request->session()->regenerate();
+                return redirect('admin/index');
+            }
+
+            return back()->withErrors([
+                'login_error' => '職員コードかパスワードが間違っています。',
+            ]);
+
+        } catch (\Throwable $e) {
+            \Log::error($e);
+            throw $e;
         }
-
-        return back()->withErrors([
-            'login_error' => '職員コードかパスワードが間違っています。',
-        ]);
     }
 
     public function logout(Request $request)
     {
-        \Auth::guard('admin')->logout();
-        $request->session()->invalidate(); // セッションの削除
-        $request->session()->regenerateToken(); // セッションの再生成（_token）
-        return redirect('admin/login');
+        try {
+            \Auth::guard('admin')->logout();
+            $request->session()->invalidate(); // セッションの削除
+            $request->session()->regenerateToken(); // セッションの再生成（_token）
+            return redirect('admin/login');
+        } catch (\Throwable $e) {
+            \Log::error($e);
+            throw $e;
+        }
     }
 
     // --------------------管理者画面操作関係----------------------
     public function showStaff()
     {
-        $users = User::get();
+        try {
+            $users = User::get();
+            return view('admin.staff', compact('users'));
 
-        return view('admin.staff', compact('users'));
+        } catch (\Throwable $e) {
+            \Log::error($e);
+            throw $e;
+        }
+
     }
 
     public function showStaffDetail($id)
     {
-        $user = User::find($id);
+        try {
+            $user = User::find($id);
+            $user_questions_answers = DB::table('users')
+                ->where('users.id', '=', $id)
+                ->where('answers.user_id', '=', $id)
+                ->select(
+                    'users.id as user_id',
+                    'questions.id as question_id',
+                    'questions.content',
+                    'questions.category',
+                    'answers.answer',
+                )
+                ->leftjoin('answers', 'users.id', '=', 'answers.user_id')
+                ->leftJoin('questions', 'questions.id', '=', 'answers.question_id')
+                ->get();
 
-        $user_questions_answers = DB::table('users')
-            ->where('users.id', '=', $id)
-            ->where('answers.user_id', '=', $id)
-            ->select(
-                'users.id as user_id',
-                'questions.id as question_id',
-                'questions.content',
-                'questions.category',
-                'answers.answer',
-            )
-            ->leftjoin('answers', 'users.id', '=', 'answers.user_id')
-            ->leftJoin('questions', 'questions.id', '=', 'answers.question_id')
-            ->get();
+            // $user_questions_answersをstdClassから配列化
+            $array_user_questions_answers = json_decode(json_encode($user_questions_answers), true);
+            // 解答を集計
+            $answers_count = array_count_values(array_column($array_user_questions_answers, 'answer'));
 
-        // $user_questions_answersをstdClassから配列化
-        $array_user_questions_answers = json_decode(json_encode($user_questions_answers), true);
-        // 解答を集計
-        $answers_count = array_count_values(array_column($array_user_questions_answers, 'answer'));
-
-        return view('admin.staff_detail', compact('user', 'array_user_questions_answers', 'answers_count'));
+            return view('admin.staff_detail', compact('user', 'array_user_questions_answers', 'answers_count'));
+        } catch (\Throwable $e) {
+            \Log::error($e);
+            throw $e;
+        }
     }
 
     public function evaluationStaff($id)
     {
-        $user = User::find($id);
-        return view('admin.evaluation_staff', compact('user'));
+        try {
+            $user = User::find($id);
+            return view('admin.evaluation_staff', compact('user'));
+        } catch (\Throwable $e) {
+            \Log::error($e);
+            throw $e;
+        }
+
     }
 
     public function exeEvaluationStaff($id, Request $request)
     {
-        $user = User::find($id);
-        $evaluation = $request->only(['evaluation']);
-        $user->update($evaluation);
-        
-        return redirect()->route('evaluationStaff', $user->id)->with('evaluationUpdateMessage', 'フィードバックコメントを編集しました。');
+        try {
+            DB::beginTransaction();
+            $user = User::find($id);
+            $evaluation = $request->only(['evaluation']);
+            $user->save();
+            DB::commit();
+            return redirect()->route('evaluationStaff', $user->id)->with('evaluationMessage', 'フィードバックコメントを編集しました。');
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            Log::error($e);
+            throw $e;
+        }
     }
-    
+
     public function exeEditEvaluationStaff($id, Request $request)
     {
-        $user = User::find($id);
-        $evaluation = $request->only(['evaluation']);
-        $user->update($evaluation);
-
-        return redirect()->route('evaluationStaff', $user->id)->with('evaluationMessage', 'フィードバックコメントを編集しました。');
+        try {
+            $user = User::find($id);
+            $evaluation = $request->only(['evaluation']);
+            $user->update($evaluation);
+            return redirect()->route('evaluationStaff', $user->id)->with('evaluationUpdateMessage', 'フィードバックコメントを編集しました。');
+        } catch (ModelNotFoundException $e) {
+            throw $e;
+        }
     }
 
     public function showStaffSoftDeleted()
@@ -417,7 +455,7 @@ class AdminController extends Controller
             ->leftJoin('questions', 'questions.id', '=', 'answers.question_id')
             ->get()->toArray();
 
-            $array_user_questions_answers = json_decode(json_encode($user_questions_answers), true);
+        $array_user_questions_answers = json_decode(json_encode($user_questions_answers), true);
 
         return view('admin.show_part_edit_answer', compact('user', 'array_user_questions_answers'));
     }
