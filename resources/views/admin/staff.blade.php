@@ -4,14 +4,21 @@
     <h2 class="text-center mb-3">職員一覧</h2>
 
     <a class="mb-2" style="text-decoration: none;" href="{{ route('register') }}">
-        <button type="button" class="btn btn-primary mb-3 me-2">職員登録</button>
-        </a>
+        <x-utility-button class="primary mb-3 me-2" icon="fa-solid fa-user-plus me-2">
+            職員登録
+        </x-utility-button>
+    </a>
     <a style="text-decoration: none;" href="{{ route('searchStaff') }}">
-        <button type="button" class="btn btn-secondary mb-3 me-2">職員を検索</button>
+        <x-utility-button class="secondary mb-3 me-2" icon="fa-sharp fa-solid fa-magnifying-glass me-2">
+            職員を検索
+        </x-utility-button>
     </a>
     <a style="text-decoration: none;" class="mb-2" href="{{ route('showStaffSoftDeleted') }}">
-        <button type="button" class="btn btn-danger mb-3">職員削除</button>
+        <x-utility-button class="danger mb-3" icon="fa-solid fa-user-minus me-2">
+            職員削除
+        </x-utility-button>
     </a>
+    
     <table class="table table-striped">
         <thead>
             <tr>
@@ -40,9 +47,11 @@
                 <td></td>
                 <td>
                     <a href={{ route('showStaffDetail', $user['id']) }}>
-                    <button class="btn btn-outline-primary">回答結果</button>
-                </a>
-            </td>
+                        <x-utility-button class="outline-primary">
+                            回答結果
+                        </x-utility-button>
+                    </a>
+                </td>
             </tr>
             @endforeach
         </tbody>

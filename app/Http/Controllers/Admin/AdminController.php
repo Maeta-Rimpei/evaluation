@@ -126,7 +126,7 @@ class AdminController extends Controller
             return redirect()->route('evaluationStaff', $user->id)->with('evaluationMessage', 'フィードバックコメントを編集しました。');
         } catch (\Throwable $e) {
             DB::rollBack();
-            Log::error($e);
+            \Log::error($e);
             throw $e;
         }
     }

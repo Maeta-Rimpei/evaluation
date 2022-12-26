@@ -15,8 +15,8 @@
                             </th>
                             <td class="name-search d-flex flex-row ms-5" style="position: relative;">
                                 <div class="search-form" style="">
-                                    <input class="form-control" type="search" name="name" id="name"
-                                    value="{{ $name }}" style="background: url( {{ asset('storage/image/baseline_search_black_24dp.png') }}) no-repeat; background-position: 5% 50%;">
+                                    <input class="form-control fas" type="search" name="name" id="name"
+                                    value="{{ $name }}">
                                 </div>
                             </td>
                         </tr>

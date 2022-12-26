@@ -36,7 +36,19 @@
                     <td></td>
                     <td> </td>
                     <td>
-                        <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                        @component('components.modal-and-delete-button')
+                        @slot('icon', 'fa-solid fa-user-minus me-2')
+                        @slot('dataBsToggle', 'modal')
+                        @slot('dataBsTarget', "#{{ 'modal' . $admin[staff_id] }}")
+                        @slot('id', "{{ 'modal' . $admin[staff_id] }}")
+                        @slot('href', "{{ route('exeAdminSoftDeleted', $admin[id]) }}")
+                        @slot('title', '確認：削除しようとしています')
+                        @slot('body', "{{ $admin[name] }}さんを本当に削除しますか？")
+                        @endslot
+                        @endcomponent
+
+                        
+                        {{-- <button type="button" class="btn btn-danger" data-bs-toggle="modal"
                             data-bs-target="#{{ 'modal' . $admin['staff_id'] }}">
                             削除する
                         </button>
@@ -63,7 +75,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                     </td>
                 </tr>
             @endforeach
