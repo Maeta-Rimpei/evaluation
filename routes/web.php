@@ -57,7 +57,7 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::get('/search_admin', [App\Http\Controllers\Admin\AdminController::class, 'searchAdmin'])->name('searchAdmin');
 
     // 管理者登録
-    Route::get('/admin_register', [App\Http\Controllers\Auth\RegisterController::class, 'showAdminRegistrationForm'])->name('adminRegister');
+    Route::get('/admin_register', [App\Http\Controllers\Auth\RegisterController::class, 'showAdminRegistrationForm'])->name('showAdminRegister');
     Route::post('/exe_register_admin', [App\Http\Controllers\Auth\RegisterController::class, 'exeAdminRegistrationForm'])->name('exeAdminRegister');
     // 管理者削除
     Route::get('/show_deleted_admin', [App\Http\Controllers\Admin\AdminController::class, 'showAdminSoftDeleted'])->name('showAdminSoftDeleted');

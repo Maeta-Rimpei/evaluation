@@ -37,8 +37,8 @@
                                 <label class="mt-5 me-3" for="name">名前</label>
                             </th>
                             <td>
-                                <input type="text" class="form-control @error('name') is-invalid @enderror mt-5 ms-5"
-                                    name="name" value="{{ old('name') }}" id="name">
+                                <input type="text" class="form-control  @error('name') is-invalid @enderror mt-5 ms-5"
+                                    name="name" value="{{ old('name') }}" placeholder="登録する方の名前を入力" id="name" >
                                 @error('name')
                                     <span class="invalid-feedback ms-5" role="alert">
                                         <strong>{{ $message }}</strong>

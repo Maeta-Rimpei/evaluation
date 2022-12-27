@@ -41,40 +41,14 @@
                 <td></td>
                 <td>
                     {{-- 編集ボタン --}}
-                    <a href={{ route('showPartEditAnswer', $user['id']) }}>
-                        <button class="btn btn-success" type="button">編集</button>
+                        <x-utility-button href="{{ route('showPartEditAnswer', $user['id']) }}" class="success" icon="fa-regular fa-pen-to-square">
+                        編集
+                        </x-utility-button>
                     </a>
                 </td>
                 <td>
                     {{-- 一括削除ボタン --}}
-                    <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                    data-bs-target="#{{ 'modal' . $user['staff_id'] }}">回答を一括削除</button>
-
-                {{-- 一括削除 Modal --}}
-                <div class="modal fade" id="{{ 'modal' . $user['staff_id'] }}" tabindex="-1"
-                    aria-labelledby="modalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="modalLabel">確認：削除しようとしています</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                    aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                {{ $user['name'] }}さんの回答を全て削除してもよろしいですか？
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary"
-                                    data-bs-dismiss="modal">キャンセル</button>
-                                <a href={{ route('exeAllDeletedAnswer', $user['id']) }}>
-                                    <button type="button" class="btn btn-danger">削除する</button>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </td>
-        </tr>
+                     <x-modal-and-delete-button type="button" buttonClass="danger" data-bs-toggle="modal" data-bs-target="#{{ 'modal' . $user['staff_id'] }}" icon="fa-solid fa-trash" id="{{ 'modal' . $user['staff_id'] }}" title="確認：削除しようとしています" body="{{ $user['name'] }}さんの回答を本当に削除しますか？" href="{{ route('exeAllDeletedAnswer', $user['id']) }}"></x-modal-and-delete-button>
             @endforeach
         </tbody>
     </table>

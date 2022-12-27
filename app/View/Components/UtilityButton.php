@@ -8,6 +8,8 @@ class UtilityButton extends Component
 {
     public $label;
 
+    public $href;
+
     public $type;
 
     public $class;
@@ -24,10 +26,11 @@ class UtilityButton extends Component
      *  
      * @return void
      */
-    public function __construct($label = null, $type = 'button', $class = '', $icon = null)
+    public function __construct($label = null, $href = null, $type = 'button', $class = '', $icon = null)
     {
-        $this->type = $type;
         $this->label = $label;
+        $this->href = $href;
+        $this->type = $type;
         $this->class = $class;
         $this->icon = $icon;
     }

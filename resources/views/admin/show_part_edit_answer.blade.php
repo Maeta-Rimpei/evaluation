@@ -18,9 +18,9 @@
             <thead>
                 <tr>
                     <th class="text-center" scope="col" style="width: 5%">質問ID</th>
-                    <th class="text-center" scope="col" style="width: 50%">質問内容</th>
+                    <th class="text-center" scope="col" style="width: 45%">質問内容</th>
                     <th class="text-center" scope="col" style="width: 25%">回答</th>
-                    <th class="text-center" scope="col" style="width: 10%"></th>
+                    <th class="text-center" scope="col" style="width: 15%"></th>
                 </tr>
             </thead>
             <tbody>
@@ -32,9 +32,9 @@
                     <td class="text-center">{{ $array_user_question_answer['answer'] }}</td>
                     {{-- 修正ボタン --}}
                             <td>
-                                <a href="{{ route('showUpdatedAnswer', $array_user_question_answer['answer_id']) }}">
-                                    <button type="button" class="btn btn-success">修正</button>
-                                </a>
+                                <x-utility-button href="{{ route('showUpdatedAnswer', $array_user_question_answer['answer_id']) }}" class="success" icon="fa-regular fa-pen-to-square">
+                                    修正する
+                                </x-utility-button>
                             </td>
                         </tr>
                         @endforeach

@@ -49,9 +49,9 @@
             @if (!empty($array_user_questions_answers))
             <div class="eva-btn text-center mt-5">
                 <a href="{{ route('evaluationStaff', $user['id']) }}">
-                    <x-all-button class="outline-primary" icon="fa-solid fa-comment-dots me-2">
+                    <x-utility-button class="outline-primary" icon="fa-solid fa-comment-dots me-2">
                         {{ $user['name'] . 'さんへのフィードバックを作成' }}
-                    </x-all-button>
+                    </x-utility-button>
                 </a>
             </div>
             @endif

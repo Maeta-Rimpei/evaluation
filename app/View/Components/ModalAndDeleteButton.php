@@ -20,6 +20,10 @@ class ModalAndDeleteButton extends Component
     //Modal関係変数
     public $id;
 
+    public $title;
+
+    public $body;
+
     public $href;
 
     /**
@@ -27,7 +31,17 @@ class ModalAndDeleteButton extends Component
      *
      * @return void
      */
-    public function __construct($type='button', $buttonClass='danger', $icon=null, $dataBsToggle, $dataBsTarget, $id, $href)
+    public function __construct(
+        $type = 'button',
+        $buttonClass = 'danger',
+        $icon = null,
+        $dataBsToggle,
+        $dataBsTarget,
+        $id,
+        $title,
+        $body,
+        $href
+    )
     {
         $this->type = $type;
         $this->buttonClass = $buttonClass;
@@ -35,6 +49,8 @@ class ModalAndDeleteButton extends Component
         $this->dataBsToggle = $dataBsToggle;
         $this->dataBsTarget = $dataBsTarget;
         $this->id = $id;
+        $this->title = $title;
+        $this->body = $body;
         $this->href = $href;
     }
 

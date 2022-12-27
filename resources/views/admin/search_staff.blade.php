@@ -9,26 +9,24 @@
                 @csrf
                 <table class="mt-3 mx-auto">
                     <tbody>
-                        <tr>
-                            <th class="mt-3">
-                                <label class="me-3" for="name">職員名</label>
-                            </th>
-                            <td class="name-search d-flex flex-row ms-5" style="position: relative;">
-                                <div class="search-form" style="">
-                                    <input class="form-control fas" type="search" name="name" id="name"
-                                    value="{{ $name }}">
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>
-                                <label class="mt-5 me-3" for="staff_id">職員コード</label>
-                            </th>
-                            <td>
-                                <input class="form-control mt-5 ms-5" name="staff_id" id="staff_id">
-                            </td>
-                        </tr>
-                        <tr>
+                        @php
+                            $label = '職員名';
+                        @endphp
+                        <x-searchBox :label=$label name="name" value="{{ $name }}"></x-searchBox>
+
+                        @php
+                            $label = '職員コード';
+                        @endphp
+                        <x-searchBox :label=$label name="staff_id" value="{{ $staff_id }}"></x-searchBox>
+                        
+
+                        @php
+                            $label = '所属';
+                            $options = array_values($user_affiliations);
+                        @endphp
+
+                        <x-selectBox :label=$label name="affiliation" :options=$options></x-searchBox>
+                        {{-- <tr>
                             <th>
                                 <label class="mt-5 me-3" for="affiliation">所属</label>
                             </th>
@@ -42,7 +40,7 @@
 
                                 </select>
                             </td>
-                        </tr>
+                        </tr> --}}
                         <tr>
                             <th>
                                 <label class="mt-5 me-3" for="role_id">職位</label>

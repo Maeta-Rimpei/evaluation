@@ -310,8 +310,11 @@ class AdminController extends Controller
         $affiliation = $request->input('affiliation');
         $role_id = $request->input('role');
 
-        $user_affiliations = User::get('affiliation');
+        $affiliations = User::get('affiliation')->toArray();
+        $user_affiliations = array_column($affiliations, 'affiliation');
+        // dd($affiliations);
 
+        // dd($user_affiliations);
         $query = User::query();
 
         if (isset($name)) {
