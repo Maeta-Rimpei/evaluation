@@ -53,7 +53,7 @@ class User extends Authenticatable
 
     /**
      * usersテーブルのデータを全件取得
-     * 
+     *
      * @return // collection
      */
     public function getAllUsers()
@@ -64,8 +64,8 @@ class User extends Authenticatable
     /**
      * 特定のユーザーを取得
      * @param int $id user_id
-     * 
-     * @return App\Models\User;
+     *
+     * @return App\Models\User
      */
     public function getUser(int $id)
     {
@@ -74,9 +74,9 @@ class User extends Authenticatable
 
     /**
      * ユーザーに関係する質問と回答を取得
-     * @param int $id 
-     * 
-     * @return //collection
+     * @param int $id
+     *
+     * @return collection
      */
     public function getQuestionsAndAnswers(int $id)
     {
@@ -99,15 +99,13 @@ class User extends Authenticatable
     /**
      * StdClassオブジェクトを配列に変換
      * @param // ex. collection
-     * 
+     *
      * @return array
      */
     public function conversionToArray($array)
     {
         return json_decode(json_encode($array), true);
     }
-
-
 
     // Question Modelとのリレーション
     public function questions()

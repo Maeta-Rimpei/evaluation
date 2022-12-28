@@ -90,20 +90,8 @@ class AdminController extends Controller
     public function showStaffDetail($id)
     {
         try {
-            $user = User::findOrFail($id);
-            $user_questions_answers = DB::table('users')
-                ->where('users.id', '=', $id)
-                ->where('answers.user_id', '=', $id)
-                ->select(
-                    'users.id as user_id',
-                    'questions.id as question_id',
-                    'questions.content',
-                    'questions.category',
-                    'answers.answer',
-                )
-                ->leftJoin('answers', 'users.id', '=', 'answers.user_id')
-                ->leftJoin('questions', 'questions.id', '=', 'answers.question_id')
-                ->get();
+            $user = $this->user->getUser($id);
+            $user_questions_answers = getQuestionsAndAnswers($id);
 
             // $user_questions_answersをstdClassから配列化
             $array_user_questions_answers = $this->user->conversionToArray($user_questions_answers);
@@ -170,7 +158,6 @@ class AdminController extends Controller
     public function exeStaffSoftDeleted($id)
     {
         try {
-
             $user = $this->user->getUserOrFail($id);
             $user->delete();
             return redirect()->route('showStaffSoftDeleted')->with('deleteMessage', '削除しました。');
@@ -431,7 +418,6 @@ class AdminController extends Controller
     public function searchAdmin(Request $request)
     {
         try {
-
             $name = $request->input('name');
             $staff_id = $request->input('staff_id');
             $affiliation = $request->input('affiliation');
@@ -483,7 +469,7 @@ class AdminController extends Controller
     public function showEditAnswer()
     {
         try {
-            $users = User::get();
+            $users = $this->user->getAllUsers();
 
             return view('admin.show_edit_answer', compact('users'));
         } catch (\Throwable $e) {
@@ -513,24 +499,9 @@ class AdminController extends Controller
     public function showPartEditAnswer($id)
     {
         try {
-
-            $user = User::findOrFail($id);
-
-            $user_questions_answers = DB::table('users')
-                ->where('answers.user_id', '=', $id)
-                ->select(
-                    'users.id as user_id',
-                    'questions.id as question_id',
-                    'questions.content',
-                    'questions.category',
-                    'answers.id as answer_id',
-                    'answers.answer',
-                )
-                ->leftJoin('answers', 'users.id', '=', 'answers.user_id')
-                ->leftJoin('questions', 'questions.id', '=', 'answers.question_id')
-                ->get()->toArray();
-
-            $array_user_questions_answers = json_decode(json_encode($user_questions_answers), true);
+            $user = $this->user->getUser($id);
+            $user_questions_answers = $this->user->getQuestionsAndAnswers($id);
+            $array_user_questions_answers = $this->user->conversionToArray($user_questions_answers);
 
             return view('admin.show_part_edit_answer', compact('user', 'array_user_questions_answers'));
         } catch (ModelNotFoundException $e) {
@@ -544,7 +515,6 @@ class AdminController extends Controller
     public function exePartDeletedAnswer($answer_id)
     {
         try {
-
             $user_answer = Answer::findOrFail($answer_id);
             $user_answer->destroy($answer_id);
 
@@ -558,7 +528,6 @@ class AdminController extends Controller
     public function showUpdatedAnswer($answer_id)
     {
         try {
-
             $user_answer = Answer::findOrFail($answer_id);
 
             return view('admin.show_updated_answer', compact('user_answer'));
