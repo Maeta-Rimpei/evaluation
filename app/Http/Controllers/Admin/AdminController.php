@@ -226,7 +226,7 @@ class AdminController extends Controller
         try {
             $std_role = $this->question->getRoleIdByQuestionId($question_id);
         // 中間テーブルを削除→onDeleteCascadeによりリレーション先のquestionsレコードも削除
-        $question = Question::find($question_id);
+        $question = $this->question->getQuestion($question_id);
         $question->users()->detach();
 
             return redirect()->route('showDetailQuestionEdit', $std_role->role_id)
@@ -248,17 +248,17 @@ class AdminController extends Controller
     {
         try {
             DB::beginTransaction();
-            $question = new Question();
+            // $question = new Question();
             $inputs = $request->only(['content', 'category', 'role_id']);
 
-            $question->create([
+            $this->question->create([
                 'content' => $inputs['content'],
                 'category' => $inputs['category'],
             ]);
 
             // 184～187行目で挿入したquestionのidを取得
-            $question_id = $question->latest('id')->first()->id;
-            $new = $question->findOrFail($question_id);
+            $question_id = $this->question->latest('id')->first()->id;
+            $new = $this->question->findOrFail($question_id);
             // 中間テーブルに挿入
             $new->users()->attach($inputs['role_id']);
             DB::commit();
@@ -323,6 +323,7 @@ class AdminController extends Controller
     /**
      * 職員検索
      * @param Request $request
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function searchStaff(Request $request)
@@ -380,7 +381,7 @@ class AdminController extends Controller
     public function showAdminSoftDeleted()
     {
         try {
-            $admins = Admin::get();
+            $admins = $this->admin->getAllAdmins();
 
             return view('admin.show_deleted_admin', compact('admins'));
         } catch (\Throwable $e) {
@@ -392,7 +393,7 @@ class AdminController extends Controller
     public function exeAdminSoftDeleted($id)
     {
         try {
-            $admin = Admin::findOrFail($id);
+            $admin = $this->admin->getAdmin($id);
             $admin->delete();
 
             return redirect()->route('showAdminSoftDeleted')->with('deleteMessage', '削除しました。');
@@ -405,8 +406,7 @@ class AdminController extends Controller
     public function showAdmin()
     {
         try {
-
-            $admins = Admin::get();
+            $admins = $this->admin->getAllAdmins();
 
             return view('admin.admin', compact('admins'));
         } catch (\Throwable $e) {
@@ -502,7 +502,7 @@ class AdminController extends Controller
             $user = $this->user->getUser($id);
             $user_questions_answers = $this->user->getQuestionsAndAnswers($id);
             $array_user_questions_answers = $this->user->conversionToArray($user_questions_answers);
-
+// dd($array_user_questions_answers);
             return view('admin.show_part_edit_answer', compact('user', 'array_user_questions_answers'));
         } catch (ModelNotFoundException $e) {
             throw $e;
@@ -515,7 +515,7 @@ class AdminController extends Controller
     public function exePartDeletedAnswer($answer_id)
     {
         try {
-            $user_answer = Answer::findOrFail($answer_id);
+            $user_answer = $this->answer->getAnswer($answer_id);
             $user_answer->destroy($answer_id);
 
             return redirect()->route('showPartEditAnswer')->with('partDeleteAnswerMessage', '選択した回答を削除しました。');

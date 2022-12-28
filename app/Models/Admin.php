@@ -23,4 +23,25 @@ class Admin extends Authenticatable
     protected $hidden = [
         'password',
     ];
+
+    /**
+     * adminsテーブルから全ての情報を取得
+     *
+     * @return collection
+     */
+    public function getAllAdmins()
+    {
+        return $this->get();
+    }
+
+    /**
+     * 特定のadminを取得
+     * @param int $id
+     *
+     * @return App\Models\Admin
+     */
+    public function getAdmin(int $id)
+    {
+        return findOrFail($id);
+    }
 }

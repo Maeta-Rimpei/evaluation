@@ -89,6 +89,7 @@ class User extends Authenticatable
                 'questions.id as question_id',
                 'questions.content',
                 'questions.category',
+                'answers.id as answer_id',
                 'answers.answer',
             )
             ->leftJoin('answers', 'users.id', '=', 'answers.user_id')

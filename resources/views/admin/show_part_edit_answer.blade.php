@@ -25,19 +25,20 @@
             </thead>
             <tbody>
                 @foreach ($array_user_questions_answers as $array_user_question_answer)
-
-                <tr>
-                    <th class="text-center">{{ $array_user_question_answer['question_id'] }}</th>
-                    <td>{{ $array_user_question_answer['content'] }}</td>
-                    <td class="text-center">{{ $array_user_question_answer['answer'] }}</td>
-                    {{-- 修正ボタン --}}
-                            <td>
-                                <x-utility-button href="{{ route('showUpdatedAnswer', $array_user_question_answer['answer_id']) }}" class="success" icon="fa-regular fa-pen-to-square">
-                                    修正する
-                                </x-utility-button>
-                            </td>
-                        </tr>
-                        @endforeach
+                    <tr>
+                        <th class="text-center">{{ $array_user_question_answer['question_id'] }}</th>
+                        <td>{{ $array_user_question_answer['content'] }}</td>
+                        <td class="text-center">{{ $array_user_question_answer['answer'] }}</td>
+                        {{-- 修正ボタン --}}
+                        <td>
+                            <x-utility-button
+                                href="{{ route('showUpdatedAnswer', $array_user_question_answer['answer_id']) }}"
+                                class="success" icon="fa-regular fa-pen-to-square">
+                                修正する
+                            </x-utility-button>
+                        </td>
+                    </tr>
+                @endforeach
             </tbody>
         </table>
     </div>
