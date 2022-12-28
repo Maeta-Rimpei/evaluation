@@ -30,39 +30,20 @@
                         <th class="text-center">{{ $question->question_id }}</th>
                         <td>{{ $question->content }}</td>
                         <td class="text-center">
-                            <a href={{ route('editForm', $question->question_id) }}>
-                                <button type="button" class="btn btn-success">編集</button>
-                            </a>
+
+                            <x-utility-button href="{{ route('editForm', $question->question_id) }}"
+                                class="success" icon="fa-regular fa-pen-to-square">
+                                編集
+                            </x-utility-button>
                         </td>
                         <td class="text-center">
-                            <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                                data-bs-target="#{{ 'modal' . $question->question_id }}">
-                                削除
-                            </button>
-                            <p></p>
-                            <!-- モーダル -->
-                            <div class="modal fade" id="{{ 'modal' . $question->question_id }}" tabindex="-1"
-                                aria-labelledby="modalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="modalLabel">確認：削除しようとしています</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <strong>{{ mb_substr($question->content, 0, 10, 'UTF-8') }}......</strong>この質問を本当に削除しますか？
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary"
-                                                data-bs-dismiss="modal">キャンセル</button>
-                                            <a href={{ route('exeQuestionDestroyed', $question->question_id) }}>
-                                                <button type="button" class="btn btn-danger">削除する</button>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <x-modal-and-delete-button
+                            type="button" buttonClass="danger" data-bs-toggle="modal"
+                            data-bs-target="#{{ 'modal' . $question->question_id }}"
+                            icon="fa-solid fa-trash" id="{{ 'modal' . $question->question_id }}" title="確認：削除しようとしています"
+                            body="{{ mb_substr($question->content, 0, 10, 'UTF-8') }}......この質問を本当に削除しますか？"
+                            href="{{ route('exeQuestionDestroyed', $question->question_id) }}">
+                        </x-modal-and-delete-button>
                         </td>
                     </tr>
                 @endforeach

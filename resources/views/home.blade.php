@@ -6,9 +6,9 @@
             <div class="card-header">
                 <h3>【職員名】{{ $user['name'] }}</h3>
             </div>
-            <table class="table">
+            <table class="table mb-0">
                 <thead>
-                    
+
                     <tr>
                         <th>【職員コード】</th>
                         <td>{{ $user['staff_id'] }}</td>
@@ -24,58 +24,57 @@
                     <tr>
                         <th></th>
                         <td>
-                            <a href="{{ route('showChangePassword') }}">
-                                <button class="btn btn-secondary">パスワードを変更する</button>
-                            </a>
+                            <x-utility-button href="{{ route('showChangePassword') }}" class="secondary"
+                                icon="fa-solid fa-pen-to-square">
+                              パスワードを変更する
+                            </x-utility-button>
                         </td>
                     </tr>
                 </thead>
             </table>
 
             <div class="d-flex flex-row">
-                <div class="btn-action" style="min-width: 30%;">
+                <div class="btn-action" style="min-width: 35%;">
                     {{-- $user_answersの一つ目のanswerプロパティが空かつ、ルートがhomeの場合 --}}
                     @if (empty($user_answers[0]['answer']) and Route::is('home'))
                         <div class="ms-2 mt-2">
-                            <a href="{{ route('evaluationForm') }}">
-                                <button type="button" class="btn btn-outline-primary mb-2">回答はこちらから</button>
-                            </a>
+                            <x-utility-button href="{{ route('evaluationForm') }}" class="outline-primary mb-2"
+                                icon="fa-solid fa-pen">
+                                回答はこちらから
+                            </x-utility-button>
                         </div>
-                        @elseif (!empty($user_answers[0]['answer']) or Route::is('confirmFeedback'))
+                    @elseif (!empty($user_answers[0]['answer']) or Route::is('confirmFeedback'))
                         {{-- $user_answersの一つ目のanswerプロパティが存在するまたは、フィードバック閲覧時の場合 --}}
                         <div class="ms-2 mt-4">
-                            <button type="button" class="btn btn-outline-primary disabled"><img class="me-1"
-                                    src="{{ asset('storage/image/round_done_outline_black_24dp.png') }}" alt="done"
-                                    style="width: 20px;"> 回答済です</button>
+                            <x-utility-button class="outline-primary disabled" icon="fa-solid fa-check">
+                                回答済です
+                            </x-utility-button>
                         </div>
 
                         <div class="ms-2 my-3">
-                            <a href="{{ route('confirmAnswers') }}">
-                                <button type="button" class="btn btn-info">自分の回答を確認する</button>
-                            </a>
+                            <x-utility-button href="{{ route('confirmAnswers') }}" class="info" icon="fa-solid fa-eye">
+                                自分の回答を確認
+                            </x-utility-button>
                         </div>
                     @endif
-
 
                     @if (!empty($user['evaluation']) and !empty($user['total_evaluation']) and Route::is('home'))
                         <div class="ms-2 my-2">
-                            <a href="{{route('confirmFeedback')}}">
-                                <button type="button" class="btn btn-primary">フィードバックを確認する</button>
-                            </a>
+                            <x-utility-button href="{{ route('confirmFeedback') }}" icon="fa-solid fa-eye">
+                                フィードバックを確認
+                            </x-utility-button>
                         </div>
-                        @elseif (Route::is('confirmFeedback'))
+                    @elseif (Route::is('confirmFeedback'))
                         <div class="ms-2 my-2">
-                            <a href="{{route('home')}}">
-                                <button type="button" class="btn btn-secondary"><img class="me-1"
-                                    src="{{ asset('storage/image/outline_disabled_by_default_black_24dp.png') }}" alt="done"
-                                    style="width: 20px;">閉じる</button>
-                            </a>
+                            <x-utility-button href="{{ route('home') }}" class="secondary" icon="fa-solid fa-circle-xmark">
+                                閉じる
+                            </x-utility-button>
                         </div>
                     @endif
                 </div>
-                <div class="evaluation border-start ms-3">
-                    @if (empty($user['evaluation']) and empty($user['total_evaluation']))
-                        <p class="ms-2 mt-2">{{ $user['name'] }} さんへのフィードバックはまだありません。</p>
+                <div class="evaluation border-start ms-3" style="width: 65%;">
+                    @if (empty($user['evaluation']) or empty($user['total_evaluation']))
+                        <p class="mt-3 text-center">{{ $user['name'] }} さんへのフィードバックはまだありません。</p>
                     @else
                         @yield('evaluation')
                     @endif
@@ -83,4 +82,4 @@
             </div>
         </div>
     </div>
-    @endsection
+@endsection

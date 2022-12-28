@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Question;
 use App\Models\Admin;
 use App\Models\User;
+use App\Models\Question;
 use App\Models\Answer;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -15,6 +15,23 @@ use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
+    private $admin;
+    private $user;
+    private $question;
+    private $answer;
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->admin = new Admin();
+        $this->user = new User();
+        $this->question = new Question();
+        $this->answer = new Answer();
+    }
+
     // --------------------認証関係----------------------
     public function index()
     {
@@ -63,7 +80,7 @@ class AdminController extends Controller
     public function showStaff()
     {
         try {
-            $users = User::get();
+            $users = $this->user->getAllUsers();
             return view('admin.staff', compact('users'));
 
         } catch (\Throwable $e) {
@@ -76,23 +93,10 @@ class AdminController extends Controller
     public function showStaffDetail($id)
     {
         try {
-            $user = User::find($id);
-            $user_questions_answers = DB::table('users')
-                ->where('users.id', '=', $id)
-                ->where('answers.user_id', '=', $id)
-                ->select(
-                    'users.id as user_id',
-                    'questions.id as question_id',
-                    'questions.content',
-                    'questions.category',
-                    'answers.answer',
-                )
-                ->leftjoin('answers', 'users.id', '=', 'answers.user_id')
-                ->leftJoin('questions', 'questions.id', '=', 'answers.question_id')
-                ->get();
-
+            $user = $this->user->getUser($id);
+            $user_questions_answers = $this->user->getQuestionsAndAnswers($id);
             // $user_questions_answersをstdClassから配列化
-            $array_user_questions_answers = json_decode(json_encode($user_questions_answers), true);
+            $array_user_questions_answers = $this->user->conversionToArray($user_questions_answers);
             // 解答を集計
             $answers_count = array_count_values(array_column($array_user_questions_answers, 'answer'));
 
@@ -106,20 +110,19 @@ class AdminController extends Controller
     public function evaluationStaff($id)
     {
         try {
-            $user = User::find($id);
+            $user = $this->user->getUser($id);
             return view('admin.evaluation_staff', compact('user'));
         } catch (\Throwable $e) {
             \Log::error($e);
             throw $e;
         }
-
     }
 
     public function exeEvaluationStaff($id, Request $request)
     {
         try {
             DB::beginTransaction();
-            $user = User::find($id);
+            $user = $user = $this->user->getUser($id);
             $evaluation = $request->only(['evaluation']);
             $user->save();
             DB::commit();
@@ -134,7 +137,7 @@ class AdminController extends Controller
     public function exeEditEvaluationStaff($id, Request $request)
     {
         try {
-            $user = User::find($id);
+            $user = $user = $this->user->getUser($id);
             $evaluation = $request->only(['evaluation']);
             $user->update($evaluation);
             return redirect()->route('evaluationStaff', $user->id)->with('evaluationUpdateMessage', 'フィードバックコメントを編集しました。');
@@ -145,14 +148,14 @@ class AdminController extends Controller
 
     public function showStaffSoftDeleted()
     {
-        $users = User::get()->all();
+        $users = $this->user->getAllUsers();
 
         return view('admin.show_deleted_staff', compact('users'));
     }
 
     public function exeStaffSoftDeleted($id)
     {
-        $user = User::find($id);
+        $user = $this->user->getUser($id);
         $user->delete();
 
         return redirect()->route('showStaffSoftDeleted')->with('deleteMessage', '削除しました。');
@@ -163,46 +166,23 @@ class AdminController extends Controller
         return view('admin.show_question_edit');
     }
 
-    public function showDetailQuestionEdit($role)
+    public function showDetailQuestionEdit($role_id)
     {
-        $questions = DB::table('questions')
-            ->where('question_user.role_id', "=", $role)
-            ->select(
-                'questions.id as question_id',
-                'questions.content',
-                'questions.category',
-                'question_user.role_id'
-            )
-            ->leftJoin('question_user', 'questions.id', '=', 'question_id')
-            ->get();
+        $questions = $this->question->getQuestionsByRoleId($role_id);
 
         return view('admin.show_detail_edit', compact('questions'));
     }
 
     public function editForm($question_id)
     {
-        $question = DB::table('questions')
-            ->where('question_user.question_id', "=", $question_id)
-            ->select(
-                'questions.id as question_id',
-                'questions.content',
-                'questions.category',
-                'question_user.role_id',
-            )
-            ->leftJoin('question_user', 'questions.id', '=', 'question_id')
-            ->first();
-        // dd($question);
+        $question = $this->question->getQuestionByQuestionId($question_id);
 
         return view('admin.edit_form', compact('question'));
     }
 
     public function editExe(Request $request, $question_id)
     {
-        $std_role = DB::table('questions')
-            ->where('questions.id', '=', $question_id)
-            ->select('question_user.role_id')
-            ->join('question_user', 'questions.id', '=', 'question_user.question_id')
-            ->first();
+        $std_role = $this->question->getRoleIdByQuestionId($question_id);
 
         $question = Question::find($question_id);
 
@@ -215,14 +195,10 @@ class AdminController extends Controller
 
     public function exeQuestionDestroyed($question_id)
     {
-        $std_role = DB::table('questions')
-            ->where('questions.id', '=', $question_id)
-            ->select('question_user.role_id')
-            ->join('question_user', 'questions.id', '=', 'question_user.question_id')
-            ->first();
+        $std_role = $this->question->getRoleIdByQuestionId($question_id);
 
         // 中間テーブルを削除→onDeleteCascadeによりリレーション先のquestionsレコードも削除
-        $question = Question::find($question_id);
+        $question = $this->question->getQuestion($question_id);
         $question->users()->detach();
 
         return redirect()->route('showDetailQuestionEdit', $std_role->role_id)
@@ -259,8 +235,6 @@ class AdminController extends Controller
         return str_replace(['\\', '%', '_'], ['\\\\', '\%', '\_'], $str);
     }
 
-    // TODO:最低限の検索OK　キーワードが空の時の処理検討
-    // TODO:Viewでの見せ方→ 現状：未入力の時全部取ってくる
     public function searchQuestion(Request $request)
     {
         $keyword = $request->input('keyword');

@@ -8,7 +8,7 @@
             @csrf
             @method('patch')
             <div>
-                <table class="mt-3">
+                <table class="mt-5 mx-auto">
                     <tbody>
                         <tr>
                             <th>
@@ -53,7 +53,9 @@
                 </table>
             </div>
             <div class="text-center">
-                <button class="btn btn-success mt-5 mx-auto" type="submit">編集</button>
+                <x-utility-button type="submit" class="success" icon="fa-solid fa-pen">
+                    修正する
+                </x-utility-button>
             </div>
         </form>
     </div>

@@ -36,7 +36,7 @@ class StaffCreateRequest extends FormRequest
     public function attributes()
     {
         return [
-            'stafF_id' => '職員コード',
+            'staff_id' => '職員コード',
             'name' => '名前',
             'role_id' => '職位',
             'affiliation' => '職位',

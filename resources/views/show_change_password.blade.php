@@ -26,7 +26,7 @@
                     </th>
                     <td>
                         <input type="password" class="form-control @error('current_password') is-invalid @enderror ms-5"
-                            name="current_password" id="current-password">
+                            name="current_password" id="current-password" placeholder="現在のパスワードを入力">
                         @error('current_password')
                             <span class="invalid-feedback ms-5" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -42,7 +42,7 @@
                     </th>
                     <td>
                         <input type="password" name="password"
-                            class="form-control @error('password') is-invalid @enderror ms-5 mt-5" id="password">
+                            class="form-control @error('password') is-invalid @enderror ms-5 mt-5" id="password" placeholder="変更後のパスワードを入力">
                         @error('password')
                             <span class="invalid-feedback ms-5" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -58,7 +58,7 @@
                 <td>
                     <input type="password"
                         class="form-control @error('password_confirmation') is-invalid @enderror ms-5 mt-5"
-                        name="password_confirmation" id="password_confirmation">
+                        name="password_confirmation" id="password_confirmation" placeholder="変更後のパスワード(確認)">
                     @error('password_confirmation')
                         <span class="invalid-feedback ms-5" role="alert">
                             <strong>{{ $message }}</strong>

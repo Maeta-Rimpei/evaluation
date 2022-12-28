@@ -26,7 +26,7 @@ class UtilityButton extends Component
      *  
      * @return void
      */
-    public function __construct($label = null, $href = null, $type = 'button', $class = '', $icon = null)
+    public function __construct($label = null, $href = null, $type = 'button', $class = 'primary', $icon = null)
     {
         $this->label = $label;
         $this->href = $href;

@@ -48,7 +48,7 @@
                 </td>
                 <td>
                     {{-- 一括削除ボタン --}}
-                     <x-modal-and-delete-button type="button" buttonClass="danger" data-bs-toggle="modal" data-bs-target="#{{ 'modal' . $user['staff_id'] }}" icon="fa-solid fa-trash" id="{{ 'modal' . $user['staff_id'] }}" title="確認：削除しようとしています" body="{{ $user['name'] }}さんの回答を本当に削除しますか？" href="{{ route('exeAllDeletedAnswer', $user['id']) }}"></x-modal-and-delete-button>
+                    <x-modal-and-delete-button type="button" buttonClass="danger" data-bs-toggle="modal" data-bs-target="#{{ 'modal' . $user['staff_id'] }}" icon="fa-solid fa-trash" id="{{ 'modal' . $user['staff_id'] }}" title="確認：削除しようとしています" body="{{ $user['name'] }}さんの回答を本当に削除しますか？" href="{{ route('exeAllDeletedAnswer', $user['id']) }}"></x-modal-and-delete-button>
             @endforeach
         </tbody>
     </table>
