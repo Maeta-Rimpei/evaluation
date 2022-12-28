@@ -41,10 +41,6 @@ class EvaluationController extends Controller
     public function confirmAnswers()
     {
         try {
-<<<<<<< HEAD
-=======
-
->>>>>>> 5ed07a9 (nothing)
             $user = \Auth::user();
             $user_answers = $user->answers;
             $user_questions = $user->questions;
@@ -59,10 +55,6 @@ class EvaluationController extends Controller
     public function confirmFeedback()
     {
         try {
-<<<<<<< HEAD
-=======
-
->>>>>>> 5ed07a9 (nothing)
             $user = \Auth::user();
             $user_total_evaluation = $user->total_evaluation;
             $user_evaluation = $user->evaluation;
@@ -82,21 +74,12 @@ class EvaluationController extends Controller
 
     public function exeChangePassword(PasswordRequest $request)
     {
-<<<<<<< HEAD
         try {
             DB::beginTransaction();
             $user = \Auth::user();
             if (!password_verify($request->current_password, $user->password)) {
                 return redirect()->route('showChangePassword')->with('alertDifferentPassword', 'パスワードが一致しません');
             }
-=======
-
-        $user = \Auth::user();
-        if (!password_verify($request->current_password, $user->password)) {
-            return redirect()->route('showChangePassword')->with('alertDifferentPassword', 'パスワードが一致しません');
-        }
->>>>>>> 5ed07a9 (nothing)
-
             $new_password = $request->only(['password']);
             $user->password = bcrypt($new_password['password']);
             $user->save();
@@ -127,18 +110,11 @@ class EvaluationController extends Controller
 
     public function evaluationStore(EvaRequest $request)
     {
-<<<<<<< HEAD
         try {
             DB::beginTransaction();
             $auth_user = \Auth::user();
             $auth_user_questions = $auth_user->questions;
             $count = count($auth_user_questions);
-=======
-
-        $auth_user = \Auth::user();
-        $auth_user_questions = $auth_user->questions;
-        $count = count($auth_user_questions);
->>>>>>> 5ed07a9 (nothing)
 
             for ($i = 0; $i < $count; $i++) {
                 // question_idとuser_idを$requestに追加
@@ -156,7 +132,7 @@ class EvaluationController extends Controller
                 $answer->save();
                 DB::commit();
             }
-            
+
         } catch (\Throwable $e) {
             DB::rollBack();
             \Log::error($e);

@@ -56,7 +56,6 @@ class AdminController extends Controller
             return back()->withErrors([
                 'login_error' => '職員コードかパスワードが間違っています。',
             ]);
-
         } catch (\Throwable $e) {
             \Log::error($e);
             throw $e;
@@ -82,19 +81,30 @@ class AdminController extends Controller
         try {
             $users = $this->user->getAllUsers();
             return view('admin.staff', compact('users'));
-
         } catch (\Throwable $e) {
             \Log::error($e);
             throw $e;
         }
-
     }
 
     public function showStaffDetail($id)
     {
         try {
-            $user = $this->user->getUser($id);
-            $user_questions_answers = $this->user->getQuestionsAndAnswers($id);
+            $user = User::findOrFail($id);
+            $user_questions_answers = DB::table('users')
+                ->where('users.id', '=', $id)
+                ->where('answers.user_id', '=', $id)
+                ->select(
+                    'users.id as user_id',
+                    'questions.id as question_id',
+                    'questions.content',
+                    'questions.category',
+                    'answers.answer',
+                )
+                ->leftJoin('answers', 'users.id', '=', 'answers.user_id')
+                ->leftJoin('questions', 'questions.id', '=', 'answers.question_id')
+                ->get();
+
             // $user_questions_answersをstdClassから配列化
             $array_user_questions_answers = $this->user->conversionToArray($user_questions_answers);
             // 解答を集計
@@ -110,7 +120,7 @@ class AdminController extends Controller
     public function evaluationStaff($id)
     {
         try {
-            $user = $this->user->getUser($id);
+            $user = User::find($id);
             return view('admin.evaluation_staff', compact('user'));
         } catch (\Throwable $e) {
             \Log::error($e);
@@ -126,7 +136,7 @@ class AdminController extends Controller
             $evaluation = $request->only(['evaluation']);
             $user->save();
             DB::commit();
-            return redirect()->route('evaluationStaff', $user->id)->with('evaluationMessage', 'フィードバックコメントを編集しました。');
+            return redirect()->route('evaluationStaff', $user->id)->with('evaluationMessage', 'フィードバックコメントを送信しました。');
         } catch (\Throwable $e) {
             DB::rollBack();
             \Log::error($e);
@@ -148,17 +158,28 @@ class AdminController extends Controller
 
     public function showStaffSoftDeleted()
     {
-        $users = $this->user->getAllUsers();
-
-        return view('admin.show_deleted_staff', compact('users'));
+        try {
+            $users = $this->user->getAllUsers();
+            return view('admin.show_deleted_staff', compact('users'));
+        } catch (\Throwable $e) {
+            \Log::error($e);
+            throw $e;
+        }
     }
 
     public function exeStaffSoftDeleted($id)
     {
-        $user = $this->user->getUser($id);
-        $user->delete();
+        try {
 
-        return redirect()->route('showStaffSoftDeleted')->with('deleteMessage', '削除しました。');
+            $user = $this->user->getUserOrFail($id);
+            $user->delete();
+            return redirect()->route('showStaffSoftDeleted')->with('deleteMessage', '削除しました。');
+        } catch (ModelNotFoundException $e) {
+            throw $e;
+        } catch (\Throwable $e) {
+            \Log::error($e);
+            throw $e;
+        }
     }
 
     public function showQuestionEdit()
@@ -169,40 +190,66 @@ class AdminController extends Controller
     public function showDetailQuestionEdit($role_id)
     {
         $questions = $this->question->getQuestionsByRoleId($role_id);
+        try {
+            $questions = $this->question->getQuestionsByRoleId($role_id);
 
-        return view('admin.show_detail_edit', compact('questions'));
+            return view('admin.show_detail_edit', compact('questions'));
+        } catch (\Throwable $e) {
+            \Log::error($e);
+            throw $e;
+        }
     }
 
     public function editForm($question_id)
     {
         $question = $this->question->getQuestionByQuestionId($question_id);
+        try {
+            $question = $this->question->getQuestionByQuestionId($question_id);
 
-        return view('admin.edit_form', compact('question'));
+            return view('admin.edit_form', compact('question'));
+        } catch (\Throwable $e) {
+            \Log::error($e);
+            throw $e;
+        }
     }
 
     public function editExe(Request $request, $question_id)
     {
         $std_role = $this->question->getRoleIdByQuestionId($question_id);
+        try {
+            $std_role = $this->question->getRoleIdByQuestionId($question_id);
+            $question = Question::findOrFail($question_id);
 
-        $question = Question::find($question_id);
+            $question->content = $request->content;
+            $question->category = $request->category;
+            $question->save();
 
-        $question->content = $request->content;
-        $question->category = $request->category;
-        $question->save();
-
-        return redirect()->route('showDetailQuestionEdit', $std_role->role_id)->with('editMessage', '質問内容を更新しました。');
+            return redirect()->route('showDetailQuestionEdit', $std_role->role_id)->with('editMessage', '質問内容を更新しました。');
+        } catch (ModelNotFoundException $e) {
+            throw $e;
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            \Log::error($e);
+            throw $e;
+        }
     }
 
     public function exeQuestionDestroyed($question_id)
     {
-        $std_role = $this->question->getRoleIdByQuestionId($question_id);
-
+        try {
+            $std_role = $this->question->getRoleIdByQuestionId($question_id);
         // 中間テーブルを削除→onDeleteCascadeによりリレーション先のquestionsレコードも削除
-        $question = $this->question->getQuestion($question_id);
+        $question = Question::find($question_id);
         $question->users()->detach();
 
-        return redirect()->route('showDetailQuestionEdit', $std_role->role_id)
-            ->with('deleteMessage', '削除しました。');
+            return redirect()->route('showDetailQuestionEdit', $std_role->role_id)
+                ->with('deleteMessage', '削除しました。');
+        } catch (ModelNotFoundException $e) {
+            throw $e;
+        } catch (\Throwable $e) {
+            \Log::error($e);
+            throw $e;
+        }
     }
 
     public function showCreateQuestion()
@@ -212,21 +259,30 @@ class AdminController extends Controller
 
     public function exeCreateQuestion(QuestionCreateRequest $request)
     {
-        $question = new Question();
-        $inputs = $request->only(['content', 'category', 'role_id']);
+        try {
+            DB::beginTransaction();
+            $question = new Question();
+            $inputs = $request->only(['content', 'category', 'role_id']);
 
-        $question->create([
-            'content' => $inputs['content'],
-            'category' => $inputs['category'],
-        ]);
+            $question->create([
+                'content' => $inputs['content'],
+                'category' => $inputs['category'],
+            ]);
 
-        // 184～187行目で挿入したquestionのidを取得
-        $question_id = $question->latest('id')->first()->id;
-        $new = $question->find($question_id);
-        // 中間テーブルに挿入
-        $new->users()->attach($inputs['role_id']);
-
-        return redirect()->route('showCreateQuestion')->with('createQuestionMessage', '質問を作成しました。');
+            // 184～187行目で挿入したquestionのidを取得
+            $question_id = $question->latest('id')->first()->id;
+            $new = $question->findOrFail($question_id);
+            // 中間テーブルに挿入
+            $new->users()->attach($inputs['role_id']);
+            DB::commit();
+            return redirect()->route('showCreateQuestion')->with('createQuestionMessage', '質問を作成しました。');
+        } catch (ModelNotFoundException $e) {
+            throw $e;
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            \Log::error($e);
+            throw $e;
+        }
     }
 
     // TODO:何に対してのセキュリティ対策？？
@@ -237,39 +293,44 @@ class AdminController extends Controller
 
     public function searchQuestion(Request $request)
     {
-        $keyword = $request->input('keyword');
-        $category = $request->input('category');
-        $role_id = $request->input('role_id');
-        // dd($role_id);
-        $query = Question::query();
-        $query->join('question_user', 'questions.id', '=', 'question_user.question_id')
-            ->select(
-                'questions.id',
-                'questions.content',
-                'questions.category',
-                'question_user.role_id'
-            );
+        try {
+            $keyword = $request->input('keyword');
+            $category = $request->input('category');
+            $role_id = $request->input('role_id');
 
-        if (isset($keyword))
-            $query->when($request, function ($query, $request) {
-                $query->where('content', 'LIKE', '%' . self::escape($request->keyword) . '%');
-            });
+            $query = Question::query();
+            $query->join('question_user', 'questions.id', '=', 'question_user.question_id')
+                ->select(
+                    'questions.id',
+                    'questions.content',
+                    'questions.category',
+                    'question_user.role_id'
+                );
 
-        if (isset($category)) {
-            $query->when($request, function ($query, $request) {
-                return $query->where('category', '=', $request->category);
-            });
+            if (isset($keyword))
+                $query->when($request, function ($query, $request) {
+                    $query->where('content', 'LIKE', '%' . self::escape($request->keyword) . '%');
+                });
+
+            if (isset($category)) {
+                $query->when($request, function ($query, $request) {
+                    return $query->where('category', '=', $request->category);
+                });
+            }
+
+            if (isset($role_id)) {
+                $query->when($request, function ($query, $request) {
+                    return $query->where('role_id', '=', $request->role_id);
+                });
+            }
+
+            $search_questions = $query->orderBy('questions.content', 'desc')->paginate(10);
+
+            return view('admin.show_search_question', compact('keyword', 'category', 'role_id', 'search_questions'));
+        } catch (\Throwable $e) {
+            \Log::error($e);
+            throw $e;
         }
-
-        if (isset($role_id)) {
-            $query->when($request, function ($query, $request) {
-                return $query->where('role_id', '=', $request->role_id);
-            });
-        }
-
-        $search_questions = $query->orderBy('questions.content', 'desc')->paginate(10);
-
-        return view('admin.show_search_question', compact('keyword', 'category', 'role_id', 'search_questions'));
     }
 
     /**
@@ -279,187 +340,251 @@ class AdminController extends Controller
      */
     public function searchStaff(Request $request)
     {
-        $name = $request->input('name');
-        $staff_id = $request->input('staff_id');
-        $affiliation = $request->input('affiliation');
-        $role_id = $request->input('role');
+        try {
+            $name = $request->input('name');
+            $staff_id = $request->input('staff_id');
+            $affiliation = $request->input('affiliation');
+            $role_id = $request->input('role');
 
-        $affiliations = User::get('affiliation')->toArray();
+            $affiliations = User::get('affiliation')->toArray();
         $user_affiliations = array_column($affiliations, 'affiliation');
         // dd($affiliations);
 
-        // dd($user_affiliations);
         $query = User::query();
 
-        if (isset($name)) {
-            $space_conversion = mb_convert_kana($name, 's');
-            // TODO:/[\s,]+/ ←この表現の意味は？
-            $name_push_array = preg_split('/[\s,]+/', $space_conversion, -1, PREG_SPLIT_NO_EMPTY);
+            if (isset($name)) {
+                $space_conversion = mb_convert_kana($name, 's');
+                $name_push_array = preg_split('/[\s,]+/', $space_conversion, -1, PREG_SPLIT_NO_EMPTY);
 
-            foreach ($name_push_array as $word) {
-                $query->where('name', 'LIKE', '%' . self::escape($word) . '%');
+                foreach ($name_push_array as $word) {
+                    $query->where('name', 'LIKE', '%' . self::escape($word) . '%');
+                }
             }
-        }
 
-        if (isset($staff_id)) {
-            $staff_id_push_array = preg_split('/[\s,]+/', $staff_id, -1, PREG_SPLIT_NO_EMPTY);
+            if (isset($staff_id)) {
+                $staff_id_push_array = preg_split('/[\s,]+/', $staff_id, -1, PREG_SPLIT_NO_EMPTY);
 
-            foreach ($staff_id_push_array as $word) {
-                $query->where('staff_id', 'LIKE', '%' . self::escape($staff_id) . '%');
+                foreach ($staff_id_push_array as $word) {
+                    $query->where('staff_id', 'LIKE', '%' . self::escape($staff_id) . '%');
+                }
             }
+
+            if (isset($affiliation)) {
+                $query->when($request, function ($query, $request) {
+                    return $query->where('affiliation', '=', $request->affiliation);
+                });
+            }
+
+            if (isset($request->role_id)) {
+                $query->when($request, function ($query, $request) {
+                    return $query->where('role_id', '=', $request->role_id);
+                });
+            }
+
+            $search_staffs = $query->orderBy('users.created_at', 'desc')->paginate(10);
+
+            return view('admin.search_staff', compact('name', 'staff_id', 'affiliation', 'user_affiliations', 'role_id', 'search_staffs'));
+        } catch (\Throwable $e) {
+            \Log::error($e);
+            throw $e;
         }
-
-        if (isset($affiliation)) {
-            $query->when($request, function ($query, $request) {
-                return $query->where('affiliation', '=', $request->affiliation);
-            });
-        }
-
-        if (isset($request->role_id)) {
-            $query->when($request, function ($query, $request) {
-                return $query->where('role_id', '=', $request->role_id);
-            });
-        }
-
-        $search_staffs = $query->orderBy('users.created_at', 'desc')->paginate(10);
-
-        return view('admin.search_staff', compact('name', 'staff_id', 'affiliation', 'user_affiliations', 'role_id', 'search_staffs'));
     }
 
     public function showAdminSoftDeleted()
     {
-        $admins = Admin::get();
+        try {
+            $admins = Admin::get();
 
-        return view('admin.show_deleted_admin', compact('admins'));
+            return view('admin.show_deleted_admin', compact('admins'));
+        } catch (\Throwable $e) {
+            \Log::error($e);
+            throw $e;
+        }
     }
 
     public function exeAdminSoftDeleted($id)
     {
-        $admin = Admin::find($id);
-        $admin->delete();
+        try {
+            $admin = Admin::findOrFail($id);
+            $admin->delete();
 
-        return redirect()->route('showAdminSoftDeleted')->with('deleteMessage', '削除しました。');
+            return redirect()->route('showAdminSoftDeleted')->with('deleteMessage', '削除しました。');
+        } catch (\Throwable $e) {
+            \Log::error($e);
+            throw $e;
+        }
     }
 
     public function showAdmin()
     {
-        $admins = Admin::get();
+        try {
 
-        return view('admin.admin', compact('admins'));
+            $admins = Admin::get();
+
+            return view('admin.admin', compact('admins'));
+        } catch (\Throwable $e) {
+            \Log::error($e);
+            throw $e;
+        }
     }
 
     public function searchAdmin(Request $request)
     {
-        $name = $request->input('name');
-        $staff_id = $request->input('staff_id');
-        $affiliation = $request->input('affiliation');
-        $role_id = $request->input('role');
+        try {
 
-        $admin_affiliations = Admin::get('affiliation');
+            $name = $request->input('name');
+            $staff_id = $request->input('staff_id');
+            $affiliation = $request->input('affiliation');
+            $role_id = $request->input('role');
 
-        $query = Admin::query();
+            $admin_affiliations = Admin::get('affiliation');
 
-        if (isset($name)) {
-            $space_conversion = mb_convert_kana($name, 's');
-            // TODO:/[\s,]+/ ←この表現の意味は？
-            $name_push_array = preg_split('/[\s,]+/', $space_conversion, -1, PREG_SPLIT_NO_EMPTY);
+            $query = Admin::query();
 
-            foreach ($name_push_array as $word) {
-                $query->where('name', 'LIKE', '%' . self::escape($word) . '%');
+            if (isset($name)) {
+                $space_conversion = mb_convert_kana($name, 's');
+                // TODO:/[\s,]+/ ←この表現の意味は？
+                $name_push_array = preg_split('/[\s,]+/', $space_conversion, -1, PREG_SPLIT_NO_EMPTY);
+
+                foreach ($name_push_array as $word) {
+                    $query->where('name', 'LIKE', '%' . self::escape($word) . '%');
+                }
             }
-        }
 
-        if (isset($staff_id)) {
-            $staff_id_push_array = preg_split('/[\s,]+/', $staff_id, -1, PREG_SPLIT_NO_EMPTY);
+            if (isset($staff_id)) {
+                $staff_id_push_array = preg_split('/[\s,]+/', $staff_id, -1, PREG_SPLIT_NO_EMPTY);
 
-            foreach ($staff_id_push_array as $word) {
-                $query->where('staff_id', 'LIKE', '%' . self::escape($staff_id) . '%');
+                foreach ($staff_id_push_array as $word) {
+                    $query->where('staff_id', 'LIKE', '%' . self::escape($staff_id) . '%');
+                }
             }
+
+            if (isset($affiliation)) {
+                $query->when($request, function ($query, $request) {
+                    return $query->where('affiliation', '=', $request->affiliation);
+                });
+            }
+
+            if (isset($request->role_id)) {
+                $query->when($request, function ($query, $request) {
+                    return $query->where('role_id', '=', $request->role_id);
+                });
+            }
+
+            $search_admins = $query->orderBy('admins.created_at', 'desc')->paginate(10);
+
+            return view('admin.search_admin', compact('name', 'staff_id', 'affiliation', 'admin_affiliations', 'role_id', 'search_admins'));
+        } catch (\Throwable $e) {
+            \Log::error($e);
+            throw $e;
         }
-
-        if (isset($affiliation)) {
-            $query->when($request, function ($query, $request) {
-                return $query->where('affiliation', '=', $request->affiliation);
-            });
-        }
-
-        if (isset($request->role_id)) {
-            $query->when($request, function ($query, $request) {
-                return $query->where('role_id', '=', $request->role_id);
-            });
-        }
-
-        $search_admins = $query->orderBy('admins.created_at', 'desc')->paginate(10);
-
-        return view('admin.search_admin', compact('name', 'staff_id', 'affiliation', 'admin_affiliations', 'role_id', 'search_admins'));
     }
 
     public function showEditAnswer()
     {
-        $users = User::get();
+        try {
+            $users = User::get();
 
-        return view('admin.show_edit_answer', compact('users'));
+            return view('admin.show_edit_answer', compact('users'));
+        } catch (\Throwable $e) {
+            \Log::error($e);
+            throw $e;
+        }
     }
 
     public function exeAllDeletedAnswer($id)
     {
-        $user_answer = Answer::where('user_id', '=', $id);
+        try {
+            $user_answer = Answer::where('user_id', '=', $id);
 
-        if (!empty($user_answer)) {
-            return redirect()->route('showEditAnswer')->with('errorAnswerEmptyMessage', 'この方はまだ回答していません。');
+            if (!empty($user_answer)) {
+                return redirect()->route('showEditAnswer')->with('errorAnswerEmptyMessage', 'この方はまだ回答していません。');
+            }
+
+            $user_answer->delete();
+
+            return redirect()->route('showEditAnswer')->with('allDeleteAnswerMessage', '回答を全て削除しました。');
+        } catch (\Throwable $e) {
+            \Log::error($e);
+            throw $e;
         }
-        // dd($user_answer);
-        $user_answer->delete();
-
-        return redirect()->route('showEditAnswer')->with('allDeleteAnswerMessage', '回答を全て削除しました。');
     }
 
     public function showPartEditAnswer($id)
     {
-        $user = User::find($id);
+        try {
 
-        $user_questions_answers = DB::table('users')
-            ->where('answers.user_id', '=', $id)
-            ->select(
-                'users.id as user_id',
-                'questions.id as question_id',
-                'questions.content',
-                'questions.category',
-                'answers.id as answer_id',
-                'answers.answer',
-            )
-            ->leftJoin('answers', 'users.id', '=', 'answers.user_id')
-            ->leftJoin('questions', 'questions.id', '=', 'answers.question_id')
-            ->get()->toArray();
+            $user = User::findOrFail($id);
 
-        $array_user_questions_answers = json_decode(json_encode($user_questions_answers), true);
+            $user_questions_answers = DB::table('users')
+                ->where('answers.user_id', '=', $id)
+                ->select(
+                    'users.id as user_id',
+                    'questions.id as question_id',
+                    'questions.content',
+                    'questions.category',
+                    'answers.id as answer_id',
+                    'answers.answer',
+                )
+                ->leftJoin('answers', 'users.id', '=', 'answers.user_id')
+                ->leftJoin('questions', 'questions.id', '=', 'answers.question_id')
+                ->get()->toArray();
 
-        return view('admin.show_part_edit_answer', compact('user', 'array_user_questions_answers'));
+            $array_user_questions_answers = json_decode(json_encode($user_questions_answers), true);
+
+            return view('admin.show_part_edit_answer', compact('user', 'array_user_questions_answers'));
+        } catch (ModelNotFoundException $e) {
+            throw $e;
+        } catch (\Throwable $e) {
+            \Log::error($e);
+            throw $e;
+        }
     }
 
     public function exePartDeletedAnswer($answer_id)
     {
-        $user_answer = Answer::find($answer_id);
-        $user_answer->destroy($answer_id);
+        try {
 
-        return redirect()->route('showPartEditAnswer')->with('partDeleteAnswerMessage', '選択した回答を削除しました。');
+            $user_answer = Answer::findOrFail($answer_id);
+            $user_answer->destroy($answer_id);
+
+            return redirect()->route('showPartEditAnswer')->with('partDeleteAnswerMessage', '選択した回答を削除しました。');
+        } catch (\Throwable $e) {
+            \Log::error($e);
+            throw $e;
+        }
     }
 
     public function showUpdatedAnswer($answer_id)
     {
-        $user_answer = Answer::find($answer_id);
+        try {
 
-        return view('admin.show_updated_answer', compact('user_answer'));
+            $user_answer = Answer::findOrFail($answer_id);
+
+            return view('admin.show_updated_answer', compact('user_answer'));
+        } catch (ModelNotFoundException $e) {
+            throw $e;
+        } catch (\Throwable $e) {
+            \Log::error($e);
+            throw $e;
+        }
     }
 
     public function exeUpdatedAnswer($answer_id, AnswerRequest $request)
     {
-        $answer = $request->only(['answer']);
-        $user_answer = Answer::find($answer_id);
-        $user_id = Answer::find($answer_id)->user->id;
+        try {
+            $answer = $request->only(['answer']);
+            $user_answer = Answer::findOrFail($answer_id);
+            $user_id = Answer::findOrFail($answer_id)->user->id;
 
-        $user_answer->update($answer);
+            $user_answer->update($answer);
 
-        return redirect()->route('showPartEditAnswer', $user_id)->with('updateAnswerMessage', '回答を修正しました。');
+            return redirect()->route('showPartEditAnswer', $user_id)->with('updateAnswerMessage', '回答を修正しました。');
+        } catch (ModelNotFoundException $e) {
+            throw $e;
+        } catch (\Throwable $e) {
+            \Log::error($e);
+            throw $e;
+        }
     }
 }
