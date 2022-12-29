@@ -4,19 +4,16 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Admin;
-use App\Models\User;
 use App\Models\Question;
 use App\Models\Answer;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Http\Requests\AnswerRequest;
 use App\Http\Requests\QuestionCreateRequest;
-use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
     private $admin;
-    private $user;
     private $question;
     private $answer;
     /**
@@ -27,7 +24,6 @@ class AdminController extends Controller
     public function __construct()
     {
         $this->admin = new Admin();
-        $this->user = new User();
         $this->question = new Question();
         $this->answer = new Answer();
     }
@@ -76,103 +72,7 @@ class AdminController extends Controller
     }
 
     // --------------------管理者画面操作関係----------------------
-    public function showStaff()
-    {
-        try {
-            $users = $this->user->getAllUsers();
-            return view('admin.staff', compact('users'));
-        } catch (\Throwable $e) {
-            \Log::error($e);
-            throw $e;
-        }
-    }
 
-    public function showStaffDetail($id)
-    {
-        try {
-            $user = $this->user->getUser($id);
-            $user_questions_answers = getQuestionsAndAnswers($id);
-
-            // $user_questions_answersをstdClassから配列化
-            $array_user_questions_answers = $this->user->conversionToArray($user_questions_answers);
-            // 解答を集計
-            $answers_count = array_count_values(array_column($array_user_questions_answers, 'answer'));
-
-            return view('admin.staff_detail', compact('user', 'array_user_questions_answers', 'answers_count'));
-        } catch (\Throwable $e) {
-            \Log::error($e);
-            throw $e;
-        }
-    }
-
-    public function evaluationStaff($id)
-    {
-        try {
-            $user = User::find($id);
-            return view('admin.evaluation_staff', compact('user'));
-        } catch (\Throwable $e) {
-            \Log::error($e);
-            throw $e;
-        }
-    }
-
-    public function exeEvaluationStaff($id, Request $request)
-    {
-        try {
-            DB::beginTransaction();
-            $user = $user = $this->user->getUser($id);
-            $evaluation = $request->only(['evaluation']);
-            $user->save();
-            DB::commit();
-            return redirect()->route('evaluationStaff', $user->id)->with('evaluationMessage', 'フィードバックコメントを送信しました。');
-        } catch (\Throwable $e) {
-            DB::rollBack();
-            \Log::error($e);
-            throw $e;
-        }
-    }
-
-    public function exeEditEvaluationStaff($id, Request $request)
-    {
-        try {
-            $user = $user = $this->user->getUser($id);
-            $evaluation = $request->only(['evaluation']);
-            $user->update($evaluation);
-            return redirect()->route('evaluationStaff', $user->id)->with('evaluationUpdateMessage', 'フィードバックコメントを編集しました。');
-        } catch (ModelNotFoundException $e) {
-            throw $e;
-        }
-    }
-
-    public function showStaffSoftDeleted()
-    {
-        try {
-            $users = $this->user->getAllUsers();
-            return view('admin.show_deleted_staff', compact('users'));
-        } catch (\Throwable $e) {
-            \Log::error($e);
-            throw $e;
-        }
-    }
-
-    public function exeStaffSoftDeleted($id)
-    {
-        try {
-            $user = $this->user->getUserOrFail($id);
-            $user->delete();
-            return redirect()->route('showStaffSoftDeleted')->with('deleteMessage', '削除しました。');
-        } catch (ModelNotFoundException $e) {
-            throw $e;
-        } catch (\Throwable $e) {
-            \Log::error($e);
-            throw $e;
-        }
-    }
-
-    public function showQuestionEdit()
-    {
-        return view('admin.show_question_edit');
-    }
 
     public function showDetailQuestionEdit($role_id)
     {
@@ -225,9 +125,9 @@ class AdminController extends Controller
     {
         try {
             $std_role = $this->question->getRoleIdByQuestionId($question_id);
-        // 中間テーブルを削除→onDeleteCascadeによりリレーション先のquestionsレコードも削除
-        $question = $this->question->getQuestion($question_id);
-        $question->users()->detach();
+            // 中間テーブルを削除→onDeleteCascadeによりリレーション先のquestionsレコードも削除
+            $question = $this->question->getQuestion($question_id);
+            $question->users()->detach();
 
             return redirect()->route('showDetailQuestionEdit', $std_role->role_id)
                 ->with('deleteMessage', '削除しました。');
@@ -335,10 +235,10 @@ class AdminController extends Controller
             $role_id = $request->input('role');
 
             $affiliations = User::get('affiliation')->toArray();
-        $user_affiliations = array_column($affiliations, 'affiliation');
-        // dd($affiliations);
+            $user_affiliations = array_column($affiliations, 'affiliation');
+            // dd($affiliations);
 
-        $query = User::query();
+            $query = User::query();
 
             if (isset($name)) {
                 $space_conversion = mb_convert_kana($name, 's');
@@ -481,7 +381,7 @@ class AdminController extends Controller
     public function exeAllDeletedAnswer($id)
     {
         try {
-            $user_answer = Answer::where('user_id', '=', $id);
+            $user_answer = $this->answer->where('user_id', '=', $id);
 
             if (!empty($user_answer)) {
                 return redirect()->route('showEditAnswer')->with('errorAnswerEmptyMessage', 'この方はまだ回答していません。');
@@ -502,7 +402,7 @@ class AdminController extends Controller
             $user = $this->user->getUser($id);
             $user_questions_answers = $this->user->getQuestionsAndAnswers($id);
             $array_user_questions_answers = $this->user->conversionToArray($user_questions_answers);
-// dd($array_user_questions_answers);
+            // dd($array_user_questions_answers);
             return view('admin.show_part_edit_answer', compact('user', 'array_user_questions_answers'));
         } catch (ModelNotFoundException $e) {
             throw $e;
@@ -528,7 +428,7 @@ class AdminController extends Controller
     public function showUpdatedAnswer($answer_id)
     {
         try {
-            $user_answer = Answer::findOrFail($answer_id);
+            $user_answer = $this->answer->getAnswer($answer_id);
 
             return view('admin.show_updated_answer', compact('user_answer'));
         } catch (ModelNotFoundException $e) {
