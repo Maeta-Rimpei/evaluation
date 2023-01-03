@@ -8,6 +8,10 @@
             <div class="alert alert-success text-center">
                 {{ session('evaluationMessage') }}
             </div>
+        @elseif(session('evaluationErrorMessage'))
+            <div class="alert alert-warning text-center">
+                {{ session('evaluationErrorMessage') }}
+            </div>
         @endif
 
         <form action="{{ route('exeEvaluationStaff', $user['id']) }}" method="post">
@@ -19,7 +23,8 @@
                             <label class="me-3" for="total_evaluation">総合評価</label>
                         </th>
                         <td>
-                            <select class="form-select @error("total_evaluation") is-invalid @enderror" name="total_evaluation">
+                            <select class="form-select @error('total_evaluation') is-invalid @enderror"
+                                name="total_evaluation">
                                 <option class="mb-3" disabled>クリックして選んでください</option>
                                 @foreach (App\Consts\AnswerOptionConsts::ANSWER_OPTION as $option)
                                     <option>{{ $option }}</option>

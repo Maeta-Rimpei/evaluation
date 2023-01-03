@@ -13,7 +13,7 @@
             管理者を検索
         </x-utility-button>
     </a>
-    <a style="text-decoration: none;" class="mb-2" href="{{ route('showAdminSoftDeleted') }}">
+    <a style="text-decoration: none;" class="mb-2" href="{{ route('showSoftDeleteAdmin') }}">
         <x-utility-button class="danger mb-3" icon="fa-solid fa-user-minus me-2">
             管理者削除
         </x-utility-button>

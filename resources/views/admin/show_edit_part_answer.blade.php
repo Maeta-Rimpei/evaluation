@@ -8,10 +8,6 @@
             <div class="alert alert-success text-center">
                 {{ session('updateAnswerMessage') }}
             </div>
-        @elseif (session('partDeleteAnswerMessage'))
-            <div class="alert alert-danger text-center">
-                {{ session('partDeleteAnswerMessage') }}
-            </div>
         @endif
 
         <table class="table table-striped">
@@ -24,16 +20,16 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($array_user_questions_answers as $array_user_question_answer)
+                @foreach ($user_questions_answers as $user_question_answer)
                     <tr>
-                        <th class="text-center">{{ $array_user_question_answer['question_id'] }}</th>
-                        <td>{{ $array_user_question_answer['content'] }}</td>
-                        <td class="text-center">{{ $array_user_question_answer['answer'] }}</td>
+                        <th class="text-center">{{ $user_question_answer->question_id }}</th>
+                        <td>{{ $user_question_answer->content }}</td>
+                        <td class="text-center">{{ $user_question_answer->answer }}</td>
                         {{-- 修正ボタン --}}
                         <td>
                             <x-utility-button
-                                href="{{ route('showUpdatedAnswer', $array_user_question_answer['answer_id']) }}"
-                                class="success" icon="fa-regular fa-pen-to-square">
+                                href="{{ route('showEditAnswerForm', $user_question_answer->answer_id) }}"
+                                class="success" icon="fa-regular fa-pen-to-square me-2">
                                 修正する
                             </x-utility-button>
                         </td>

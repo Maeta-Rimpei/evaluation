@@ -4,13 +4,13 @@
     <div class="container">
         <h3 class="mb-3">{{ $user['name'] . 'さんの回答' }}</h2>
 
-            @if (session('destroyedEvaluationMessage'))
+            @if (session('destroyEvaluationMessage'))
                 <div class="alert alert-danger text-center">
-                    {{ session('destroyedEvaluationMessage') }}
+                    {{ session('destroyEvaluationMessage') }}
                 </div>
-            @elseif (session('destroyedErrorMessage'))
+            @elseif (session('destroyErrorMessage'))
                 <div class="alert alert-warning text-center">
-                    {{ session('destroyedErrorMessage') }}
+                    {{ session('destroyErrorMessage') }}
                 </div>
             @endif
 
@@ -75,7 +75,7 @@
                         data-bs-target="#{{ 'modal' . $user['staff_id'] }}" icon="fa-solid fa-trash"
                         id="{{ 'modal' . $user['staff_id'] }}" title="確認：削除しようとしています"
                         body="{{ $user['name'] }}さんへのフィードバックを本当に削除しますか？"
-                        href="{{ route('exeDestroyedEvaluationStaff', $user['id']) }}">
+                        href="{{ route('exeDestroyEvaluationStaff', $user['id']) }}">
                     </x-modal-and-delete-button>
                 </div>
             @endif

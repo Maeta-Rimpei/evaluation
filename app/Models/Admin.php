@@ -42,6 +42,6 @@ class Admin extends Authenticatable
      */
     public function getAdmin(int $id)
     {
-        return findOrFail($id);
+        return $this->findOrFail($id);
     }
 }

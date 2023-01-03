@@ -8,9 +8,13 @@
             <div class="alert alert-success text-center">
                 {{ session('evaluationUpdateMessage') }}
             </div>
+             @elseif (session('evaluationUpdateErrorMessage'))
+            <div class="alert alert-warning text-center">
+                {{ session('evaluationUpdateErrorMessage') }}
+            </div>
         @endif
 
-        <form action="{{ route('exeEditEvaluationStaff', $user['id']) }}" method="post">
+        <form action="{{ route('exeUpdateEvaluationStaff', $user['id']) }}" method="post">
             @method('patch')
             @csrf
             <table class="mx-auto mt-5">

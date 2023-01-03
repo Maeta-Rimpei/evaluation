@@ -3,9 +3,9 @@
 @section('content')
     <h2 class="text-center mb-3">職員回答管理</h2>
 
-    @if (session('allDeleteAnswerMessage'))
+    @if (session('deleteAllAnswerMessage'))
         <div class="alert alert-danger text-center">
-            {{ session('allDeleteAnswerMessage') }}
+            {{ session('deleteAllAnswerMessage') }}
         </div>
     @elseif (session('errorAnswerEmptyMessage'))
         <div class="alert alert-warning text-center">
@@ -13,7 +13,7 @@
         </div>
     @endif
 
-    <table class="table table-striped">
+    <table class="table table-striped mt-5">
         <thead>
             <tr>
                 <th scope="col">職員コード</th>
@@ -41,14 +41,14 @@
                 <td></td>
                 <td>
                     {{-- 編集ボタン --}}
-                        <x-utility-button href="{{ route('showPartEditAnswer', $user['id']) }}" class="success" icon="fa-regular fa-pen-to-square">
+                        <x-utility-button href="{{ route('showEditPartAnswer', $user['id']) }}" class="success" icon="fa-regular fa-pen-to-square">
                         編集
                         </x-utility-button>
                     </a>
                 </td>
                 <td>
                     {{-- 一括削除ボタン --}}
-                    <x-modal-and-delete-button type="button" buttonClass="danger" data-bs-toggle="modal" data-bs-target="#{{ 'modal' . $user['staff_id'] }}" icon="fa-solid fa-trash" id="{{ 'modal' . $user['staff_id'] }}" title="確認：削除しようとしています" body="{{ $user['name'] }}さんの回答を本当に削除しますか？" href="{{ route('exeAllDeletedAnswer', $user['id']) }}"></x-modal-and-delete-button>
+                    <x-modal-and-delete-button type="button" buttonClass="danger" data-bs-toggle="modal" data-bs-target="#{{ 'modal' . $user['staff_id'] }}" icon="fa-solid fa-trash" id="{{ 'modal' . $user['staff_id'] }}" title="確認：削除しようとしています" body="{{ $user['name'] }}さんの回答を本当に削除しますか？" href="{{ route('exeDeleteAllAnswers', $user['id']) }}"></x-modal-and-delete-button>
             @endforeach
         </tbody>
     </table>

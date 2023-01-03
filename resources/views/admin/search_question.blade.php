@@ -7,7 +7,7 @@
         <div class="form-contents">
             <form action="{{ route('searchQuestion') }}" method="GET">
                 @csrf
-                <table class="mt-3">
+                <table class="mt-5 mx-auto">
                     <tbody>
                         <tr>
                             <th class="mt-3">
@@ -15,7 +15,7 @@
                             </th>
                             <td>
                                 <input class="form-control" type="search" name="keyword" id="keyword"
-                                    value="{{ $keyword }}">
+                                    value="{{ $keyword }}" placeholder="キーワードを入力してください">
                             </td>
                         </tr>
                         <tr>
@@ -59,7 +59,7 @@
             <thead>
                 <tr>
                     <th class="text-center">質問ID</th>
-                    <th scope="col" style="width: 50%;" class="text-center">質問内容</th>
+                    <th scope="col" style="width: 45%;" class="text-center">質問内容</th>
                     <th scope="col" class="text-center">カテゴリー</th>
                     <th scope="col" class="text-center">対象職員</th>
                 </tr>
@@ -73,39 +73,17 @@
                     <td class="text-center">{{ App\Consts\StaffPositionConsts::STAFF_LIST[$search_question->role_id] }}
                     </td>
                     <td class="text-center">
-                        <a href={{ route('editForm', $search_question->id) }}>
-                            <button type="button" class="btn btn-success">編集</button>
-                        </a>
+                        <x-utility-button href="{{ route('showEditQuestionForm', $search_question->id) }}" class="success" icon="fa-regular fa-pen-to-square me-2">
+                            編集
+                        </x-utility-button>
                     </td>
                     <td class="text-center">
-                        <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                            data-bs-target="#{{ 'modal' . $search_question->id }}">
-                            削除
-                        </button>
-                        <p></p>
-                        <!-- モーダル -->
-                        <div class="modal fade" id="{{ 'modal' . $search_question->id }}" tabindex="-1"
-                            aria-labelledby="modalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="modalLabel">確認：削除しようとしています</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                            aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <strong>{{ mb_substr($search_question->content, 0, 10, 'UTF-8') }}......</strong>この質問を本当に削除しますか？
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary"
-                                            data-bs-dismiss="modal">キャンセル</button>
-                                        <a href={{ route('exeQuestionDestroyed', $search_question->id) }}>
-                                            <button type="button" class="btn btn-danger">削除する</button>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <x-modal-and-delete-button data-bs-toggle="modal"
+                        data-bs-target="#{{ 'modal' . $search_question->id }}"
+                        icon="fa-solid fa-trash me-2" id="{{ 'modal' . $search_question->id }}"
+                        title="確認：削除しようとしています"
+                        body="{{ mb_substr($search_question->content, 0, 10, 'UTF-8') }}......この質問を本当に削除しますか？" href="{{ route('exeDestroyedQuestion', $search_question->id) }}">
+                        </x-modal-and-delete-button>
                     </td>
                 </tr>
             @empty

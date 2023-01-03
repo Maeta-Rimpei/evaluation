@@ -31,7 +31,7 @@
                         <td>{{ $question->content }}</td>
                         <td class="text-center">
 
-                            <x-utility-button href="{{ route('editForm', $question->question_id) }}"
+                            <x-utility-button href="{{ route('showEditQuestionForm', $question->question_id) }}"
                                 class="success" icon="fa-regular fa-pen-to-square">
                                 編集
                             </x-utility-button>
@@ -42,7 +42,7 @@
                             data-bs-target="#{{ 'modal' . $question->question_id }}"
                             icon="fa-solid fa-trash" id="{{ 'modal' . $question->question_id }}" title="確認：削除しようとしています"
                             body="{{ mb_substr($question->content, 0, 10, 'UTF-8') }}......この質問を本当に削除しますか？"
-                            href="{{ route('exeQuestionDestroyed', $question->question_id) }}">
+                            href="{{ route('exeDestroyQuestion', $question->question_id) }}">
                         </x-modal-and-delete-button>
                         </td>
                     </tr>

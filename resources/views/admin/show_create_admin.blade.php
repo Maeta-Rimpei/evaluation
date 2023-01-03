@@ -22,8 +22,7 @@
                                 <label class="mt-5 me-3" for="staff_id">職員コード</label>
                             </th>
                             <td>
-                                <input type="text" class="form-control @error('staff_id') is-invalid @enderror mt-5 ms-5"
-                                    name="staff_id" value="{{ old('staff_id') }}" id="staff_id">
+                                <input type="text" class="form-control @error('staff_id') is-invalid @enderror mt-5 ms-5" name="staff_id" value="{{ old('staff_id') }}" id="staff_id" placeholder="登録する方の職員コードを入力">
                                 @error('staff_id')
                                     <span class="invalid-feedback ms-5" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -72,8 +71,7 @@
                                 <label class="mt-5 me-3" for="affiliation">所属</label>
                             </th>
                             <td>
-                                <input type="text" class="form-control @error('affiliation') is-invalid @enderror mt-5 ms-5"
-                                    name="affiliation" value="{{ old('affiliation') }}" id="affiliation">
+                                <input type="text" class="form-control @error('affiliation') is-invalid @enderror mt-5 ms-5" name="affiliation" value="{{ old('affiliation') }}" id="affiliation" placeholder="登録する方の所属を入力">
                                 @error('affiliation')
                                     <span class="invalid-feedback ms-5" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -88,7 +86,7 @@
                             </th>
                             <td>
                                 <input type="password"
-                                    class="form-control @error('password') is-invalid @enderror mt-5 ms-5" name="password"
+                                    class="form-control @error('password') is-invalid @enderror mt-5 ms-5" name="password" placeholder="登録する方の仮パスワードを入力"
                                     id="password">
                                 @error('password')
                                     <span class="invalid-feedback ms-5" role="alert">
@@ -105,7 +103,7 @@
                             <td>
                                 <input type="password"
                                     class="form-control @error('password_confirmation') is-invalid @enderror mt-5 ms-5"
-                                    name="password_confirmation" id="password_confirmation">
+                                    name="password_confirmation" id="password_confirmation" placeholder="確認のためもう一度入力してください">
                                 @error('password_confirmation')
                                     <span class="invalid-feedback ms-5" role="alert">
                                         <strong>{{ $message }}</strong>

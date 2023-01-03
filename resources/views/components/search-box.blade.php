@@ -5,8 +5,8 @@
     <td class="d-flex flex-row ms-5">
         <div class="search-form mb-5"
             style="display: flex;
-                border: 1px solid #ebebeb;
-                box-shadow: 2px 2px 2px #eaeaea;
+                border: 1px solid #ced4da;;
+                border-radius: 6px;
                 margin: 0px;
                 padding: 0px;
                 height: 47px;">

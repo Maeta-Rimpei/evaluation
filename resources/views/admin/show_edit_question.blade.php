@@ -23,7 +23,7 @@
                     <th>{{ $position }}</th>
                     <td>
 
-                        <x-utility-button href="{{ route('showDetailQuestionEdit', $num) }}" class="success" icon="fa-regular fa-pen-to-square">
+                        <x-utility-button href="{{ route('showEditQuestionDetail', $num) }}" class="success" icon="fa-regular fa-pen-to-square">
                             編集
                         </x-utility-button>
                     </td>

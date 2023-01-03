@@ -4,17 +4,15 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Admin;
-use App\Models\Question;
-use App\Models\Answer;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Http\Requests\AnswerRequest;
-use App\Http\Requests\QuestionCreateRequest;
+use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
     private $admin;
-    private $question;
+
     private $answer;
     /**
      * Create a new controller instance.
@@ -24,8 +22,6 @@ class AdminController extends Controller
     public function __construct()
     {
         $this->admin = new Admin();
-        $this->question = new Question();
-        $this->answer = new Answer();
     }
 
     // --------------------認証関係----------------------
@@ -72,148 +68,16 @@ class AdminController extends Controller
     }
 
     // --------------------管理者画面操作関係----------------------
-
-
-    public function showDetailQuestionEdit($role_id)
-    {
-        $questions = $this->question->getQuestionsByRoleId($role_id);
-        try {
-            $questions = $this->question->getQuestionsByRoleId($role_id);
-
-            return view('admin.show_detail_edit', compact('questions'));
-        } catch (\Throwable $e) {
-            \Log::error($e);
-            throw $e;
-        }
-    }
-
-    public function editForm($question_id)
-    {
-        $question = $this->question->getQuestionByQuestionId($question_id);
-        try {
-            $question = $this->question->getQuestionByQuestionId($question_id);
-
-            return view('admin.edit_form', compact('question'));
-        } catch (\Throwable $e) {
-            \Log::error($e);
-            throw $e;
-        }
-    }
-
-    public function editExe(Request $request, $question_id)
-    {
-        $std_role = $this->question->getRoleIdByQuestionId($question_id);
-        try {
-            $std_role = $this->question->getRoleIdByQuestionId($question_id);
-            $question = Question::findOrFail($question_id);
-
-            $question->content = $request->content;
-            $question->category = $request->category;
-            $question->save();
-
-            return redirect()->route('showDetailQuestionEdit', $std_role->role_id)->with('editMessage', '質問内容を更新しました。');
-        } catch (ModelNotFoundException $e) {
-            throw $e;
-        } catch (\Throwable $e) {
-            DB::rollBack();
-            \Log::error($e);
-            throw $e;
-        }
-    }
-
-    public function exeQuestionDestroyed($question_id)
+    /**
+     * 管理者一覧画面
+     * @return view Admin.admin.show_admin
+     */
+    public function showAdmin()
     {
         try {
-            $std_role = $this->question->getRoleIdByQuestionId($question_id);
-            // 中間テーブルを削除→onDeleteCascadeによりリレーション先のquestionsレコードも削除
-            $question = $this->question->getQuestion($question_id);
-            $question->users()->detach();
+            $admins = $this->admin->getAllAdmins();
 
-            return redirect()->route('showDetailQuestionEdit', $std_role->role_id)
-                ->with('deleteMessage', '削除しました。');
-        } catch (ModelNotFoundException $e) {
-            throw $e;
-        } catch (\Throwable $e) {
-            \Log::error($e);
-            throw $e;
-        }
-    }
-
-    public function showCreateQuestion()
-    {
-        return view('admin.show_create_question');
-    }
-
-    public function exeCreateQuestion(QuestionCreateRequest $request)
-    {
-        try {
-            DB::beginTransaction();
-            // $question = new Question();
-            $inputs = $request->only(['content', 'category', 'role_id']);
-
-            $this->question->create([
-                'content' => $inputs['content'],
-                'category' => $inputs['category'],
-            ]);
-
-            // 184～187行目で挿入したquestionのidを取得
-            $question_id = $this->question->latest('id')->first()->id;
-            $new = $this->question->findOrFail($question_id);
-            // 中間テーブルに挿入
-            $new->users()->attach($inputs['role_id']);
-            DB::commit();
-            return redirect()->route('showCreateQuestion')->with('createQuestionMessage', '質問を作成しました。');
-        } catch (ModelNotFoundException $e) {
-            throw $e;
-        } catch (\Throwable $e) {
-            DB::rollBack();
-            \Log::error($e);
-            throw $e;
-        }
-    }
-
-    // TODO:何に対してのセキュリティ対策？？
-    public static function escape($str)
-    {
-        return str_replace(['\\', '%', '_'], ['\\\\', '\%', '\_'], $str);
-    }
-
-    public function searchQuestion(Request $request)
-    {
-        try {
-            $keyword = $request->input('keyword');
-            $category = $request->input('category');
-            $role_id = $request->input('role_id');
-
-            $query = Question::query();
-            $query->join('question_user', 'questions.id', '=', 'question_user.question_id')
-                ->select(
-                    'questions.id',
-                    'questions.content',
-                    'questions.category',
-                    'question_user.role_id'
-                );
-
-            if (isset($keyword))
-                $query->when($request, function ($query, $request) {
-                    $query->where('content', 'LIKE', '%' . self::escape($request->keyword) . '%');
-                });
-
-            if (isset($category)) {
-                $query->when($request, function ($query, $request) {
-                    return $query->where('category', '=', $request->category);
-                });
-            }
-
-            if (isset($role_id)) {
-                $query->when($request, function ($query, $request) {
-                    return $query->where('role_id', '=', $request->role_id);
-                });
-            }
-
-            $search_questions = $query->orderBy('questions.content', 'desc')->paginate(10);
-
-            return view('admin.show_search_question', compact('keyword', 'category', 'role_id', 'search_questions'));
+            return view('Admin.admin.show_admin', compact('admins'));
         } catch (\Throwable $e) {
             \Log::error($e);
             throw $e;
@@ -221,100 +85,11 @@ class AdminController extends Controller
     }
 
     /**
-     * 職員検索
+     * 管理者検索
      * @param Request $request
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @return view Admin.admin.show_search_admin
      */
-    public function searchStaff(Request $request)
-    {
-        try {
-            $name = $request->input('name');
-            $staff_id = $request->input('staff_id');
-            $affiliation = $request->input('affiliation');
-            $role_id = $request->input('role');
-
-            $affiliations = User::get('affiliation')->toArray();
-            $user_affiliations = array_column($affiliations, 'affiliation');
-            // dd($affiliations);
-
-            $query = User::query();
-
-            if (isset($name)) {
-                $space_conversion = mb_convert_kana($name, 's');
-                $name_push_array = preg_split('/[\s,]+/', $space_conversion, -1, PREG_SPLIT_NO_EMPTY);
-
-                foreach ($name_push_array as $word) {
-                    $query->where('name', 'LIKE', '%' . self::escape($word) . '%');
-                }
-            }
-
-            if (isset($staff_id)) {
-                $staff_id_push_array = preg_split('/[\s,]+/', $staff_id, -1, PREG_SPLIT_NO_EMPTY);
-
-                foreach ($staff_id_push_array as $word) {
-                    $query->where('staff_id', 'LIKE', '%' . self::escape($staff_id) . '%');
-                }
-            }
-
-            if (isset($affiliation)) {
-                $query->when($request, function ($query, $request) {
-                    return $query->where('affiliation', '=', $request->affiliation);
-                });
-            }
-
-            if (isset($request->role_id)) {
-                $query->when($request, function ($query, $request) {
-                    return $query->where('role_id', '=', $request->role_id);
-                });
-            }
-
-            $search_staffs = $query->orderBy('users.created_at', 'desc')->paginate(10);
-
-            return view('admin.search_staff', compact('name', 'staff_id', 'affiliation', 'user_affiliations', 'role_id', 'search_staffs'));
-        } catch (\Throwable $e) {
-            \Log::error($e);
-            throw $e;
-        }
-    }
-
-    public function showAdminSoftDeleted()
-    {
-        try {
-            $admins = $this->admin->getAllAdmins();
-
-            return view('admin.show_deleted_admin', compact('admins'));
-        } catch (\Throwable $e) {
-            \Log::error($e);
-            throw $e;
-        }
-    }
-
-    public function exeAdminSoftDeleted($id)
-    {
-        try {
-            $admin = $this->admin->getAdmin($id);
-            $admin->delete();
-
-            return redirect()->route('showAdminSoftDeleted')->with('deleteMessage', '削除しました。');
-        } catch (\Throwable $e) {
-            \Log::error($e);
-            throw $e;
-        }
-    }
-
-    public function showAdmin()
-    {
-        try {
-            $admins = $this->admin->getAllAdmins();
-
-            return view('admin.admin', compact('admins'));
-        } catch (\Throwable $e) {
-            \Log::error($e);
-            throw $e;
-        }
-    }
-
     public function searchAdmin(Request $request)
     {
         try {
@@ -359,101 +134,56 @@ class AdminController extends Controller
 
             $search_admins = $query->orderBy('admins.created_at', 'desc')->paginate(10);
 
-            return view('admin.search_admin', compact('name', 'staff_id', 'affiliation', 'admin_affiliations', 'role_id', 'search_admins'));
+            return view('Admin.admin.search_admin', compact('name', 'staff_id', 'affiliation', 'admin_affiliations', 'role_id', 'search_admins'));
         } catch (\Throwable $e) {
             \Log::error($e);
             throw $e;
         }
     }
 
-    public function showEditAnswer()
+    /**
+     * 管理者論理削除画面
+     * @return view Admin.admin.show_deleted_admin
+     */
+    public function showSoftDeleteAdmin()
     {
         try {
-            $users = $this->user->getAllUsers();
+            $admins = $this->admin->getAllAdmins();
 
-            return view('admin.show_edit_answer', compact('users'));
+            return view('Admin.admin.show_delete_admin', compact('admins'));
         } catch (\Throwable $e) {
             \Log::error($e);
             throw $e;
         }
     }
 
-    public function exeAllDeletedAnswer($id)
+    /**
+     * 管理者論理削除実行
+     * @param int $id
+     *
+     * @return view Admin.admin.show_admin_soft_delete
+     */
+    public function exeSoftDeleteAdmin($id)
     {
         try {
-            $user_answer = $this->answer->where('user_id', '=', $id);
+            $admin = $this->admin->getAdmin($id);
+            $all_admins = $this->admin->getAllAdmins()->toArray();
 
-            if (!empty($user_answer)) {
-                return redirect()->route('showEditAnswer')->with('errorAnswerEmptyMessage', 'この方はまだ回答していません。');
+            if (count($all_admins) == 1) {
+                return redirect()->route('showSoftDeleteAdmin')->with('deleteErrorMessage', '管理者が残り一人です。削除できません。');
             }
 
-            $user_answer->delete();
+            $admin->delete();
 
-            return redirect()->route('showEditAnswer')->with('allDeleteAnswerMessage', '回答を全て削除しました。');
+            return redirect()->route('showAdminSoftDeleted')->with('deleteMessage', '削除しました。');
         } catch (\Throwable $e) {
             \Log::error($e);
             throw $e;
         }
     }
 
-    public function showPartEditAnswer($id)
+    public static function escape($str)
     {
-        try {
-            $user = $this->user->getUser($id);
-            $user_questions_answers = $this->user->getQuestionsAndAnswers($id);
-            $array_user_questions_answers = $this->user->conversionToArray($user_questions_answers);
-            // dd($array_user_questions_answers);
-            return view('admin.show_part_edit_answer', compact('user', 'array_user_questions_answers'));
-        } catch (ModelNotFoundException $e) {
-            throw $e;
-        } catch (\Throwable $e) {
-            \Log::error($e);
-            throw $e;
-        }
-    }
-
-    public function exePartDeletedAnswer($answer_id)
-    {
-        try {
-            $user_answer = $this->answer->getAnswer($answer_id);
-            $user_answer->destroy($answer_id);
-
-            return redirect()->route('showPartEditAnswer')->with('partDeleteAnswerMessage', '選択した回答を削除しました。');
-        } catch (\Throwable $e) {
-            \Log::error($e);
-            throw $e;
-        }
-    }
-
-    public function showUpdatedAnswer($answer_id)
-    {
-        try {
-            $user_answer = $this->answer->getAnswer($answer_id);
-
-            return view('admin.show_updated_answer', compact('user_answer'));
-        } catch (ModelNotFoundException $e) {
-            throw $e;
-        } catch (\Throwable $e) {
-            \Log::error($e);
-            throw $e;
-        }
-    }
-
-    public function exeUpdatedAnswer($answer_id, AnswerRequest $request)
-    {
-        try {
-            $answer = $request->only(['answer']);
-            $user_answer = Answer::findOrFail($answer_id);
-            $user_id = Answer::findOrFail($answer_id)->user->id;
-
-            $user_answer->update($answer);
-
-            return redirect()->route('showPartEditAnswer', $user_id)->with('updateAnswerMessage', '回答を修正しました。');
-        } catch (ModelNotFoundException $e) {
-            throw $e;
-        } catch (\Throwable $e) {
-            \Log::error($e);
-            throw $e;
-        }
+        return str_replace(['\\', '%', '_'], ['\\\\', '\%', '\_'], $str);
     }
 }

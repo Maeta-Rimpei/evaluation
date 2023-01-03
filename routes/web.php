@@ -38,7 +38,7 @@ Route::group(['middleware' => ['auth:admin']], function () {
     // 職員一覧
     Route::get('/admin/show_staff', [App\Http\Controllers\Admin\StaffController::class, 'showStaff'])->name('showStaff');
     Route::get('/admin/staff_detail/{id}', [App\Http\Controllers\Admin\StaffController::class, 'showStaffDetail'])->name('showStaffDetail');
-    Route::get('/admin/search_staff', [App\Http\Controllers\Admin\AdminController::class, 'searchStaff'])->name('searchStaff');
+    Route::get('/admin/search_staff', [App\Http\Controllers\Admin\StaffController::class, 'searchStaff'])->name('searchStaff');
 
     // 職員登録
     Route::get('/register', [App\Http\Controllers\Auth\RegisterController::class, 'showRegistrationForm'])->name('register');
@@ -48,14 +48,14 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::post('/admin/exe_evaluation_staff/{id}', [App\Http\Controllers\Admin\StaffController::class, 'exeEvaluationStaff'])->name('exeEvaluationStaff');
     // 職員評価編集
     Route::get('/admin/show_edit_evaluation_staff/{id}', [App\Http\Controllers\Admin\StaffController::class, 'showEditEvaluationStaff'])->name('showEditEvaluationStaff');
-    Route::patch('/admin/exe_edit_evaluation_staff/{id}', [App\Http\Controllers\Admin\StaffController::class, 'exeEditEvaluationStaff'])->name('exeEditEvaluationStaff');
-    Route::get('/admin/exe_destroyed_evaluation_staff/{id}', [App\Http\Controllers\Admin\StaffController::class, 'exeDestroyedEvaluationStaff'])->name('exeDestroyedEvaluationStaff');
-    Route::get('/admin/show_destroyed_evaluation_staff', [App\Http\Controllers\Admin\StaffController::class, 'showDestroyedEvaluationStaff'])->name('showDestroyedEvaluationStaff');
-    Route::get('/admin/exe_destroyed_all_evaluation_staff', [App\Http\Controllers\Admin\StaffController::class, 'exeDestroyedAllEvaluationStaff'])->name('exeDestroyedAllEvaluationStaff');
-    
+    Route::patch('/admin/exe__evaluation_staff/{id}', [App\Http\Controllers\Admin\StaffController::class, 'exeUpdateEvaluationStaff'])->name('exeUpdateEvaluationStaff');
+    Route::get('/admin/exe_destroy_evaluation_staff/{id}', [App\Http\Controllers\Admin\StaffController::class, 'exeDestroyEvaluationStaff'])->name('exeDestroyEvaluationStaff');
+    Route::get('/admin/show_destroy_evaluation_staff', [App\Http\Controllers\Admin\StaffController::class, 'showDestroyEvaluationStaff'])->name('showDestroyEvaluationStaff');
+    Route::get('/admin/exe_destroy_all_evaluation_staff', [App\Http\Controllers\Admin\StaffController::class, 'exeDestroyAllEvaluationStaff'])->name('exeDestroyAllEvaluationStaff');
+
     // 職員削除
-    Route::get('/admin/show_deleted', [App\Http\Controllers\Admin\StaffController::class, 'showStaffSoftDeleted'])->name('showStaffSoftDeleted');
-    Route::get('/admin/exe_deleted/{id}', [App\Http\Controllers\Admin\StaffController::class, 'exeStaffSoftDeleted'])->name('exeStaffSoftDeleted');
+    Route::get('/admin/show_delete_staff', [App\Http\Controllers\Admin\StaffController::class, 'showSoftDeleteStaff'])->name('showSoftDeleteStaff');
+    Route::get('/admin/exe_delete_staff/{id}', [App\Http\Controllers\Admin\StaffController::class, 'exeSoftDeleteStaff'])->name('exeSoftDeleteStaff');
 
     // 管理者一覧
     Route::get('/admin/show_admin', [App\Http\Controllers\Admin\AdminController::class, 'showAdmin'])->name('showAdmin');
@@ -65,26 +65,25 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::get('/admin_register', [App\Http\Controllers\Auth\RegisterController::class, 'showAdminRegistrationForm'])->name('showAdminRegister');
     Route::post('/admin/exe_register_admin', [App\Http\Controllers\Auth\RegisterController::class, 'exeAdminRegistrationForm'])->name('exeAdminRegister');
     // 管理者削除
-    Route::get('/admin/show_deleted_admin', [App\Http\Controllers\Admin\AdminController::class, 'showAdminSoftDeleted'])->name('showAdminSoftDeleted');
-    Route::get('/admin/exe_deleted_admin/{id}', [App\Http\Controllers\Admin\AdminController::class, 'exeAdminSoftDeleted'])->name('exeAdminSoftDeleted');
+    Route::get('/admin/show_delete_admin', [App\Http\Controllers\Admin\AdminController::class, 'showSoftDeleteAdmin'])->name('showSoftDeleteAdmin');
+    Route::get('/admin/exe_delete_admin/{id}', [App\Http\Controllers\Admin\AdminController::class, 'exeSoftDeleteAdmin'])->name('exeSoftDeleteAdmin');
 
-    // 自己評価シート編集
-    Route::get('/admin/show_edit_question', [App\Http\Controllers\Admin\QuestionController::class, 'showQuestionEdit'])->name('showQuestionEdit');
-    Route::get('admin/show_edit_question_detail/{role_id}', [App\Http\Controllers\Admin\AdminController::class, 'showDetailQuestionEdit'])->name('showDetailQuestionEdit');
-    Route::get('admin/edit_form/{question_id}', [App\Http\Controllers\Admin\AdminController::class, 'editForm'])->name('editForm');
-    Route::patch('edit_exe/{question_id}', [App\Http\Controllers\Admin\AdminController::class, 'editExe'])->name('editExe');
-    Route::get('exe_question_destroyed/{question_id}', [App\Http\Controllers\Admin\AdminController::class, 'exeQuestionDestroyed'])->name('exeQuestionDestroyed');
-    Route::get('show_create_question', [App\Http\Controllers\Admin\AdminController::class, 'showCreateQuestion'])->name('showCreateQuestion');
-    Route::post('exe_create_question', [App\Http\Controllers\Admin\AdminController::class, 'exeCreateQuestion'])->name('exeCreateQuestion');
-    Route::get('show_search_question', [App\Http\Controllers\Admin\AdminController::class, 'searchQuestion'])->name('searchQuestion');
+    // 自己評価シート編集・削除
+    Route::get('/admin/show_edit_question', [App\Http\Controllers\Admin\QuestionController::class, 'showEditQuestion'])->name('showEditQuestion');
+    Route::get('admin/show_edit_question_detail/{role_id}', [App\Http\Controllers\Admin\QuestionController::class, 'showEditQuestionDetail'])->name('showEditQuestionDetail');
+    Route::get('admin/show_edit_question_form/{question_id}', [App\Http\Controllers\Admin\QuestionController::class, 'showEditQuestionForm'])->name('showEditQuestionForm');
+    Route::patch('/admin/exe_update_question/{question_id}', [App\Http\Controllers\Admin\QuestionController::class, 'exeUpdateQuestion'])->name('exeUpdateQuestion');
+    Route::get('/admin/exe_question_destroy/{question_id}', [App\Http\Controllers\Admin\QuestionController::class, 'exeDestroyQuestion'])->name('exeDestroyQuestion');
+    Route::get('/admin/show_create_question', [App\Http\Controllers\Admin\QuestionController::class, 'showCreateQuestion'])->name('showCreateQuestion');
+    Route::post('/admin/exe_create_question', [App\Http\Controllers\Admin\QuestionController::class, 'exeCreateQuestion'])->name('exeCreateQuestion');
+    Route::get('/admin/search_question', [App\Http\Controllers\Admin\QuestionController::class, 'searchQuestion'])->name('searchQuestion');
 
     // 回答編集
-    Route::get('/show_edit_answer', [App\Http\Controllers\Admin\AdminController::class, 'showEditAnswer'])->name('showEditAnswer');
-    Route::get('/exe_all_deleted_answer/{id}', [App\Http\Controllers\Admin\AdminController::class, 'exeAllDeletedAnswer'])->name('exeAllDeletedAnswer');
-    Route::get('/show_part_edit_answer/{id}', [App\Http\Controllers\Admin\AdminController::class, 'showPartEditAnswer'])->name('showPartEditAnswer');
-    Route::get('/exe_part_deleted_answer/{answer_id}', [App\Http\Controllers\Admin\AdminController::class, 'exePartDeletedAnswer'])->name('exePartDeletedAnswer');
-    Route::get('/show_updated_answer/{answer_id}', [App\Http\Controllers\Admin\AdminController::class, 'showUpdatedAnswer'])->name('showUpdatedAnswer');
-    Route::patch('/exe_updated_answer/{answer_id}', [App\Http\Controllers\Admin\AdminController::class, 'exeUpdatedAnswer'])->name('exeUpdatedAnswer');
+    Route::get('/admin/show_edit_answer', [App\Http\Controllers\Admin\AnswerController::class, 'showEditAnswer'])->name('showEditAnswer');
+    Route::get('/admin/exe_delete_all_answers/{id}', [App\Http\Controllers\Admin\AnswerController::class, 'exeDeleteAllAnswers'])->name('exeDeleteAllAnswers');
+    Route::get('/admin/show_edit_part_answer/{id}', [App\Http\Controllers\Admin\AnswerController::class, 'showEditPartAnswer'])->name('showEditPartAnswer');
+    Route::get('/admin/show_edit_answer_form/{answer_id}', [App\Http\Controllers\Admin\AnswerController::class, 'showEditAnswerForm'])->name('showEditAnswerForm');
+    Route::patch('/admin/exe_update_answer/{answer_id}', [App\Http\Controllers\Admin\AnswerController::class, 'exeUpdateAnswer'])->name('exeUpdateAnswer');
 
     // ログアウト処理
     Route::get('/admin/logout', [App\Http\Controllers\Admin\AdminController::class, 'logout'])->name('adminLogout');

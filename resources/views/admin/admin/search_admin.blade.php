@@ -1,30 +1,23 @@
 @extends('admin.index')
 
 @section('content')
-    <h2 class="text-center">職員検索</h2>
+    <h2 class="text-center">管理者検索</h2>
 
     <div class="container mt-3">
         <form action="{{ route('searchAdmin') }}" method="GET">
             @csrf
             <table class="mt-5 mx-auto">
                 <tbody>
-                    <tr>
-                        <th class="mt-3">
-                            <label class="me-3" for="name">職員名</label>
-                        </th>
-                        <td>
-                            <input class="form-control ms-5" type="search" name="name" id="name"
-                                value="{{ $name }}">
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            <label class="mt-5 me-3" for="staff_id">職員コード</label>
-                        </th>
-                        <td>
-                            <input class="form-control mt-5 ms-5" name="staff_id" id="staff_id">
-                        </td>
-                    </tr>
+                    @php
+                    $label = '管理者名';
+                @endphp
+                <x-searchBox :label=$label name="name" value="{{ $name }}"></x-searchBox>
+
+                @php
+                    $label = '職員コード';
+                @endphp
+                <x-searchBox :label=$label name="staff_id" value="{{ $staff_id }}"></x-searchBox>
+
                     <tr>
                         <th>
                             <label class="mt-5 me-3" for="affiliation">所属</label>

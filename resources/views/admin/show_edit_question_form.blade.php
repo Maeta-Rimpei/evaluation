@@ -4,7 +4,7 @@
     <div class="container mt-3">
         <h2 class="text-center">質問編集</h2>
 
-        <form action="{{ route('editExe', $question->question_id) }}" method="post">
+        <form action="{{ route('exeUpdateQuestion', $question->question_id) }}" method="post">
             @csrf
             @method('patch')
             <div>

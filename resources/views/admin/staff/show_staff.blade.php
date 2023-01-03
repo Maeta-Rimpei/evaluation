@@ -19,7 +19,7 @@
             職員を検索
         </x-utility-button>
 
-        <x-utility-button href="{{ route('showStaffSoftDeleted') }}" class="danger mb-3" icon="fa-solid fa-user-minus me-2">
+        <x-utility-button href="{{ route('showSoftDeleteStaff') }}" class="danger mb-3" icon="fa-solid fa-user-minus me-2">
             職員削除
         </x-utility-button>
     </div>
@@ -37,7 +37,7 @@
                 <th scope="col"></th>
                 <th scope="col"></th>
                 <th scope="col">
-                    <x-utility-button href="{{ route('showDestroyedEvaluationStaff') }}" class="outline-primary" icon="fa-solid fa-list me-2">
+                    <x-utility-button href="{{ route('showDestroyEvaluationStaff') }}" class="outline-primary" icon="fa-solid fa-list me-2">
                         全職員フィードバック一覧
                     </x-utility-button>
                 </th>

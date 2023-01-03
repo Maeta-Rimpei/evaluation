@@ -45,14 +45,16 @@ class RegisterController extends Controller
 
     /**
      * 職員登録フォーム表示
+     * @return view admin.staff.show_create_staff
      */
     protected function showRegistrationForm()
     {
-        return view('admin.show_create_staff');
+        return view('admin.staff.show_create_staff');
     }
 
     /**
      * 管理者登録フォーム表示
+     * @return view admin.admin.show_create_admin
      */
     protected function showAdminRegistrationForm()
     {

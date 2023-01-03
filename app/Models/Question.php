@@ -20,7 +20,7 @@ class Question extends Model
 
     /**
      * questionsテーブルの全ての情報を取得
-     * 
+     *
      * @return //collection
      */
     public function getAllQuestions()
@@ -30,16 +30,18 @@ class Question extends Model
 
     /**
      * questionsテーブルから特定のレコードを取得
+     *
+     * @return App\Models\Question
      */
     public function getQuestion($question_id)
     {
-        return $this->find($question_id);
+        return $this->findOrFail($question_id);
     }
 
     /**
      * $role_idに紐づいた全ての質問情報を取得
      * @param int $role_id
-     * 
+     *
      * @return // collection
      */
     public function getQuestionsByRoleId(int $role_id)
@@ -59,7 +61,7 @@ class Question extends Model
     /**
      * $question_idに紐づいた質問を取得
      * @param int $question_id
-     * 
+     *
      * @return App\Models\Question;
      */
     public function getQuestionByQuestionId(int $question_id)
@@ -79,7 +81,7 @@ class Question extends Model
     /**
      * $question_idに紐づいた$role_idを取得
      * @param int $question_id
-     * 
+     *
      * @return $role_id App\Models\QuestionUser
      */
     public function getRoleIdByQuestionId(int $question_id)

@@ -4,7 +4,7 @@
     <div class="container">
         <h2 class="text-center">回答編集</h2>
 
-        <form action="{{ route('exeUpdatedAnswer', $user_answer['id']) }}" method="post">
+        <form action="{{ route('exeUpdateAnswer', $user_answer['id']) }}" method="post">
             @method('patch')
             @csrf
             <table class="mx-auto mt-5">
@@ -42,7 +42,9 @@
                 </tbody>
             </table>
             <div class="text-center">
-                <button class="btn btn-success mt-5 mx-auto" type="submit">修正</button>
+                <x-utility-button type="submit" class="success mt-5 mx-auto">
+                    修正
+                </x-utility-button>
             </div>
         </form>
     </div>
