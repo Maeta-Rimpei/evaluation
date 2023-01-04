@@ -171,8 +171,8 @@ class StaffController extends Controller
             }
 
             // nullで上書きすることで削除
-            $user->evaluation = '';
-            $user->total_evaluation = '';
+            $user->evaluation = null;
+            $user->total_evaluation = null;
             $user->save();
 
             return redirect()->route('showStaffDetail', $user->id)->with('destroyEvaluationMessage', 'フィードバックを削除しました。');
@@ -182,21 +182,15 @@ class StaffController extends Controller
         }
     }
 
-
     /**
      * 全評価削除画面
      * @return view Admin.staff.show_destroy_all_evaluation_staff
      */
     public function showDestroyAllEvaluationStaff()
     {
-        /**
-         *
-         *
-         *
-         *
-         *
-         * 
-         */
+        $users = $this->user->getAllUsers();
+
+        return view('Admin.staff.show_destroy_all_evaluation_staff', compact('users'));
     }
     /**
      * 全評価削除実行
@@ -205,10 +199,15 @@ class StaffController extends Controller
     public function exeDestroyAllEvaluationStaff()
     {
         try {
-            $users = $this->user->getAllUsers();
+            $users = $this->user->getAllUsers()->toArray();
+            // dd(array_column($users, 'evaluation'));
+            $user_evaluation = array_column($users, 'evaluation');
+            $user_total_evaluation = array_column($users, 'total_evaluation');
+            dd(empty(array_filter($user_evaluation)));
+            
             foreach ($users as $user) {
-                $user->evaluation = '';
-                $user->total_evaluation = '';
+                $user->evaluation = null;
+                $user->total_evaluation = null;
                 $user->save();
             }
             return redirect()->route('showStaff')->with('destroyAllEvaluationMessage', '全職員のフィードバックを削除しました。');

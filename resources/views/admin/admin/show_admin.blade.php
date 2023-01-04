@@ -3,7 +3,7 @@
 @section('content')
     <h2 class="text-center mb-3">管理者一覧</h2>
 
-    <a class="mb-2" style="text-decoration: none;" href="{{ route('showAdminRegister') }}">
+    <a class="mb-2" style="text-decoration: none;" href="{{ route('showRegistrationAdminForm') }}">
         <x-utility-button class="primary mb-3 me-2" icon="fa-solid fa-user-plus me-2">
             管理者登録
         </x-utility-button>

@@ -14,7 +14,7 @@
         </div>
     @endif
 
-    <table class="table table-striped">
+    <table class="table table-striped mt-5">
         <thead>
             <tr>
                 <th scope="col">職員コード</th>
@@ -41,7 +41,13 @@
                     <td></td>
                     <td> </td>
                     <td>
-                        <x-modal-and-delete-button type="button" buttonClass="danger" data-bs-toggle="modal" data-bs-target="#{{ 'modal' . $user['staff_id'] }}" icon="fa-solid fa-user-minus me-2" id="{{ 'modal' . $user['staff_id'] }}" title="確認：削除しようとしています" body="{{ $user['name'] }}さんを本当に削除しますか？" href="{{ route('exeSoftDeleteStaff', $user['id']) }}"></x-modal-and-delete-button>
+                        <x-modal-and-delete-button type="button" 
+                        buttonClass="danger" data-bs-toggle="modal" 
+                        data-bs-target="#{{ 'modal' . $user['staff_id'] }}" 
+                        icon="fa-solid fa-user-minus me-2" id="{{ 'modal' . $user['staff_id'] }}" 
+                        title="確認：削除しようとしています" body="{{ $user['name'] }}さんを本当に削除しますか？" 
+                        href="{{ route('exeSoftDeleteStaff', $user['id']) }}">
+                    </x-modal-and-delete-button>
                     </td>
                 </tr>
             @endforeach

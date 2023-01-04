@@ -32,8 +32,8 @@ class ModalAndDeleteButton extends Component
      * @return void
      */
     public function __construct(
-        $type = 'button',
-        $buttonClass = 'danger',
+        $type,
+        $buttonClass,
         $icon = null,
         $dataBsToggle,
         $dataBsTarget,

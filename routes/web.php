@@ -41,16 +41,18 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::get('/admin/search_staff', [App\Http\Controllers\Admin\StaffController::class, 'searchStaff'])->name('searchStaff');
 
     // 職員登録
-    Route::get('/register', [App\Http\Controllers\Auth\RegisterController::class, 'showRegistrationForm'])->name('register');
-    Route::post('/exe_register', [App\Http\Controllers\Auth\RegisterController::class, 'create'])->name('create');
+    Route::get('/admin/show_registration_staff', [App\Http\Controllers\Auth\RegisterController::class, 'showRegistrationStaffForm'])->name('showRegistrationStaffForm');
+    Route::post('/admin/exe_register', [App\Http\Controllers\Auth\RegisterController::class, 'exeRegisterStaff'])->name('exeRegisterStaff');
+    
     // 職員評価作成
     Route::get('/admin/evaluation_staff/{id}', [App\Http\Controllers\Admin\StaffController::class, 'evaluationStaff'])->name('evaluationStaff');
     Route::post('/admin/exe_evaluation_staff/{id}', [App\Http\Controllers\Admin\StaffController::class, 'exeEvaluationStaff'])->name('exeEvaluationStaff');
+    
     // 職員評価編集
     Route::get('/admin/show_edit_evaluation_staff/{id}', [App\Http\Controllers\Admin\StaffController::class, 'showEditEvaluationStaff'])->name('showEditEvaluationStaff');
     Route::patch('/admin/exe__evaluation_staff/{id}', [App\Http\Controllers\Admin\StaffController::class, 'exeUpdateEvaluationStaff'])->name('exeUpdateEvaluationStaff');
     Route::get('/admin/exe_destroy_evaluation_staff/{id}', [App\Http\Controllers\Admin\StaffController::class, 'exeDestroyEvaluationStaff'])->name('exeDestroyEvaluationStaff');
-    Route::get('/admin/show_destroy_evaluation_staff', [App\Http\Controllers\Admin\StaffController::class, 'showDestroyEvaluationStaff'])->name('showDestroyEvaluationStaff');
+    Route::get('/admin/show_destroy_all_evaluation_staff', [App\Http\Controllers\Admin\StaffController::class, 'showDestroyAllEvaluationStaff'])->name('showDestroyAllEvaluationStaff');
     Route::get('/admin/exe_destroy_all_evaluation_staff', [App\Http\Controllers\Admin\StaffController::class, 'exeDestroyAllEvaluationStaff'])->name('exeDestroyAllEvaluationStaff');
 
     // 職員削除
@@ -62,8 +64,9 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::get('/admin/search_admin', [App\Http\Controllers\Admin\AdminController::class, 'searchAdmin'])->name('searchAdmin');
 
     // 管理者登録
-    Route::get('/admin_register', [App\Http\Controllers\Auth\RegisterController::class, 'showAdminRegistrationForm'])->name('showAdminRegister');
-    Route::post('/admin/exe_register_admin', [App\Http\Controllers\Auth\RegisterController::class, 'exeAdminRegistrationForm'])->name('exeAdminRegister');
+    Route::get('/admin/admin_register', [App\Http\Controllers\Auth\RegisterController::class, 'showRegistrationAdminForm'])->name('showRegistrationAdminForm');
+    Route::post('/admin/exe_register_admin', [App\Http\Controllers\Auth\RegisterController::class, 'exeRegisterAdmin'])->name('exeRegisterAdmin');
+    
     // 管理者削除
     Route::get('/admin/show_delete_admin', [App\Http\Controllers\Admin\AdminController::class, 'showSoftDeleteAdmin'])->name('showSoftDeleteAdmin');
     Route::get('/admin/exe_delete_admin/{id}', [App\Http\Controllers\Admin\AdminController::class, 'exeSoftDeleteAdmin'])->name('exeSoftDeleteAdmin');

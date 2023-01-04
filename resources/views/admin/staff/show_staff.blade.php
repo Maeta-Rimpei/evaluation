@@ -4,13 +4,18 @@
     <h2 class="text-center mb-3">職員一覧</h2>
 
     @if (session('destroyedAllEvaluationMessage'))
-            <div class="alert alert-danger text-center">
-                {{ session('destroyedAllEvaluationMessage') }}
-            </div>
-        @endif
+        <div class="alert alert-danger text-center">
+            {{ session('destroyedAllEvaluationMessage') }}
+        </div>
+    @elseif (session('destroyAllEvaluationMessage'))
+        <div class="alert alert-danger text-center">
+            {{ session('destroyAllEvaluationMessage') }}
+        </div>
+    @endif
 
     <div class="btn mt-5">
-        <x-utility-button href="{{ route('register') }}" class="primary mb-3 me-2" icon="fa-solid fa-user-plus me-2">
+        <x-utility-button href="{{ route('showRegistrationStaffForm') }}" class="primary mb-3 me-2"
+            icon="fa-solid fa-user-plus me-2">
             職員登録
         </x-utility-button>
 
@@ -37,7 +42,8 @@
                 <th scope="col"></th>
                 <th scope="col"></th>
                 <th scope="col">
-                    <x-utility-button href="{{ route('showDestroyEvaluationStaff') }}" class="outline-primary" icon="fa-solid fa-list me-2">
+                    <x-utility-button href="{{ route('showDestroyAllEvaluationStaff') }}" class="outline-primary"
+                        icon="fa-solid fa-list me-2">
                         全職員フィードバック一覧
                     </x-utility-button>
                 </th>

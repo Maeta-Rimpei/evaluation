@@ -24,14 +24,14 @@ class AnswerController extends Controller
 
     /**
      * 回答編集画面
-     * @return view admin.show_edit_answer
+     * @return view Admin.answer.show_edit_answer
      */
     public function showEditAnswer()
     {
         try {
             $users = $this->user->getAllUsers();
 
-            return view('admin.show_edit_answer', compact('users'));
+            return view('Admin.answer.show_edit_answer', compact('users'));
         } catch (\Throwable $e) {
             \Log::error($e);
             throw $e;
@@ -68,7 +68,7 @@ class AnswerController extends Controller
      * 回答個別編集画面
      * @param int $id users.id
      *
-     * @return view admin.show_edit_part_answer
+     * @return view Admin.answer.show_edit_part_answer
      */
     public function showEditPartAnswer($id)
     {
@@ -76,7 +76,7 @@ class AnswerController extends Controller
             $user = $this->user->getUser($id);
             $user_questions_answers = $this->user->getQuestionsAndAnswers($id);
 
-            return view('admin.show_edit_part_answer', compact('user', 'user_questions_answers'));
+            return view('Admin.answer.show_edit_part_answer', compact('user', 'user_questions_answers'));
         } catch (ModelNotFoundException $e) {
             throw $e;
         } catch (\Throwable $e) {
@@ -96,7 +96,7 @@ class AnswerController extends Controller
         try {
             $user_answer = $this->answer->getAnswer($answer_id);
 
-            return view('admin.show_edit_answer_form', compact('user_answer'));
+            return view('Admin.answer.show_edit_answer_form', compact('user_answer'));
         } catch (ModelNotFoundException $e) {
             throw $e;
         } catch (\Throwable $e) {
@@ -109,7 +109,7 @@ class AnswerController extends Controller
      * 回答更新実行
      * @param int $answer_id answers.id
      *        Request $request
-     * @return view admin.show_edit_part_answer
+     * @return view Admin.answer.show_edit_part_answer
      */
     public function exeUpdateAnswer($answer_id, AnswerRequest $request)
     {

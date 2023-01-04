@@ -13,7 +13,7 @@
         @endif
 
         <div class="form-contents">
-            <form action={{ route('exeAdminRegister') }} method="post">
+            <form action={{ route('exeRegisterAdmin') }} method="post">
                 @csrf
                 <table class="mt-3 mx-auto">
                     <tbody>

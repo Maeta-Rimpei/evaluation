@@ -62,6 +62,8 @@
                     <th scope="col" style="width: 45%;" class="text-center">質問内容</th>
                     <th scope="col" class="text-center">カテゴリー</th>
                     <th scope="col" class="text-center">対象職員</th>
+                    <th scope="col" class="text-center"></th>
+                    <th scope="col" class="text-center"></th>
                 </tr>
             </thead>
             @forelse ($search_questions as $search_question)
@@ -78,11 +80,12 @@
                         </x-utility-button>
                     </td>
                     <td class="text-center">
-                        <x-modal-and-delete-button data-bs-toggle="modal"
+                        <x-modal-and-delete-button type="button" buttonClass="danger" data-bs-toggle="modal"
                         data-bs-target="#{{ 'modal' . $search_question->id }}"
                         icon="fa-solid fa-trash me-2" id="{{ 'modal' . $search_question->id }}"
                         title="確認：削除しようとしています"
-                        body="{{ mb_substr($search_question->content, 0, 10, 'UTF-8') }}......この質問を本当に削除しますか？" href="{{ route('exeDestroyedQuestion', $search_question->id) }}">
+                        body="{{ mb_substr($search_question->content, 0, 10, 'UTF-8') }}......この質問を本当に削除しますか？"
+                        href="{{ route('exeDestroyQuestion', $search_question->id) }}">
                         </x-modal-and-delete-button>
                     </td>
                 </tr>

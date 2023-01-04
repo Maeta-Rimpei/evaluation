@@ -104,7 +104,7 @@ class AdminController extends Controller
 
             if (isset($name)) {
                 $space_conversion = mb_convert_kana($name, 's');
-                // TODO:/[\s,]+/ ←この表現の意味は？
+
                 $name_push_array = preg_split('/[\s,]+/', $space_conversion, -1, PREG_SPLIT_NO_EMPTY);
 
                 foreach ($name_push_array as $word) {

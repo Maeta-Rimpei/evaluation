@@ -6,10 +6,10 @@
 <h2 class="text-center">全職員フィードバック一覧</h2>
 
 <div class="my-3">
-    <x-modal-and-delete-button type="button" buttonClass="outline-danger" data-bs-toggle="modal"
-        data-bs-target="#modal" icon="fa-solid fa-trash" id="modal"
+    <x-modal-and-delete-button type="button" buttonClass="danger" data-bs-toggle="modal"
+        data-bs-target="#modal" icon="fa-solid fa-trash me-2" id="modal"
         title="確認：削除しようとしています" body="全職員のフィードバックを本当に削除しますか？"
-        href="{{ route('exeDestroyedAllEvaluationStaff') }}">
+        href="{{ route('exeDestroyAllEvaluationStaff') }}">
     </x-modal-and-delete-button>
 </div>
 

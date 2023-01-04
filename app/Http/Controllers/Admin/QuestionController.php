@@ -22,18 +22,18 @@ class QuestionController extends Controller
 
     /**
      * 質問作成画面
-     * @return view admin.show_create_question
+     * @return view Admin.question.questionshow_create_question
      */
     public function showCreateQuestion()
     {
-        return view('admin.show_create_question');
+        return view('Admin.question.show_create_question');
     }
 
     /**
      * 質問作成
      * @param QuestionCreateRequest $request
      *
-     * @return view admin.show_create_question
+     * @return view Admin.question.show_create_question
      * */
     public function exeCreateQuestion(QuestionCreateRequest $request)
     {
@@ -64,18 +64,18 @@ class QuestionController extends Controller
 
     /**
      * 質問区分一覧画面
-     * @return view admin.show_edit_question
+     * @return view Admin.question.show_edit_question
      */
     public function showEditQuestion()
     {
-        return view('admin.show_edit_question');
+        return view('Admin.question.show_edit_question');
     }
 
     /**
      * 区分ごとの質問詳細画面
      * @param int $role_id
      *
-     * @return view admin.show_edit_question_detail
+     * @return view Admin.question.show_edit_question_detail
      */
     public function showEditQuestionDetail($role_id)
     {
@@ -83,7 +83,7 @@ class QuestionController extends Controller
         try {
             $questions = $this->question->getQuestionsByRoleId($role_id);
 
-            return view('admin.show_edit_question_detail', compact('questions'));
+            return view('Admin.question.show_edit_question_detail', compact('questions'));
         } catch (\Throwable $e) {
             \Log::error($e);
             throw $e;
@@ -94,14 +94,14 @@ class QuestionController extends Controller
      * 質問編集フォーム画面
      * @param int $question_id
      *
-     * @return view admin.show_edit_question_form
+     * @return view Admin.question.show_edit_question_form
      */
     public function showEditQuestionForm($question_id)
     {
         try {
             $question = $this->question->getQuestionByQuestionId($question_id);
 
-            return view('admin.show_edit_question_form', compact('question'));
+            return view('Admin.question.show_edit_question_form', compact('question'));
         } catch (\Throwable $e) {
             \Log::error($e);
             throw $e;
@@ -112,7 +112,7 @@ class QuestionController extends Controller
      * 更新実行
      * @param Request $request
      *
-     * @return view admin.show_edit_question_detail
+     * @return view Admin.question.show_edit_question_detail
      */
     public function exeUpdateQuestion(Request $request, $question_id)
     {
@@ -142,7 +142,7 @@ class QuestionController extends Controller
      * 質問削除実行
      * @param int $question_id
      *
-     * @return view admin.show_edit_question_detail
+     * @return view Admin.question.show_edit_question_detail
      */
     public function exeDestroyQuestion($question_id)
     {
@@ -173,7 +173,7 @@ class QuestionController extends Controller
      * 質問検索画面
      * @param Request $request
      *
-     * @return view admin.show_search_question
+     * @return view Admin.question.show_search_question
      */
     public function searchQuestion(Request $request)
     {
@@ -191,10 +191,15 @@ class QuestionController extends Controller
                     'question_user.role_id'
                 );
 
-            if (isset($keyword))
-                $query->when($request, function ($query, $request) {
-                    $query->where('content', 'LIKE', '%' . self::escape($request->keyword) . '%');
-                });
+            if (isset($keyword)) {
+                    $space_conversion = mb_convert_kana($keyword, 's');
+
+                $keyword_push_array = preg_split('/[\s,]+/', $space_conversion, -1, PREG_SPLIT_NO_EMPTY);
+
+                foreach ($keyword_push_array as $word) {
+                    $query->where('content', 'LIKE', '%' . self::escape($word) . '%');
+                }
+            }
 
             if (isset($category)) {
                 $query->when($request, function ($query, $request) {
@@ -210,7 +215,7 @@ class QuestionController extends Controller
 
             $search_questions = $query->orderBy('questions.content', 'desc')->paginate(10);
 
-            return view('admin.search_question', compact('keyword', 'category', 'role_id', 'search_questions'));
+            return view('Admin.question.search_question', compact('keyword', 'category', 'role_id', 'search_questions'));
         } catch (\Throwable $e) {
             \Log::error($e);
             throw $e;

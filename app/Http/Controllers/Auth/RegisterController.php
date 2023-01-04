@@ -45,26 +45,26 @@ class RegisterController extends Controller
 
     /**
      * 職員登録フォーム表示
-     * @return view admin.staff.show_create_staff
+     * @return view Admin.admin.show_registeration_staff_form
      */
-    protected function showRegistrationForm()
+    protected function showRegistrationStaffForm()
     {
-        return view('admin.staff.show_create_staff');
+        return view('Admin.staff.show_registeration_staff_form');
     }
 
     /**
      * 管理者登録フォーム表示
-     * @return view admin.admin.show_create_admin
+     * @return view Admin.admin.show_register_admin_form
      */
-    protected function showAdminRegistrationForm()
+    protected function showRegistrationAdminForm()
     {
-        return view('admin.show_create_admin');
+        return view('Admin.admin.show_register_admin_form');
     }
 
     /**
-     * 職員登録フォーム表示
+     * 管理者登録フォーム表示
      */
-    protected function exeAdminRegistrationForm(StaffCreateRequest $request)
+    protected function exeRegisterAdmin(StaffCreateRequest $request)
     {
         Admin::create([
             'staff_id' => $request->staff_id,
@@ -83,7 +83,7 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \App\Models\User
      */
-    protected function create(StaffCreateRequest $request)
+    protected function exeRegisterStaff(StaffCreateRequest $request)
     {
         User::create([
             'staff_id' => $request->staff_id,
