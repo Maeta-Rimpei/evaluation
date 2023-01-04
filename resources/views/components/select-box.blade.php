@@ -1,6 +1,6 @@
 <tr>
     <th>
-        <label class="mt-5 me-3" for="role_id">{{ $label }}</label>
+        <label class="mt-5 me-3" for="{{ $name }}">{{ $label }}</label>
     </th>
     <td>
         <select class="form-select mt-5 ms-5" name="{{ $name }}">

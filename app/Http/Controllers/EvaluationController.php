@@ -25,33 +25,45 @@ class EvaluationController extends Controller
         $this->middleware('auth');
     }
 
+    /**
+     * ホーム画面
+     * @return view user.home
+     */
     public function index()
     {
         try {
             $user = Auth::user();
             $user_answers = $user->answers;
+
+            return view('user.home', compact('user', 'user_answers'));
         } catch (\Throwable $e) {
             \Log::error($e);
             throw $e;
         }
-
-        return view('home', compact('user', 'user_answers'));
     }
 
+    /**
+     * 回答確認画面
+     * @return view user.confirm_answer
+     */
     public function confirmAnswers()
     {
         try {
             $user = \Auth::user();
             $user_answers = $user->answers;
             $user_questions = $user->questions;
+
+            return view('user.confirm_answers', compact('user', 'user_answers', 'user_questions'));
         } catch (\Throwable $e) {
             \Log::error($e);
             throw $e;
         }
-
-        return view('confirm_answers', compact('user', 'user_answers', 'user_questions'));
     }
 
+    /**
+     * フィードバック確認画面
+     *@return view user.confirm_evaluation
+     */
     public function confirmFeedback()
     {
         try {
@@ -59,19 +71,28 @@ class EvaluationController extends Controller
             $user_total_evaluation = $user->total_evaluation;
             $user_evaluation = $user->evaluation;
 
+            return view('user.confirm_feedback', compact('user', 'user_total_evaluation', 'user_evaluation'));
         } catch (\Throwable $e) {
             \Log::error($e);
             throw $e;
         }
-
-        return view('confirm_feedback', compact('user', 'user_total_evaluation', 'user_evaluation'));
     }
 
+    /**
+     * パスワード変更画面
+     * @return view user.show_change_password
+     */
     public function showChangePassword()
     {
         return view('show_change_password');
     }
 
+    /**
+     * パスワード変更実行
+     * @param PasswordRequest $request
+     *
+     * @return view user.show_change_password
+     */
     public function exeChangePassword(PasswordRequest $request)
     {
         try {
@@ -85,29 +106,37 @@ class EvaluationController extends Controller
             $user->save();
             DB::commit();
 
+            return redirect()->route('showChangePassword')->with('successChangePassword', 'パスワードを変更しました');
         } catch (\Throwable $e) {
             DB::rollBack();
             \Log::error($e);
             throw $e;
         }
-
-        return redirect()->route('showChangePassword')->with('successChangePassword', 'パスワードを変更しました');
     }
 
+    /**
+     * 回答フォーム
+     * @return view user.evaluation_form
+     */
     public function evaluationForm()
     {
         try {
             $user = \Auth::user();
             $user_questions = \Auth::user()->questions;
 
+            return view('user.evaluation_form', compact('user', 'user_questions'));
         } catch (\Throwable $e) {
             \Log::error($e);
             throw $e;
         }
-
-        return view('evaluation_form', compact('user', 'user_questions'));
     }
 
+    /**
+     * 回答データベース挿入実行
+     * @param EvaRequest $request
+     *
+     * @return view evaluation_completed
+     */
     public function evaluationStore(EvaRequest $request)
     {
         try {
@@ -131,21 +160,22 @@ class EvaluationController extends Controller
                 $answer->answer = $data['answer'][$i];
                 $answer->save();
                 DB::commit();
-            }
 
+                return redirect()->route('evaluationCompleted');
+            }
         } catch (\Throwable $e) {
             DB::rollBack();
             \Log::error($e);
-
             throw $e;
         }
-
-        return redirect()->route('evaluationCompleted');
     }
 
-
+    /**
+     * 回答完了画面
+     * @return view user.evaluation_completed
+     */
     public function evaluationCompleted()
     {
-        return view('completed');
+        return view('user.completed');
     }
 }
