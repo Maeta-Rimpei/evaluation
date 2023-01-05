@@ -3,6 +3,10 @@
 @section('content')
     <h2 class="text-center">質問登録</h2>
 
+    <x-utility-button href="{{ route('showEditQuestion') }}" class="secondary" icon="fa-solid fa-arrow-left me-2">
+        戻る
+    </x-utility-button>
+
     {{-- 質問作成完了メッセージ --}}
     @if (session('createQuestionMessage'))
         <div class="alert alert-success text-center">
@@ -10,7 +14,7 @@
         </div>
     @endif
 
-    <div class="container mt-3 justify-content-center">
+    <div class="container mt-5">
         <div class="form-contents">
             <form action="{{ route('exeCreateQuestion') }}" method="post">
                 @csrf

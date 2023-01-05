@@ -98,43 +98,44 @@ class AdminController extends Controller
             $affiliation = $request->input('affiliation');
             $role_id = $request->input('role');
 
-            $admin_affiliations = Admin::get('affiliation');
+            $search_admins = $this->admin->searchAdmin($name, $staff_id, $affiliation, $role_id)->paginate(10);
 
-            $query = Admin::query();
 
-            if (isset($name)) {
-                $space_conversion = mb_convert_kana($name, 's');
+            // $query = $this->admin->query();
+            
+            // if (isset($name)) {
+            //     // $this->admin->likeSearchAdmin($name);
+            //     $name_push_array = $this->admin->spaceConversionAndPushArray($name);
+            //     $this->admin->likeSearch($name_push_array, 'name');
+            //     }
+                
+            // if (isset($staff_id)) {
+            //     $staff_id_push_array = preg_split('/[\s,]+/', $staff_id, -1, PREG_SPLIT_NO_EMPTY);
 
-                $name_push_array = preg_split('/[\s,]+/', $space_conversion, -1, PREG_SPLIT_NO_EMPTY);
+            //     foreach ($staff_id_push_array as $word) {
+            //         $query->where('staff_id', 'LIKE', '%' . self::escape($staff_id) . '%');
+            //     }
+            // }
 
-                foreach ($name_push_array as $word) {
-                    $query->where('name', 'LIKE', '%' . self::escape($word) . '%');
-                }
-            }
+            // if (isset($affiliation)) {
+            //     $space_conversion = mb_convert_kana($name, 's');
 
-            if (isset($staff_id)) {
-                $staff_id_push_array = preg_split('/[\s,]+/', $staff_id, -1, PREG_SPLIT_NO_EMPTY);
+            //     $affiliation_push_array = preg_split('/[\s,]+/', $space_conversion, -1, PREG_SPLIT_NO_EMPTY);
 
-                foreach ($staff_id_push_array as $word) {
-                    $query->where('staff_id', 'LIKE', '%' . self::escape($staff_id) . '%');
-                }
-            }
+            //     foreach ($affiliation_push_array as $word) {
+            //         $query->where('name', 'LIKE', '%' . self::escape($word) . '%');
+            //     }
+            // }
 
-            if (isset($affiliation)) {
-                $query->when($request, function ($query, $request) {
-                    return $query->where('affiliation', '=', $request->affiliation);
-                });
-            }
+            // if (isset($request->role_id)) {
+            //     $query->when($request, function ($query, $request) {
+            //         return $query->where('role_id', '=', $request->role_id);
+            //     });
+            // }
 
-            if (isset($request->role_id)) {
-                $query->when($request, function ($query, $request) {
-                    return $query->where('role_id', '=', $request->role_id);
-                });
-            }
+            // $search_admins = $query->orderBy('admins.created_at', 'desc')->paginate(10);
 
-            $search_admins = $query->orderBy('admins.created_at', 'desc')->paginate(10);
-
-            return view('Admin.admin.search_admin', compact('name', 'staff_id', 'affiliation', 'admin_affiliations', 'role_id', 'search_admins'));
+            return view('Admin.admin.search_admin', compact('name', 'staff_id', 'affiliation', 'role_id', 'search_admins'));
         } catch (\Throwable $e) {
             \Log::error($e);
             throw $e;
@@ -175,12 +176,38 @@ class AdminController extends Controller
 
             $admin->delete();
 
-            return redirect()->route('showAdminSoftDeleted')->with('deleteMessage', '削除しました。');
+            return redirect()->route('showSoftDeleteAdmin')->with('deleteMessage', '削除しました。');
         } catch (\Throwable $e) {
             \Log::error($e);
             throw $e;
         }
     }
+
+     /**
+     * 管理者論理削除履歴一覧画面
+     * @return view Admin.staff.show_history_of_deleted_staff
+     */
+    public function showHistoryOfSoftDeletedAdmin()
+    {
+        $admins = $this->admin->onlyTrashed()->whereNotNull('id')->get();
+
+        return view('Admin.admin.show_history_of_deleted_admin', compact('admins'));
+    }
+
+/**
+     * 論理削除済管理者復元実行
+     * @param int $admin_id admins.id
+     * 
+     * @return view Admin.staff.show_history_of_deleted_staff
+     */
+    public function exeRestoreHistoryOfSoftDeletedAdmin($admin_id)
+    {
+        $admin = $this->admin->onlyTrashed()->whereId($admin_id);
+        $admin->restore();
+
+        return redirect()->route('showHistoryOfSoftDeletedAdmin')->with('restoreAdminMessage', '管理者の復元に成功しました。');
+    }
+
 
     public static function escape($str)
     {

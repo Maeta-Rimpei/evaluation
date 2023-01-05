@@ -4,11 +4,15 @@
     <div class="container">
         <h2 class="text-center">職員フィードバック編集</h2>
 
+        <x-utility-button href="{{ route('showStaff') }}" class="secondary" icon="fa-solid fa-arrow-left me-2">
+            戻る
+        </x-utility-button>
+
         @if (session('evaluationUpdateMessage'))
             <div class="alert alert-success text-center">
                 {{ session('evaluationUpdateMessage') }}
             </div>
-             @elseif (session('evaluationUpdateErrorMessage'))
+        @elseif (session('evaluationUpdateErrorMessage'))
             <div class="alert alert-warning text-center">
                 {{ session('evaluationUpdateErrorMessage') }}
             </div>

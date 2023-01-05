@@ -5,6 +5,10 @@
         <h2 class="text-center">管理者登録</h2>
         <p class="text-center" style="color: red;">※ こちらは管理者登録用フォームです。</p>
 
+        <x-utility-button href="{{ route('showAdmin') }}" class="secondary" icon="fa-solid fa-arrow-left me-2">
+            戻る
+        </x-utility-button>
+
         {{-- 登録完了メッセージ --}}
         @if (session('createAdminMessage'))
             <div class="alert alert-success text-center">
@@ -22,7 +26,9 @@
                                 <label class="mt-5 me-3" for="staff_id">職員コード</label>
                             </th>
                             <td>
-                                <input type="text" class="form-control @error('staff_id') is-invalid @enderror mt-5 ms-5" name="staff_id" value="{{ old('staff_id') }}" id="staff_id" placeholder="登録する方の職員コードを入力">
+                                <input type="text" class="form-control @error('staff_id') is-invalid @enderror mt-5 ms-5"
+                                    name="staff_id" value="{{ old('staff_id') }}" id="staff_id"
+                                    placeholder="登録する方の職員コードを入力">
                                 @error('staff_id')
                                     <span class="invalid-feedback ms-5" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -37,7 +43,7 @@
                             </th>
                             <td>
                                 <input type="text" class="form-control  @error('name') is-invalid @enderror mt-5 ms-5"
-                                    name="name" value="{{ old('name') }}" placeholder="登録する方の名前を入力" id="name" >
+                                    name="name" value="{{ old('name') }}" placeholder="登録する方の名前を入力" id="name">
                                 @error('name')
                                     <span class="invalid-feedback ms-5" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -71,7 +77,10 @@
                                 <label class="mt-5 me-3" for="affiliation">所属</label>
                             </th>
                             <td>
-                                <input type="text" class="form-control @error('affiliation') is-invalid @enderror mt-5 ms-5" name="affiliation" value="{{ old('affiliation') }}" id="affiliation" placeholder="登録する方の所属を入力">
+                                <input type="text"
+                                    class="form-control @error('affiliation') is-invalid @enderror mt-5 ms-5"
+                                    name="affiliation" value="{{ old('affiliation') }}" id="affiliation"
+                                    placeholder="登録する方の所属を入力">
                                 @error('affiliation')
                                     <span class="invalid-feedback ms-5" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -86,8 +95,8 @@
                             </th>
                             <td>
                                 <input type="password"
-                                    class="form-control @error('password') is-invalid @enderror mt-5 ms-5" name="password" placeholder="登録する方の仮パスワードを入力"
-                                    id="password">
+                                    class="form-control @error('password') is-invalid @enderror mt-5 ms-5" name="password"
+                                    placeholder="登録する方の仮パスワードを入力" id="password">
                                 @error('password')
                                     <span class="invalid-feedback ms-5" role="alert">
                                         <strong>{{ $message }}</strong>

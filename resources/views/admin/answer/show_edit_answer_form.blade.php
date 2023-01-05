@@ -4,6 +4,10 @@
     <div class="container">
         <h2 class="text-center">回答編集</h2>
 
+        <x-utility-button href="{{ route('showEditAnswer') }}" class="secondary" icon="fa-solid fa-arrow-left me-2">
+            戻る
+        </x-utility-button>
+
         <form action="{{ route('exeUpdateAnswer', $user_answer['id']) }}" method="post">
             @method('patch')
             @csrf

@@ -3,6 +3,10 @@
 @section('content')
     <div class="container mt-3 justify-content-center">
         <h2 class="text-center">職員登録</h2>
+        
+        <x-utility-button href="{{ route('showStaff') }}" class="secondary" icon="fa-solid fa-arrow-left me-2">
+            戻る
+        </x-utility-button>
 
         {{-- 登録完了メッセージ --}}
         @if (session('createMessage'))

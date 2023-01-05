@@ -1,13 +1,13 @@
 <tr>
     <th>
-        <label class="mt-5 me-3" for="{{ $name }}">{{ $label }}</label>
+        <label class="my-3 me-3" for="{{ $name }}">{{ $label }}</label>
     </th>
     <td>
-        <select class="form-select mt-5 ms-5" name="{{ $name }}">
+        <select class="form-select my-3 ms-5" name="{{ $name }}">
             <option value="">指定なし</option>
             @if (array_values($options) == $options)
-                @foreach ($options as $num => $value)
-                    <option value="{{ $num }}">{{ $value }}</option>
+                @foreach ($options as $key => $value)
+                    <option value="{{ $key }}">{{ $value }}</option>
                 @endforeach
             @else
                 @foreach ($options as $value)

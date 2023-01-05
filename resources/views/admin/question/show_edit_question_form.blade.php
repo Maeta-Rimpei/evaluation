@@ -4,6 +4,10 @@
     <div class="container mt-3">
         <h2 class="text-center">質問編集</h2>
 
+        <x-utility-button href="{{ route('showEditQuestion') }}" class="secondary" icon="fa-solid fa-arrow-left me-2">
+            戻る
+        </x-utility-button>
+
         <form action="{{ route('exeUpdateQuestion', $question->question_id) }}" method="post">
             @csrf
             @method('patch')
@@ -31,7 +35,12 @@
                             <td>
                                 <textarea style="height: calc( 1.3em * 10 );
                                 line-height: 1.3;"
-                                    class="form-control mt-1" name="content" id="content" required>{{ $question->content }}</textarea>
+                                    class="form-control @error('content') is-invalid @enderror mt-1" name="content" id="content">{{ $question->content }}</textarea>
+                                @error('content')
+                                    <span class="invalid-feedback ms-5" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
                             </td>
                         </tr>
                         <tr>
@@ -39,14 +48,14 @@
                                 <label class="mt-3 me-3" for="role_id">カテゴリー</label>
                             </th>
                             <td>
-                                <select class="form-select mt-1" name="category" id="category"
-                                aria-label="Default select">
-                                <option disabled>クリックして選んでください</option>
-                                @foreach (App\Consts\CategoryConsts::CATEGORY_LIST as $num => $category)
-                                <option value="{{ $num }}">{{ $category }}</option>
-                                @endforeach
-                            </select>
-                            <p class="text-center">現在のカテゴリー：{{ App\Consts\CategoryConsts::CATEGORY_LIST[$question->category] }}</p>
+                                <select class="form-select mt-1" name="category" id="category" aria-label="Default select">
+                                    <option disabled>クリックして選んでください</option>
+                                    @foreach (App\Consts\CategoryConsts::CATEGORY_LIST as $num => $category)
+                                        <option value="{{ $num }}">{{ $category }}</option>
+                                    @endforeach
+                                </select>
+                                <p class="text-center">
+                                    現在のカテゴリー：{{ App\Consts\CategoryConsts::CATEGORY_LIST[$question->category] }}</p>
                             </td>
                         </tr>
                     </tbody>

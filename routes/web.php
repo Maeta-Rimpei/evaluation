@@ -69,7 +69,7 @@ Route::group(['middleware' => ['auth:admin']], function () {
     
     // 管理者削除
     Route::get('/admin/show_delete_admin', [App\Http\Controllers\Admin\AdminController::class, 'showSoftDeleteAdmin'])->name('showSoftDeleteAdmin');
-    Route::get('/admin/exe_delete_admin/{id}', [App\Http\Controllers\Admin\AdminController::class, 'exeSoftDeleteAdmin'])->name('exeSoftDeleteAdmin');
+    Route::get('/admin/exe_delete_admin/{admin_id}', [App\Http\Controllers\Admin\AdminController::class, 'exeSoftDeleteAdmin'])->name('exeSoftDeleteAdmin');
 
     // 自己評価シート編集・削除
     Route::get('/admin/show_edit_question', [App\Http\Controllers\Admin\QuestionController::class, 'showEditQuestion'])->name('showEditQuestion');
@@ -87,6 +87,14 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::get('/admin/show_edit_part_answer/{id}', [App\Http\Controllers\Admin\AnswerController::class, 'showEditPartAnswer'])->name('showEditPartAnswer');
     Route::get('/admin/show_edit_answer_form/{answer_id}', [App\Http\Controllers\Admin\AnswerController::class, 'showEditAnswerForm'])->name('showEditAnswerForm');
     Route::patch('/admin/exe_update_answer/{answer_id}', [App\Http\Controllers\Admin\AnswerController::class, 'exeUpdateAnswer'])->name('exeUpdateAnswer');
+    
+    // 職員削除履歴
+    Route::get('/admin/show_history_of_deleted_staff', [App\Http\Controllers\Admin\StaffController::class, 'showHistoryOfSoftDeletedStaff'])->name('showHistoryOfSoftDeletedStaff');
+    Route::get('/admin/exe_restore_history_of_deleted_staff/{id}', [App\Http\Controllers\Admin\StaffController::class, 'exeRestoreHistoryOfSoftDeletedStaff'])->name('exeRestoreHistoryOfSoftDeletedStaff');
+    
+    // 管理者削除履歴
+    Route::get('/admin/show_history_deleted_admin', [App\Http\Controllers\Admin\AdminController::class, 'showHistoryOfSoftDeletedAdmin'])->name('showHistoryOfSoftDeletedAdmin');
+    Route::get('/admin/exe_restore_history_of_deleted_admin/{admin_id}', [App\Http\Controllers\Admin\AdminController::class, 'exeRestoreHistoryOfSoftDeletedAdmin'])->name('exeRestoreHistoryOfSoftDeletedAdmin');
 
     // ログアウト処理
     Route::get('/admin/logout', [App\Http\Controllers\Admin\AdminController::class, 'logout'])->name('adminLogout');

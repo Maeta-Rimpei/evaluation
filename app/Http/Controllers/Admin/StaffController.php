@@ -201,10 +201,13 @@ class StaffController extends Controller
         try {
             $users = $this->user->getAllUsers()->toArray();
             // dd(array_column($users, 'evaluation'));
-            $user_evaluation = array_column($users, 'evaluation');
-            $user_total_evaluation = array_column($users, 'total_evaluation');
-            dd(empty(array_filter($user_evaluation)));
-            
+            $user_evaluation = array_filter(array_column($users, 'evaluation'));
+            $user_total_evaluation = array_filter(array_column($users, 'total_evaluation'));
+
+            if (empty($user_evaluation) && empty($user_total_evaluation)) {
+                return redirect()->route('showDestroyAllEvaluationStaff')->with('destroyErrorMessage', '削除できる総合評価およびフィードバックコメントがありません。');
+            }
+
             foreach ($users as $user) {
                 $user->evaluation = null;
                 $user->total_evaluation = null;
@@ -285,14 +288,16 @@ class StaffController extends Controller
                 $staff_id_push_array = preg_split('/[\s,]+/', $staff_id, -1, PREG_SPLIT_NO_EMPTY);
 
                 foreach ($staff_id_push_array as $word) {
-                    $query->where('staff_id', 'LIKE', '%' . self::escape($staff_id) . '%');
+                    $query->where('staff_id', 'LIKE', '%' . self::escape($word) . '%');
                 }
             }
 
             if (isset($affiliation)) {
-                $query->when($request, function ($query, $request) {
-                    return $query->where('affiliation', '=', $request->affiliation);
-                });
+                $affiliation_id_push_array = preg_split('/[\s,]+/', $affiliation, -1, PREG_SPLIT_NO_EMPTY);
+
+                foreach ($affiliation_id_push_array as $word) {
+                    $query->where('staff_id', 'LIKE', '%' . self::escape($word) . '%');
+                }
             }
 
             if (isset($request->role_id)) {
@@ -308,5 +313,30 @@ class StaffController extends Controller
             \Log::error($e);
             throw $e;
         }
+    }
+
+    /**
+     * 職員論理削除履歴一覧画面
+     * @return view Admin.staff.show_history_of_deleted_staff
+     */
+    public function showHistoryOfSoftDeletedStaff()
+    {
+        $users = $this->user->onlyTrashed()->whereNotNull('id')->get();
+
+        return view('Admin.staff.show_history_of_deleted_staff', compact('users'));
+    }
+
+    /**
+     * 論理削除済職員復元実行
+     * @param int $id users.id
+     * 
+     * @return view Admin.staff.show_history_of_deleted_staff
+     */
+    public function exeRestoreHistoryOfSoftDeletedStaff($id)
+    {
+        $user = $this->user->onlyTrashed()->whereId($id);
+        $user->restore();
+
+        return redirect()->route('showHistoryOfSoftDeletedStaff')->with('restoreStaffMessage', '職員の復元に成功しました。');
     }
 }

@@ -15,6 +15,9 @@ use PhpParser\Node\Stmt\Catch_;
 
 class EvaluationController extends Controller
 {
+    public $user;
+    public $answer;
+
     /**
      * Create a new controller instance.
      *
@@ -23,6 +26,8 @@ class EvaluationController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->user = new User();
+        $this->answer = new Answer();
     }
 
     /**
@@ -144,25 +149,30 @@ class EvaluationController extends Controller
             $auth_user = \Auth::user();
             $auth_user_questions = $auth_user->questions;
             $count = count($auth_user_questions);
+            $question_id = [];
 
+            // dd($question_id);
+            
             for ($i = 0; $i < $count; $i++) {
                 // question_idとuser_idを$requestに追加
                 $request->merge([
                     'question_id' => $auth_user_questions[$i]->id,
                     'user_id' => $auth_user->id
                 ]);
+                
+                $inputs = $request->only(['question_id', 'user_id', 'answer']);
 
-                $data = $request->only(['answer', 'question_id', 'user_id']); //$request->all() ----> $request->answer[$i]  変更
                 // DB挿入
-                $answer = new Answer;
-                $answer->question_id = $data['question_id'];
-                $answer->user_id = $data['user_id'];
-                $answer->answer = $data['answer'][$i];
+                $answer = new Answer();
+                $answer->question_id = $inputs['question_id'];
+                $answer->user_id = $inputs['user_id'];
+                $answer->answer = $inputs['answer'][$i];
                 $answer->save();
                 DB::commit();
-
-                return redirect()->route('evaluationCompleted');
             }
+            // dd($inputs['question_id']);
+
+            return redirect()->route('evaluationCompleted');
         } catch (\Throwable $e) {
             DB::rollBack();
             \Log::error($e);

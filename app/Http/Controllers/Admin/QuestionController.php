@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Requests\QuestionEditRequest;
 use App\Http\Requests\QuestionCreateRequest;
 use App\Models\Question;
 use Illuminate\Support\Facades\DB;
@@ -114,7 +115,7 @@ class QuestionController extends Controller
      *
      * @return view Admin.question.show_edit_question_detail
      */
-    public function exeUpdateQuestion(Request $request, $question_id)
+    public function exeUpdateQuestion(QuestionEditRequest $request, $question_id)
     {
         try {
             DB::beginTransaction();
@@ -123,6 +124,7 @@ class QuestionController extends Controller
 
             $question = $this->question->getQuestion($question_id);
             $data = $request->only(['content', 'category']);
+            
             $question->content = $data['content'];
             $question->category = $data['category'];
             $question->saveOrFail();

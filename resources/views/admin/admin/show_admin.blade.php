@@ -3,12 +3,13 @@
 @section('content')
     <h2 class="text-center mb-3">管理者一覧</h2>
 
-    <a class="mb-2" style="text-decoration: none;" href="{{ route('showRegistrationAdminForm') }}">
-        <x-utility-button class="primary mb-3 me-2" icon="fa-solid fa-user-plus me-2">
-            管理者登録
-        </x-utility-button>
+    <div class="container mt-5">
+        <a class="mb-2" style="text-decoration: none;" href="{{ route('showRegistrationAdminForm') }}">
+            <x-utility-button class="primary mb-3 me-2" icon="fa-solid fa-user-plus me-2">
+                管理者登録
+            </x-utility-button>
         </a>
-    <a style="text-decoration: none;" href="{{ route('searchAdmin') }}">
+        <a style="text-decoration: none;" href="{{ route('searchAdmin') }}">
         <x-utility-button class="secondary mb-3 me-2" icon="fa-sharp fa-solid fa-magnifying-glass me-2">
             管理者を検索
         </x-utility-button>
@@ -18,7 +19,7 @@
             管理者削除
         </x-utility-button>
     </a>
-
+    
     <table class="table table-striped">
         <thead>
             <tr>
@@ -49,4 +50,5 @@
             @endforeach
         </tbody>
     </table>
+</div>
 @endsection

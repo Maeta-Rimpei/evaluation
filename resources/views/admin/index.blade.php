@@ -29,6 +29,8 @@
                 <li><a href="{{ route('showAdmin') }}">管理者一覧</a></li>
                 <li><a href="{{ route('showEditAnswer') }}">回答管理</a></li>
                 <li><a href="{{ route('showEditQuestion') }}">自己評価シート編集</a></li>
+                <li><a href="{{ route('showHistoryOfSoftDeletedStaff') }}">職員削除履歴</a></li>
+                <li><a href="{{ route('showHistoryOfSoftDeletedAdmin')}}">管理者削除履歴</a></li>
             </ul>
         </div>
 

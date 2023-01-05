@@ -52,14 +52,14 @@
                         {{ $user_question['content'] }}</td>
                     <td>
                         @if ($user_question['category'] == 0)
-                            <select class="form-select @error("answer.*") is-invalid @enderror" name="answer[]" aria-label="Default select example">
+                            <select class="form-select" name="answer[]">
                                 <option disabled>クリックして選んでください</option>
                                 @foreach (App\Consts\AnswerOptionConsts::ANSWER_OPTION as $option)
                                     <option>{{ $option }}</option>
                                 @endforeach
                             </select>
                         @else
-                            <textarea class="form-control @error("answer.*") is-invalid @enderror" style="width: 100%; height: 150px;" name="answer[]" placeholder="こちらは記述式です"></textarea>
+                            <textarea class="form-control" style="width: 100%; height: 150px;" name="answer[]" placeholder="こちらは記述式です"></textarea>
                         @endif
                     </td>
                 </tr>

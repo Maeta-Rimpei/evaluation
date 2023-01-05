@@ -3,49 +3,24 @@
 @section('content')
     <h2 class="text-center">管理者検索</h2>
 
-    <div class="container mt-3">
+    <x-utility-button href="{{ route('showAdmin') }}" class="secondary" icon="fa-solid fa-arrow-left me-2">
+        戻る
+    </x-utility-button>
+
+    <div class="container mt-5">
         <form action="{{ route('searchAdmin') }}" method="GET">
             @csrf
             <table class="mt-5 mx-auto">
                 <tbody>
-                    @php
-                    $label = '管理者名';
-                @endphp
-                <x-searchBox :label=$label name="name" value="{{ $name }}"></x-searchBox>
 
-                @php
-                    $label = '職員コード';
-                @endphp
-                <x-searchBox :label=$label name="staff_id" value="{{ $staff_id }}"></x-searchBox>
+                <x-searchBox label="管理者名" name="name" value="{{ $name }}"></x-searchBox>
 
-                    <tr>
-                        <th>
-                            <label class="mt-5 me-3" for="affiliation">所属</label>
-                        </th>
-                        <td>
-                            <select class="form-select mt-5 ms-5" name="affiliation" id="affiliation">
-                                <option value="">指定なし</option>
-                                @foreach ($admin_affiliations as $admin_affiliation)
-                                    <option value="{{ $admin_affiliation->affiliation }}">
-                                        {{ $admin_affiliation->affiliation }}</option>
-                                @endforeach
+                <x-searchBox label="職員コード" name="staff_id" value="{{ $staff_id }}"></x-searchBox>
+                
+                <x-searchBox label="所属" name="affiliation" value="{{ $affiliation }}"></x-searchBox>
 
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            <label class="mt-5 me-3" for="role_id">職位</label>
-                        </th>
-                        <td>
-                            <select class="form-select mt-5 ms-5" name="role_id" aria-label="Default select example">
-                                <option value="">指定なし</option>
-                                @foreach (App\Consts\StaffPositionConsts::STAFF_LIST as $num => $position)
-                                    <option value="{{ $num }}">{{ $position }}</option>
-                                @endforeach
-                            </select>
-                        </td>
-                    </tr>
+                <x-selectBox name="role_id" label="職位" :options="App\Consts\StaffPositionConsts::STAFF_LIST"></x-selectBox>
+                    
                 </tbody>
             </table>
     </div>
