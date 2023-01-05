@@ -62,7 +62,7 @@ class RegisterController extends Controller
     }
 
     /**
-     * 管理者登録フォーム表示
+     * 管理者登録実行
      */
     protected function exeRegisterAdmin(StaffCreateRequest $request)
     {
@@ -74,7 +74,7 @@ class RegisterController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        return redirect()->route('adminRegister')->with('createAdminMessage', '管理者を登録しました。');
+        return redirect()->route('showRegistrationAdminForm')->with('createAdminMessage', '管理者を登録しました。');
     }
 
     /**

@@ -10,7 +10,7 @@
                 margin: 0px;
                 padding: 0px;
                 height: 47px;">
-            <i class="fas fa-search" style=" margin: auto; margin-left: 16px;"></i>
+            <i class="fas fa-search pe-2" style=" margin: auto; margin-left: 16px;"></i>
             <input type="search" name="{{ $name }}" id="{{ $name }}" value="{{ $value }}"
                 style="border:none; background-color: transparent; outline: none;">
         </div>

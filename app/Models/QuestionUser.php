@@ -20,7 +20,7 @@ class QuestionUser extends Model
 
     public function users()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Staff::class);
     }
 
     public function questions()

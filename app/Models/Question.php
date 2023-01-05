@@ -103,6 +103,6 @@ class Question extends Model
 
     public function questionUser()
     {
-        return $this->belongsTo(questionUser::class);
+        return $this->belongsTo(questionStaff::class);
     }
 }

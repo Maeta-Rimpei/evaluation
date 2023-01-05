@@ -96,44 +96,9 @@ class AdminController extends Controller
             $name = $request->input('name');
             $staff_id = $request->input('staff_id');
             $affiliation = $request->input('affiliation');
-            $role_id = $request->input('role');
+            $role_id = $request->input('role_id');
 
-            $search_admins = $this->admin->searchAdmin($name, $staff_id, $affiliation, $role_id)->paginate(10);
-
-
-            // $query = $this->admin->query();
-            
-            // if (isset($name)) {
-            //     // $this->admin->likeSearchAdmin($name);
-            //     $name_push_array = $this->admin->spaceConversionAndPushArray($name);
-            //     $this->admin->likeSearch($name_push_array, 'name');
-            //     }
-                
-            // if (isset($staff_id)) {
-            //     $staff_id_push_array = preg_split('/[\s,]+/', $staff_id, -1, PREG_SPLIT_NO_EMPTY);
-
-            //     foreach ($staff_id_push_array as $word) {
-            //         $query->where('staff_id', 'LIKE', '%' . self::escape($staff_id) . '%');
-            //     }
-            // }
-
-            // if (isset($affiliation)) {
-            //     $space_conversion = mb_convert_kana($name, 's');
-
-            //     $affiliation_push_array = preg_split('/[\s,]+/', $space_conversion, -1, PREG_SPLIT_NO_EMPTY);
-
-            //     foreach ($affiliation_push_array as $word) {
-            //         $query->where('name', 'LIKE', '%' . self::escape($word) . '%');
-            //     }
-            // }
-
-            // if (isset($request->role_id)) {
-            //     $query->when($request, function ($query, $request) {
-            //         return $query->where('role_id', '=', $request->role_id);
-            //     });
-            // }
-
-            // $search_admins = $query->orderBy('admins.created_at', 'desc')->paginate(10);
+            $search_admins = $this->admin->getSearchParameterOfAdmin($name, $staff_id, $affiliation, $role_id)->paginate(10);
 
             return view('Admin.admin.search_admin', compact('name', 'staff_id', 'affiliation', 'role_id', 'search_admins'));
         } catch (\Throwable $e) {
@@ -160,21 +125,20 @@ class AdminController extends Controller
 
     /**
      * 管理者論理削除実行
-     * @param int $id
+     * @param int $admin_id admins.id
      *
      * @return view Admin.admin.show_admin_soft_delete
      */
-    public function exeSoftDeleteAdmin($id)
+    public function exeSoftDeleteAdmin($admin_id)
     {
         try {
-            $admin = $this->admin->getAdmin($id);
-            $all_admins = $this->admin->getAllAdmins()->toArray();
+            $admin = $this->admin->getAdmin($admin_id);
 
-            if (count($all_admins) == 1) {
+            if ($this->admin->checkNumberOfAdmin()) {
                 return redirect()->route('showSoftDeleteAdmin')->with('deleteErrorMessage', '管理者が残り一人です。削除できません。');
             }
 
-            $admin->delete();
+            $admin->deleteAdmin();
 
             return redirect()->route('showSoftDeleteAdmin')->with('deleteMessage', '削除しました。');
         } catch (\Throwable $e) {
@@ -183,34 +147,27 @@ class AdminController extends Controller
         }
     }
 
-     /**
+    /**
      * 管理者論理削除履歴一覧画面
      * @return view Admin.staff.show_history_of_deleted_staff
      */
     public function showHistoryOfSoftDeletedAdmin()
     {
-        $admins = $this->admin->onlyTrashed()->whereNotNull('id')->get();
+        $admins = $this->admin->getSoftDeletedAdmins();
 
         return view('Admin.admin.show_history_of_deleted_admin', compact('admins'));
     }
 
-/**
+    /**
      * 論理削除済管理者復元実行
      * @param int $admin_id admins.id
-     * 
+     *
      * @return view Admin.staff.show_history_of_deleted_staff
      */
     public function exeRestoreHistoryOfSoftDeletedAdmin($admin_id)
     {
-        $admin = $this->admin->onlyTrashed()->whereId($admin_id);
-        $admin->restore();
+        $this->admin->exeRestoreSoftDeletedAdmin($admin_id);
 
         return redirect()->route('showHistoryOfSoftDeletedAdmin')->with('restoreAdminMessage', '管理者の復元に成功しました。');
-    }
-
-
-    public static function escape($str)
-    {
-        return str_replace(['\\', '%', '_'], ['\\\\', '\%', '\_'], $str);
     }
 }

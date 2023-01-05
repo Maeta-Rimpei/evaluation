@@ -4,13 +4,13 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\User;
+use App\Models\Staff;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class StaffController extends Controller
 {
-    private $user;
+    private $staff;
 
     /**
      * Create a new controller instance.
@@ -19,7 +19,7 @@ class StaffController extends Controller
      */
     public function __construct()
     {
-        $this->user = new User();
+        $this->staff = new Staff();
     }
 
     /**
@@ -270,8 +270,6 @@ class StaffController extends Controller
             $role_id = $request->input('role');
 
             $affiliations = User::get('affiliation')->toArray();
-            $user_affiliations = array_column($affiliations, 'affiliation');
-            // dd($affiliations);
 
             $query = User::query();
 
@@ -308,7 +306,7 @@ class StaffController extends Controller
 
             $search_staffs = $query->orderBy('users.created_at', 'desc')->paginate(10);
 
-            return view('Admin.staff.search_staff', compact('name', 'staff_id', 'affiliation', 'user_affiliations', 'role_id', 'search_staffs'));
+            return view('Admin.staff.search_staff', compact('name', 'staff_id', 'affiliation', 'role_id', 'search_staffs'));
         } catch (\Throwable $e) {
             \Log::error($e);
             throw $e;
@@ -329,7 +327,7 @@ class StaffController extends Controller
     /**
      * 論理削除済職員復元実行
      * @param int $id users.id
-     * 
+     *
      * @return view Admin.staff.show_history_of_deleted_staff
      */
     public function exeRestoreHistoryOfSoftDeletedStaff($id)

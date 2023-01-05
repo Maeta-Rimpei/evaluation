@@ -5,7 +5,7 @@
         <h2 class="text-center">管理者登録</h2>
         <p class="text-center" style="color: red;">※ こちらは管理者登録用フォームです。</p>
 
-        <x-utility-button href="{{ route('showAdmin') }}" class="secondary" icon="fa-solid fa-arrow-left me-2">
+        <x-utility-button href="{{ route('showAdmin') }}" class="secondary mb-3" icon="fa-solid fa-arrow-left me-2">
             戻る
         </x-utility-button>
 

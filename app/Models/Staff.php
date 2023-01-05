@@ -10,12 +10,13 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Facades\DB;
 
-class User extends Authenticatable
+class Staff extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
     use SoftDeletes;
 
     protected $dates = ['deleted_at'];
+    protected $table = users;
 
     /**
      * The attributes that are mass assignable.

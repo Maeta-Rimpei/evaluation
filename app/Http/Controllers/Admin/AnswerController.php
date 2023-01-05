@@ -6,11 +6,12 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\AnswerRequest;
 use App\Models\Answer;
-use App\Models\User;
+use App\Models\Staff;
 
 class AnswerController extends Controller
 {
     private $answer;
+    private $staff;
     /**
      * Create a new controller instance.
      *
@@ -19,7 +20,7 @@ class AnswerController extends Controller
     public function __construct()
     {
         $this->answer = new Answer();
-        $this->user = new User();
+        $this->staff = new Staff();
     }
 
     /**

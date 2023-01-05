@@ -50,33 +50,40 @@ class Admin extends Authenticatable
     /**
      * あいまい検索
      * @param string $str
-     * 
-     * @return 
+     *
+     * @return
      */
-    public function searchAdmin($name, $staff_id, $affiliation, $role_id)
+    public function getSearchParameterOfAdmin($name, $staff_id, $affiliation, $role_id)
     {
-        $query = $this->query();
 
         // $this->admin->likeSearchAdmin($name);
         $name_push_array = $this->spaceConversionAndPushArray($name);
         $staff_id_push_array = $this->spaceConversionAndPushArray($staff_id);
         $affiliation_push_array = $this->spaceConversionAndPushArray($affiliation);
 
-        foreach ($name_push_array as $word) {
-            $query->where('name', 'LIKE', '%' . self::escape($word) . '%');
+        $query = $this->query();
+
+        if (isset($name)) {
+            foreach ($name_push_array as $word) {
+                $query->where('name', 'LIKE', '%' . self::escape($word) . '%');
+            }
         }
 
-        foreach ($staff_id_push_array as $word) {
-            $query->where('staff_id', 'LIKE', '%' . self::escape($word) . '%');
+        if (isset($staff_id)) {
+            foreach ($staff_id_push_array as $word) {
+                $query->where('staff_id', 'LIKE', '%' . self::escape($word) . '%');
+            }
         }
 
-        foreach ($affiliation_push_array as $word) {
-            $query->where('affiliation', 'LIKE', '%' . self::escape($word) . '%');
+        if (isset($affiliation)) {
+            foreach ($affiliation_push_array as $word) {
+                $query->where('affiliation', 'LIKE', '%' . self::escape($word) . '%');
+            }
         }
 
-        $query->when($role_id, function ($query, $role_id) {
-            return $query->where('role_id', '=', $role_id);
-        });
+        if (isset($role_id)) {
+            $query->where('role_id', $role_id);
+        }
 
         $search_results = $query->orderBy('admins.created_at', 'desc');
 
@@ -86,18 +93,57 @@ class Admin extends Authenticatable
     /**
      * Summary of spaceConversionAndPushArray
      * @param mixed $str
-     * @return array 
+     * @return array
      */
     public function spaceConversionAndPushArray($str)
     {
         $space_conversion = mb_convert_kana($str, 's');
 
         return preg_split('/[\s,]+/', $space_conversion, -1, PREG_SPLIT_NO_EMPTY);
-
     }
 
     public static function escape($str)
     {
         return str_replace(['\\', '%', '_'], ['\\\\', '\%', '\_'], $str);
+    }
+
+    /**
+     * 管理者残り人数確認
+     */
+    public function checkNumberOfAdmin()
+    {
+        $all_admins = $this->getAllAdmins()->toArray();
+
+        if (count($all_admins) == 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * 管理者物理削除
+     */
+    public function deleteAdmin()
+    {
+        return $this->delete();
+    }
+
+    /**
+     * 論理削除済管理者取得
+     */
+    public function getSoftDeletedAdmins()
+    {
+        return $this->onlyTrashed()->whereNotNull('id')->get();
+    }
+
+    /**
+     * 論理削除済管理者復元
+     * @param int $admin_id admins.id
+     */
+    public function exeRestoreSoftDeletedAdmin($admin_id)
+    {
+        $admin = $this->onlyTrashed()->whereId($admin_id);
+        return $admin->restore();
     }
 }
