@@ -29,7 +29,7 @@ class StaffController extends Controller
     public function showStaff()
     {
         try {
-            $users = $this->user->getAllUsers();
+            $users = $this->staff->getAllUsers();
             return view('Admin.staff.show_staff', compact('users'));
         } catch (\Throwable $e) {
             \Log::error($e);
@@ -44,11 +44,11 @@ class StaffController extends Controller
     public function showStaffDetail($id)
     {
         try {
-            $user = $this->user->getUser($id);
+            $user = $this->staff->getUser($id);
             $user_questions_answers = $user->getQuestionsAndAnswers($id);
 
             // $user_questions_answersをstdClassから配列化
-            $array_user_questions_answers = $this->user->conversionToArray($user_questions_answers);
+            $array_user_questions_answers = $this->staff->conversionToArray($user_questions_answers);
             // 解答を集計
             $answers_count = array_count_values(array_column($array_user_questions_answers, 'answer'));
 
@@ -69,7 +69,7 @@ class StaffController extends Controller
     public function evaluationStaff($id)
     {
         try {
-            $user = $this->user->getUser($id);
+            $user = $this->staff->getUser($id);
             return view('Admin.staff.evaluation_staff', compact('user'));
         } catch (\Throwable $e) {
             \Log::error($e);
@@ -87,7 +87,7 @@ class StaffController extends Controller
     {
         try {
             DB::beginTransaction();
-            $user = $user = $this->user->getUser($id);
+            $user = $user = $this->staff->getUser($id);
 
             if (!empty($user->evaluation)) {
                 return redirect()->route('evaluationStaff', $user->id)->with('evaluationErrorMessage', 'この方のフィードバックは実施済みです。');
@@ -116,7 +116,7 @@ class StaffController extends Controller
     public function showEditEvaluationStaff($id)
     {
         try {
-            $user = $this->user->getUser($id);
+            $user = $this->staff->getUser($id);
         } catch (\Throwable $e) {
             \Log::error($e);
             throw $e;
@@ -135,7 +135,7 @@ class StaffController extends Controller
     public function exeUpdateEvaluationStaff($id, Request $request)
     {
         try {
-            $user = $user = $this->user->getUser($id);
+            $user = $user = $this->staff->getUser($id);
 
             if (empty($user->evaluation)) {
                 return redirect()->route('showEditEvaluationStaff', $user->id)->with('evaluationUpdateErrorMessage', 'この方のフィードバックはまだありません。');
@@ -161,12 +161,12 @@ class StaffController extends Controller
     public function exeDestroyEvaluationStaff($id)
     {
         try {
-            $user = $this->user->getUser($id);
-            $user_evaluation = $this->user->getUser($id)->evaluation;
-            $user_total_evaluation = $this->user->getUser($id)->total_evaluation;
+            $user = $this->staff->getUser($id);
+            $user_evaluation = $this->staff->getUser($id)->evaluation;
+            $user_total_evaluation = $this->staff->getUser($id)->total_evaluation;
 
             // 総合評価とフィードバックコメントが空の場合
-            if (empty($user_evaluation) && empty($user_total_evaluation)) {
+            if ($this->staff->checkEmptyEvaluation()) {
                 return redirect()->route('showStaffDetail', $user->id)->with('destroyErrorMessage', 'この方へのフィードバックはまだできていません。');
             }
 
@@ -188,7 +188,7 @@ class StaffController extends Controller
      */
     public function showDestroyAllEvaluationStaff()
     {
-        $users = $this->user->getAllUsers();
+        $users = $this->staff->getAllUsers();
 
         return view('Admin.staff.show_destroy_all_evaluation_staff', compact('users'));
     }
@@ -199,21 +199,13 @@ class StaffController extends Controller
     public function exeDestroyAllEvaluationStaff()
     {
         try {
-            $users = $this->user->getAllUsers()->toArray();
-            // dd(array_column($users, 'evaluation'));
-            $user_evaluation = array_filter(array_column($users, 'evaluation'));
-            $user_total_evaluation = array_filter(array_column($users, 'total_evaluation'));
-
-            if (empty($user_evaluation) && empty($user_total_evaluation)) {
+            if ($this->staff->checkEmptyEvaluation()) {
                 return redirect()->route('showDestroyAllEvaluationStaff')->with('destroyErrorMessage', '削除できる総合評価およびフィードバックコメントがありません。');
             }
 
-            foreach ($users as $user) {
-                $user->evaluation = null;
-                $user->total_evaluation = null;
-                $user->save();
-            }
-            return redirect()->route('showStaff')->with('destroyAllEvaluationMessage', '全職員のフィードバックを削除しました。');
+            $this->staff->exeDeleteStaffEvaluation();
+
+            return redirect()->route('showDestroyAllEvaluationStaff')->with('destroyAllEvaluationMessage', '全職員のフィードバックを削除しました。');
         } catch (\Throwable $e) {
             \Log::error($e);
             throw $e;
@@ -227,7 +219,7 @@ class StaffController extends Controller
     public function showSoftDeleteStaff()
     {
         try {
-            $users = $this->user->getAllUsers();
+            $users = $this->staff->getAllUsers();
             return view('Admin.staff.show_delete_staff', compact('users'));
         } catch (\Throwable $e) {
             \Log::error($e);
@@ -244,8 +236,8 @@ class StaffController extends Controller
     public function exeSoftDeleteStaff($id)
     {
         try {
-            $user = $this->user->getUser($id);
-            $user->delete();
+            $user = $this->staff->getUser($id);
+            $user->deleteStaff();
             return redirect()->route('showSoftDeleteStaff')->with('deleteMessage', '削除しました。');
         } catch (ModelNotFoundException $e) {
             throw $e;
@@ -267,44 +259,9 @@ class StaffController extends Controller
             $name = $request->input('name');
             $staff_id = $request->input('staff_id');
             $affiliation = $request->input('affiliation');
-            $role_id = $request->input('role');
+            $role_id = $request->input('role_id');
 
-            $affiliations = User::get('affiliation')->toArray();
-
-            $query = User::query();
-
-            if (isset($name)) {
-                $space_conversion = mb_convert_kana($name, 's');
-                $name_push_array = preg_split('/[\s,]+/', $space_conversion, -1, PREG_SPLIT_NO_EMPTY);
-
-                foreach ($name_push_array as $word) {
-                    $query->where('name', 'LIKE', '%' . self::escape($word) . '%');
-                }
-            }
-
-            if (isset($staff_id)) {
-                $staff_id_push_array = preg_split('/[\s,]+/', $staff_id, -1, PREG_SPLIT_NO_EMPTY);
-
-                foreach ($staff_id_push_array as $word) {
-                    $query->where('staff_id', 'LIKE', '%' . self::escape($word) . '%');
-                }
-            }
-
-            if (isset($affiliation)) {
-                $affiliation_id_push_array = preg_split('/[\s,]+/', $affiliation, -1, PREG_SPLIT_NO_EMPTY);
-
-                foreach ($affiliation_id_push_array as $word) {
-                    $query->where('staff_id', 'LIKE', '%' . self::escape($word) . '%');
-                }
-            }
-
-            if (isset($request->role_id)) {
-                $query->when($request, function ($query, $request) {
-                    return $query->where('role_id', '=', $request->role_id);
-                });
-            }
-
-            $search_staffs = $query->orderBy('users.created_at', 'desc')->paginate(10);
+            $search_staffs = $this->staff->getSearchParameterOfStaff($name, $staff_id, $affiliation, $role_id)->paginate(10);
 
             return view('Admin.staff.search_staff', compact('name', 'staff_id', 'affiliation', 'role_id', 'search_staffs'));
         } catch (\Throwable $e) {
@@ -319,7 +276,7 @@ class StaffController extends Controller
      */
     public function showHistoryOfSoftDeletedStaff()
     {
-        $users = $this->user->onlyTrashed()->whereNotNull('id')->get();
+        $users = $this->staff->getSoftDeletedStaffs();
 
         return view('Admin.staff.show_history_of_deleted_staff', compact('users'));
     }
@@ -332,8 +289,7 @@ class StaffController extends Controller
      */
     public function exeRestoreHistoryOfSoftDeletedStaff($id)
     {
-        $user = $this->user->onlyTrashed()->whereId($id);
-        $user->restore();
+        $user = $this->staff->exeRestoreSoftDeletedStaff($id);
 
         return redirect()->route('showHistoryOfSoftDeletedStaff')->with('restoreStaffMessage', '職員の復元に成功しました。');
     }

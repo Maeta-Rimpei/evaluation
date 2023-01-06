@@ -16,7 +16,7 @@ class Staff extends Authenticatable
     use SoftDeletes;
 
     protected $dates = ['deleted_at'];
-    protected $table = users;
+    protected $table = 'users';
 
     /**
      * The attributes that are mass assignable.
@@ -52,6 +52,18 @@ class Staff extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    // Question Modelとのリレーション
+    public function questions()
+    {
+        return $this->belongsToMany(Question::class, 'question_user', 'role_id', 'question_id', 'role_id');
+    }
+
+    // Answer Modelとのリレーション
+    public function answers()
+    {
+        return $this->hasMany(Answer::class);
+    }
+
     /**
      * usersテーブルのデータを全件取得
      *
@@ -77,7 +89,7 @@ class Staff extends Authenticatable
      * ユーザーに関係する質問と回答を取得
      * @param int $id
      *
-     * @return collection
+     * @return 
      */
     public function getQuestionsAndAnswers(int $id)
     {
@@ -109,16 +121,121 @@ class Staff extends Authenticatable
         return json_decode(json_encode($array), true);
     }
 
-    // Question Modelとのリレーション
-    public function questions()
+    /**
+     * Summary of spaceConversionAndPushArray
+     * @param mixed $str
+     * @return array
+     */
+    public function spaceConversionAndPushArray($str)
     {
-        return $this->belongsToMany(Question::class, 'question_user', 'role_id', 'question_id', 'role_id');
+        $space_conversion = mb_convert_kana($str, 's');
+
+        return preg_split('/[\s,]+/', $space_conversion, -1, PREG_SPLIT_NO_EMPTY);
     }
 
-    // Answer Modelとのリレーション
-    public function answers()
+    public static function escape($str)
     {
-        return $this->hasMany(Answer::class);
+        return str_replace(['\\', '%', '_'], ['\\\\', '\%', '\_'], $str);
     }
 
+
+    /**
+     * @param mixed $name
+     * @param mixed $staff_id
+     * @param mixed $affiliation
+     * @param int $role_id
+     * @return void
+     */
+    public function getSearchParameterOfStaff($name, $staff_id, $affiliation, $role_id)
+    {
+        $query = $this->query();
+
+        if (isset($name)) {
+            $name_push_array = $this->spaceConversionAndPushArray($name);
+            foreach ($name_push_array as $word) {
+                $query->where('name', 'LIKE', '%' . self::escape($word) . '%');
+            }
+        }
+
+        if (isset($staff_id)) {
+            $staff_id_push_array = $this->spaceConversionAndPushArray($staff_id);
+            foreach ($staff_id_push_array as $word) {
+                $query->where('staff_id', 'LIKE', '%' . self::escape($word) . '%');
+            }
+        }
+
+        if (isset($affiliation)) {
+            $affiliation_id_push_array = $this->spaceConversionAndPushArray($affiliation);
+            foreach ($affiliation_id_push_array as $word) {
+                $query->where('affiliation', 'LIKE', '%' . self::escape($word) . '%');
+            }
+        }
+
+        if (isset($role_id)) {
+            $query->where('role_id', $role_id);
+        }
+
+        $search_results = $query->orderBy('users.created_at', 'desc');
+
+        return $search_results;
+    }
+
+    /**
+     * 職員削除
+     * @return bool|null
+     */
+    public function deleteStaff()
+    {
+        return $this->delete();
+    }
+
+    /**
+     * evaluationとtotal_evaluationの削除を実行
+     * @return void
+     */
+    public function exeDeleteStaffEvaluation()
+    {
+        $users = $this->getAllUsers();
+
+        foreach ($users as $user) {
+            $user->evaluation = null;
+            $user->total_evaluation = null;
+            $user->save();
+        }
+    }
+
+    /**
+     * 論理削除済職員取得
+     */
+    public function getSoftDeletedStaffs()
+    {
+        return $this->onlyTrashed()->whereNotNull('id')->get();
+    }
+
+    /**
+     * 論理削除済職員復元
+     * @param int $user_id users.id
+     */
+    public function exeRestoreSoftDeletedStaff($user_id)
+    {
+        $user = $this->onlyTrashed()->whereId($user_id);
+        return $user->restore();
+    }
+
+    /**
+     * evaluationとtotal_evaluationが空かどうかのチェック
+     * @return bool 
+     */
+    public function checkEmptyEvaluation()
+    {
+        $users = $this->getAllUsers()->toArray();
+        $user_evaluation = array_filter(array_column($users, 'evaluation'));
+        $user_total_evaluation = array_filter(array_column($users, 'total_evaluation'));
+
+        if (empty($user_evaluation) && empty($user_total_evaluation)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

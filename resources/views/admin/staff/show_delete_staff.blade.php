@@ -3,7 +3,7 @@
 @section('content')
     <h2 class="mb-3 text-center">職員削除</h3>
 
-        <x-utility-button href="{{ route('showStaff') }}" class="secondary" icon="fa-solid fa-arrow-left me-2">
+        <x-utility-button href="{{ route('showStaff') }}" class="secondary mb-3" icon="fa-solid fa-arrow-left me-2">
             戻る
         </x-utility-button>
 

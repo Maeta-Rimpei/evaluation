@@ -54,28 +54,25 @@ class Admin extends Authenticatable
      * @return
      */
     public function getSearchParameterOfAdmin($name, $staff_id, $affiliation, $role_id)
-    {
-
-        // $this->admin->likeSearchAdmin($name);
-        $name_push_array = $this->spaceConversionAndPushArray($name);
-        $staff_id_push_array = $this->spaceConversionAndPushArray($staff_id);
-        $affiliation_push_array = $this->spaceConversionAndPushArray($affiliation);
-
+    {   
         $query = $this->query();
-
+        
         if (isset($name)) {
+            $name_push_array = $this->spaceConversionAndPushArray($name);
             foreach ($name_push_array as $word) {
                 $query->where('name', 'LIKE', '%' . self::escape($word) . '%');
             }
         }
-
+        
         if (isset($staff_id)) {
+            $staff_id_push_array = $this->spaceConversionAndPushArray($staff_id);
             foreach ($staff_id_push_array as $word) {
                 $query->where('staff_id', 'LIKE', '%' . self::escape($word) . '%');
             }
         }
-
+        
         if (isset($affiliation)) {
+            $affiliation_push_array = $this->spaceConversionAndPushArray($affiliation);
             foreach ($affiliation_push_array as $word) {
                 $query->where('affiliation', 'LIKE', '%' . self::escape($word) . '%');
             }
@@ -109,6 +106,7 @@ class Admin extends Authenticatable
 
     /**
      * 管理者残り人数確認
+     * @return bool
      */
     public function checkNumberOfAdmin()
     {
