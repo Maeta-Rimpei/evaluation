@@ -49,8 +49,8 @@ class StaffController extends Controller
 
             // $user_questions_answersをstdClassから配列化
             $array_user_questions_answers = $this->staff->conversionToArray($user_questions_answers);
-            // 解答を集計
-            $answers_count = array_count_values(array_column($array_user_questions_answers, 'answer'));
+            // 2次元配列からanswer keyを抽出してカウント
+            $answers_count = $this->staff->conversionAndArrayCountValues($array_user_questions_answers, 'answer');
 
             return view('Admin.staff.show_staff_detail', compact('user', 'array_user_questions_answers', 'answers_count'));
         } catch (\Throwable $e) {

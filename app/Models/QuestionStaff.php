@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class QuestionUser extends Model
+class QuestionStaff extends Model
 {
     use HasFactory;
 
@@ -18,7 +18,7 @@ class QuestionUser extends Model
         'question_id',
     ];
 
-    public function users()
+    public function staffs()
     {
         return $this->belongsTo(Staff::class);
     }

@@ -14,7 +14,7 @@
                 <table class="mt-3 mx-auto">
                     <tbody>
 
-                        <x-searchBox label="管理者名" name="name" value="{{ $name }}"></x-searchBox>
+                        <x-searchBox label="職員名" name="name" value="{{ $name }}"></x-searchBox>
 
                         <x-searchBox label="職員コード" name="staff_id" value="{{ $staff_id }}"></x-searchBox>
 

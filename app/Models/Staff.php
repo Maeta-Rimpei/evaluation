@@ -16,7 +16,7 @@ class Staff extends Authenticatable
     use SoftDeletes;
 
     protected $dates = ['deleted_at'];
-    protected $table = 'users';
+    protected $table = 'staffs';
 
     /**
      * The attributes that are mass assignable.
@@ -55,7 +55,7 @@ class Staff extends Authenticatable
     // Question Modelとのリレーション
     public function questions()
     {
-        return $this->belongsToMany(Question::class, 'question_user', 'role_id', 'question_id', 'role_id');
+        return $this->belongsToMany(Question::class, 'question_staff', 'role_id', 'question_id', 'role_id');
     }
 
     // Answer Modelとのリレーション
@@ -89,7 +89,7 @@ class Staff extends Authenticatable
      * ユーザーに関係する質問と回答を取得
      * @param int $id
      *
-     * @return 
+     * @return
      */
     public function getQuestionsAndAnswers(int $id)
     {
@@ -122,8 +122,22 @@ class Staff extends Authenticatable
     }
 
     /**
+     * 2次元以上の配列$arrayからそれぞれの$keyを抽後、カウントして結果を連想配列で返す
+     * @param array $array
+     * @param mixed $key
+     *
+     * @return array
+     * $key => $value(カウントの結果)
+     */
+    public function conversionAndArrayCountValues(array $array, $key)
+    {
+        return array_count_values(array_column($array, $key));
+    }
+
+    /**
      * Summary of spaceConversionAndPushArray
      * @param mixed $str
+     *
      * @return array
      */
     public function spaceConversionAndPushArray($str)
@@ -137,7 +151,6 @@ class Staff extends Authenticatable
     {
         return str_replace(['\\', '%', '_'], ['\\\\', '\%', '\_'], $str);
     }
-
 
     /**
      * @param mixed $name
@@ -224,7 +237,7 @@ class Staff extends Authenticatable
 
     /**
      * evaluationとtotal_evaluationが空かどうかのチェック
-     * @return bool 
+     * @return bool
      */
     public function checkEmptyEvaluation()
     {

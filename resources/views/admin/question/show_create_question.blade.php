@@ -3,7 +3,7 @@
 @section('content')
     <h2 class="text-center">質問登録</h2>
 
-    <x-utility-button href="{{ route('showEditQuestion') }}" class="secondary" icon="fa-solid fa-arrow-left me-2">
+    <x-utility-button href="{{ route('showEditQuestion') }}" class="secondary mb-3" icon="fa-solid fa-arrow-left me-2">
         戻る
     </x-utility-button>
 

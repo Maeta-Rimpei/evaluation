@@ -40,19 +40,22 @@ class QuestionController extends Controller
     {
         try {
             DB::beginTransaction();
+
             $inputs = $request->only(['content', 'category', 'role_id']);
 
+            // questionsテーブルに挿入
             $this->question->create([
                 'content' => $inputs['content'],
                 'category' => $inputs['category'],
             ]);
 
             // ↑で挿入したquestionのidを取得
-            $question_id = $this->question->latest('id')->first()->id;
-            $new = $this->question->findOrFail($question_id);
+            $question_id = $this->question->getLastQuestionId();
+            $newQuestion = $this->question->getQuestion($question_id);
             // 中間テーブルに挿入
-            $new->users()->attach($inputs['role_id']);
+            $newQuestion->insertPivotTable($inputs['role_id']);
             DB::commit();
+
             return redirect()->route('showCreateQuestion')->with('createQuestionMessage', '質問を作成しました。');
         } catch (ModelNotFoundException $e) {
             throw $e;
@@ -120,14 +123,13 @@ class QuestionController extends Controller
         try {
             DB::beginTransaction();
             $std_role = $this->question->getRoleIdByQuestionId($question_id)->role_id;
-            // dd($std_role);
 
             $question = $this->question->getQuestion($question_id);
             $data = $request->only(['content', 'category']);
-            
+
             $question->content = $data['content'];
             $question->category = $data['category'];
-            $question->saveOrFail();
+            $question->saveQuestion();
             DB::commit();
 
             return redirect()->route('showEditQuestionDetail', $std_role)->with('editMessage', '質問内容を更新しました。');
@@ -155,7 +157,7 @@ class QuestionController extends Controller
             if (!empty($question_role_id)) {
                 // 中間テーブルを削除→onDeleteCascadeによりリレーション先のquestionsテーブルのレコードも削除
                 $question = $this->question->getQuestion($question_id);
-                $question->users()->detach();
+                $question->destroyQuestion();
 
                 return redirect()->route('showEditQuestionDetail', $question_role_id->role_id)
                 ->with('deleteMessage', '削除しました。');
@@ -184,38 +186,7 @@ class QuestionController extends Controller
             $category = $request->input('category');
             $role_id = $request->input('role_id');
 
-            $query = $this->question->query();
-            $query->join('question_user', 'questions.id', '=', 'question_user.question_id')
-                ->select(
-                    'questions.id',
-                    'questions.content',
-                    'questions.category',
-                    'question_user.role_id'
-                );
-
-            if (isset($keyword)) {
-                    $space_conversion = mb_convert_kana($keyword, 's');
-
-                $keyword_push_array = preg_split('/[\s,]+/', $space_conversion, -1, PREG_SPLIT_NO_EMPTY);
-
-                foreach ($keyword_push_array as $word) {
-                    $query->where('content', 'LIKE', '%' . self::escape($word) . '%');
-                }
-            }
-
-            if (isset($category)) {
-                $query->when($request, function ($query, $request) {
-                    return $query->where('category', '=', $request->category);
-                });
-            }
-
-            if (isset($role_id)) {
-                $query->when($request, function ($query, $request) {
-                    return $query->where('role_id', '=', $request->role_id);
-                });
-            }
-
-            $search_questions = $query->orderBy('questions.content', 'desc')->paginate(10);
+            $search_questions = $this->question->getSearchParameterOfQuestion($keyword, $category, $role_id)->paginate(10);
 
             return view('Admin.question.search_question', compact('keyword', 'category', 'role_id', 'search_questions'));
         } catch (\Throwable $e) {
@@ -223,10 +194,4 @@ class QuestionController extends Controller
             throw $e;
         }
     }
-
-    public static function escape($str)
-    {
-        return str_replace(['\\', '%', '_'], ['\\\\', '\%', '\_'], $str);
-    }
-
 }
