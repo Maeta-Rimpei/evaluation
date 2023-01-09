@@ -18,7 +18,7 @@ class QuestionController extends Controller
      */
     public function __construct()
     {
-        $this->question = new question();
+        $this->question = new Question();
     }
 
     /**
@@ -155,7 +155,7 @@ class QuestionController extends Controller
             $question_role_id = $this->question->getRoleIdByQuestionId($question_id);
 
             if (!empty($question_role_id)) {
-                // 中間テーブルを削除→onDeleteCascadeによりリレーション先のquestionsテーブルのレコードも削除
+                // 中間テーブルを削除→onDeleteCascade制約によりリレーション先のquestionsテーブルのレコードも削除
                 $question = $this->question->getQuestion($question_id);
                 $question->destroyQuestion();
 
@@ -163,8 +163,8 @@ class QuestionController extends Controller
                 ->with('deleteMessage', '削除しました。');
             }
             \Log::error('question_userテーブルのカラムがnullです。');
-            return redirect()->route('showEditQuestionDetail', $question_role_id->role_id)->with('errorMessage', '予期しないエラーが発生しました。この質問は削除できません。');
 
+            return redirect()->route('showEditQuestionDetail', $question_role_id->role_id)->with('errorMessage', '予期しないエラーが発生しました。この質問は削除できません。');
         } catch (ModelNotFoundException $e) {
             throw $e;
         } catch (\Throwable $e) {

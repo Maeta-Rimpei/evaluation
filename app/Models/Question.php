@@ -106,8 +106,8 @@ class Question extends Model
     {
         return DB::table('questions')
             ->where('questions.id', '=', $question_id)
-            ->select('question_user.role_id')
-            ->join('question_user', 'questions.id', '=', 'question_user.question_id')
+            ->select('question_staff.role_id')
+            ->join('question_staff', 'questions.id', '=', 'question_staff.question_id')
             ->first();
     }
 

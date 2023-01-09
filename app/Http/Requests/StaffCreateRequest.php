@@ -24,7 +24,7 @@ class StaffCreateRequest extends FormRequest
     public function rules()
     {
         return [
-            'staff_id' => 'required|regex:/\A[a-zA-Z0-9]+\z/u|max:10',
+            'staff_code' => 'required|regex:/\A[a-zA-Z0-9]+\z/u|max:10',
             'name' => 'required|max:50|not_regex:/\A[a-zA-Z0-9]+\z/i',
             'role_id' => 'required|integer',
             'affiliation' => 'required|max:50',
@@ -36,7 +36,7 @@ class StaffCreateRequest extends FormRequest
     public function attributes()
     {
         return [
-            'staff_id' => '職員コード',
+            'staff_code' => '職員コード',
             'name' => '名前',
             'role_id' => '職位',
             'affiliation' => '職位',
@@ -48,9 +48,9 @@ class StaffCreateRequest extends FormRequest
     public function messages()
     {
         return [
-            'staff_id.required' => ':attributeの入力は必須です。',
-            'staff_id.regex' => ':attributeは半角英数字で入力してください。',
-            'staff_id.max' => ':attributeは10文字以内で設定してください。',
+            'staff_code.required' => ':attributeの入力は必須です。',
+            'staff_code.regex' => ':attributeは半角英数字で入力してください。',
+            'staff_code.max' => ':attributeは10文字以内で設定してください。',
             'name.required' => ':attributeの入力は必須です。',
             'name.max' => ':attributeは50文字以内で入力してください。',
             'name.not_regex' => ':attributeは全角で入力してください。',

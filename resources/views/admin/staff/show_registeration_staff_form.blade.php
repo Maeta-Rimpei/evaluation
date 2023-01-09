@@ -22,12 +22,12 @@
                     <tbody>
                         <tr>
                             <th>
-                                <label class="mt-5" for="staff_id">職員コード</label>
+                                <label class="mt-5" for="staff_code">職員コード</label>
                             </th>
                             <td>
-                                <input type="text" class="form-control @error('staff_id') is-invalid @enderror mt-5 ms-5"
-                                    name="staff_id" value="{{ old('staff_id') }}" id="staff_id">
-                                @error('staff_id')
+                                <input type="text" class="form-control @error('staff_code') is-invalid @enderror mt-5 ms-5"
+                                    name="staff_code" value="{{ old('staff_code') }}" id="staff_code">
+                                @error('staff_code')
                                     <span class="invalid-feedback ms-5" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>

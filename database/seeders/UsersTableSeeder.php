@@ -15,7 +15,7 @@ class UsersTableSeeder extends Seeder
     public function run()
     {
         DB::table('users')->insert([
-            'staff_id' => '0000',
+            'staff_code' => '0000',
             'name' => 'taro_test',
             'role_id' => '0',
             'evaluation' => '良',
@@ -24,7 +24,7 @@ class UsersTableSeeder extends Seeder
         ]);
 
         DB::table('users')->insert([
-            'staff_id' => '1000',
+            'staff_code' => '1000',
             'name' => '大友',
             'role_id' => '0',
             'affiliation' => 'A保育園',
@@ -32,7 +32,7 @@ class UsersTableSeeder extends Seeder
         ]);
 
         DB::table('users')->insert([
-            'staff_id' => '1100',
+            'staff_code' => '1100',
             'name' => '採択',
             'role_id' => '1',
             'evaluation' => '',
@@ -41,7 +41,7 @@ class UsersTableSeeder extends Seeder
         ]);
 
         DB::table('users')->insert([
-            'staff_id' => '1110',
+            'staff_code' => '1110',
             'name' => 'のみ',
             'role_id' => '2',
             'evaluation' => '',

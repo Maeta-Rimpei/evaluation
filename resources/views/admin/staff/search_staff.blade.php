@@ -16,7 +16,7 @@
 
                         <x-searchBox label="職員名" name="name" value="{{ $name }}"></x-searchBox>
 
-                        <x-searchBox label="職員コード" name="staff_id" value="{{ $staff_id }}"></x-searchBox>
+                        <x-searchBox label="職員コード" name="staff_code" value="{{ $staff_code }}"></x-searchBox>
 
                         <x-searchBox label="所属" name="affiliation" value="{{ $affiliation }}"></x-searchBox>
 
@@ -46,7 +46,7 @@
             </thead>
             @forelse ($search_staffs as $search_staff)
                 <tr>
-                    <th scope="row" class="text-center">{{ $search_staff->staff_id }}</th>
+                    <th scope="row" class="text-center">{{ $search_staff->staff_code }}</th>
                     <td class="text-center">{{ $search_staff->name }}</td>
                     <td class="text-center">{{ $search_staff->affiliation }}
                     </td>

@@ -27,7 +27,7 @@
                 <tbody>
                     @foreach ($users as $user)
                         <tr>
-                            <th class="text-center">{{ $user['staff_id'] }}</th>
+                            <th class="text-center">{{ $user['staff_code'] }}</th>
                             <td class="text-center">{{ $user['name'] }}</td>
                             <td class="text-center">{{ $user['affiliation'] }}</td>
                             <td class="text-center">{{ App\Consts\StaffPositionConsts::STAFF_LIST[$user['role_id']] }}</td>

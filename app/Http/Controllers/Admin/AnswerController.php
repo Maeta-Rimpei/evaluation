@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\AnswerRequest;
 use App\Models\Answer;
 use App\Models\Staff;
+use Illuminate\Support\Facades\DB;
 
 class AnswerController extends Controller
 {
@@ -30,7 +31,7 @@ class AnswerController extends Controller
     public function showEditAnswer()
     {
         try {
-            $users = $this->user->getAllUsers();
+            $users = $this->staff->getAllUsers();
 
             return view('Admin.answer.show_edit_answer', compact('users'));
         } catch (\Throwable $e) {
@@ -39,24 +40,24 @@ class AnswerController extends Controller
         }
     }
 
-
     /**
      * 回答削除実行
-     * @param int $id users.id
+     * @param int $staff_id staffs.id
      *
      * @return view show_edit_answer
      */
-    public function exeDeleteAllAnswers($id)
+    public function exeDeleteAllAnswers($staff_id)
     {
         try {
             // 特定のユーザーの回答を一つ取得
-            $user_answer = $this->answer->where('user_id', '=', $id)->first();
-            // 空なら何もせずリダイレクト→回答していれば全ての問に対する回答あり→1つでも空なら全て空
-            if (empty($user_answer)) {
+            $user_answers = $this->answer->selectAnswerByStaffId($staff_id);
+
+            // 空なら何もせずリダイレクト→回答していれば全ての問に対する回答あり→1つでも空なら全て空と判断
+            if ($user_answers->isEmpty()) {
                 return redirect()->route('showEditAnswer')->with('errorAnswerEmptyMessage', 'この方はまだ回答していません。');
             }
 
-            $user_answer->delete();
+            $this->answer->deleteAllstaffAnswer($user_answers);
 
             return redirect()->route('showEditAnswer')->with('deleteAllAnswerMessage', '回答を全て削除しました。');
         } catch (\Throwable $e) {
@@ -67,15 +68,15 @@ class AnswerController extends Controller
 
     /**
      * 回答個別編集画面
-     * @param int $id users.id
+     * @param int $staff_id staffs.id
      *
      * @return view Admin.answer.show_edit_part_answer
      */
-    public function showEditPartAnswer($id)
+    public function showEditPartAnswer($staff_id)
     {
         try {
-            $user = $this->user->getUser($id);
-            $user_questions_answers = $this->user->getQuestionsAndAnswers($id);
+            $user = $this->staff->getUser($staff_id);
+            $user_questions_answers = $this->staff->getQuestionsAndAnswers($staff_id);
 
             return view('Admin.answer.show_edit_part_answer', compact('user', 'user_questions_answers'));
         } catch (ModelNotFoundException $e) {
@@ -90,14 +91,15 @@ class AnswerController extends Controller
      * 回答編集フォーム画面
      * @param int $answer_id answers.id
      *
-     * @return
+     * @return view Admin.answer.show_edit_answer_form
      */
     public function showEditAnswerForm($answer_id)
     {
         try {
             $user_answer = $this->answer->getAnswer($answer_id);
+            $user_id = $user_answer->staff->id;
 
-            return view('Admin.answer.show_edit_answer_form', compact('user_answer'));
+            return view('Admin.answer.show_edit_answer_form', compact('user_answer', 'user_id'));
         } catch (ModelNotFoundException $e) {
             throw $e;
         } catch (\Throwable $e) {
@@ -117,11 +119,12 @@ class AnswerController extends Controller
         try {
             $answer = $request->only(['answer']);
             $user_answer = $this->answer->getAnswer($answer_id);
-            $user_id = $this->answer->getAnswer($answer_id)->user->id;
+            $staff_id = $this->answer->getAnswer($answer_id)->staff->id;
 
-            $user_answer->update($answer);
+            $user_answer->answer = $answer['answer'];
+            $user_answer->saveAnswer();
 
-            return redirect()->route('showEditPartAnswer', $user_id)->with('updateAnswerMessage', '回答を修正しました。');
+            return redirect()->route('showEditPartAnswer', $staff_id)->with('updateAnswerMessage', '回答を修正しました。');
         } catch (ModelNotFoundException $e) {
             throw $e;
         } catch (\Throwable $e) {

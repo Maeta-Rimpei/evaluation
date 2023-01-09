@@ -11,7 +11,7 @@
 
                     <tr>
                         <th>【職員コード】</th>
-                        <td>{{ $user['staff_id'] }}</td>
+                        <td>{{ $user['staff_code'] }}</td>
                     </tr>
                     <tr>
                         <th>【所属】</th>

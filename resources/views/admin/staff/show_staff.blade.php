@@ -52,7 +52,7 @@
         <tbody>
             @foreach ($users as $user)
                 <tr>
-                    <th scope="row">{{ $user['staff_id'] }}</th>
+                    <th scope="row">{{ $user['staff_code'] }}</th>
                     <td></td>
                     <td></td>
                     <td>{{ $user['name'] }}</td>

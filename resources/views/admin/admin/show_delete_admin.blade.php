@@ -34,7 +34,7 @@
         <tbody>
             @foreach ($admins as $admin)
                 <tr>
-                    <th scope="row">{{ $admin['staff_id'] }}</th>
+                    <th scope="row">{{ $admin['staff_code'] }}</th>
                     <td></td>
                     <td></td>
                     <td>{{ $admin['name'] }}</td>
@@ -45,8 +45,8 @@
                     <td> </td>
                     <td>
                         <x-modal-and-delete-button type="button" buttonClass="danger" data-bs-toggle="modal"
-                            data-bs-target="#{{ 'modal' . $admin['staff_id'] }}" icon="fa-solid fa-user-minus me-2"
-                            id="{{ 'modal' . $admin['staff_id'] }}" title="確認：削除しようとしています"
+                            data-bs-target="#{{ 'modal' . $admin['staff_code'] }}" icon="fa-solid fa-user-minus me-2"
+                            id="{{ 'modal' . $admin['staff_code'] }}" title="確認：削除しようとしています"
                             body="{{ $admin['name'] }}さんを本当に削除しますか？" href="{{ route('exeSoftDeleteAdmin', $admin['id']) }}">
                         </x-modal-and-delete-button>
                     </td>

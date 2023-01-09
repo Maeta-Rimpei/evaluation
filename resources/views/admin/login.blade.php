@@ -11,11 +11,11 @@
                     <form method="POST" action={{ route('adminLogin') }}>
                         @csrf
                         <div class="row mb-3">
-                            <label for="staff_id" class="col-md-4 col-form-label text-md-end">{{ '職員コード' }}</label>
+                            <label for="staff_code" class="col-md-4 col-form-label text-md-end">{{ '職員コード' }}</label>
                             <div class="col-md-6">
-                                <input id="staff_id" type="staff_id" class="form-control @error('staff_id') is-invalid @enderror" name="staff_id" required autocomplete="staff_id">
+                                <input id="staff_code" type="staff_code" class="form-control @error('staff_code') is-invalid @enderror" name="staff_code" required autocomplete="staff_code">
 
-                                @error('staff_id')
+                                @error('staff_code')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>

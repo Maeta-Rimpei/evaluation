@@ -4,7 +4,7 @@
     <div class="container">
         <h2 class="text-center">職員フィードバック編集</h2>
 
-        <x-utility-button href="{{ route('showStaff') }}" class="secondary" icon="fa-solid fa-arrow-left me-2">
+        <x-utility-button href="{{ route('showStaff') }}" class="secondary mb-3" icon="fa-solid fa-arrow-left me-2">
             戻る
         </x-utility-button>
 
@@ -28,7 +28,7 @@
                             <label class="me-3" for="evaluation">フィードバックコメント</label>
                         </th>
                         <td>
-                            <textarea class="form-control" name="evaluation" id="evaluation" cols="40" rows="3" required>{{ $user['evaluation'] }}</textarea>
+                            <textarea class="form-control" name="evaluation" id="evaluation" cols="40" rows="3">{{ $user['evaluation'] }}</textarea>
                         </td>
                     </tr>
                 </tbody>

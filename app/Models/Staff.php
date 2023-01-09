@@ -9,6 +9,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class Staff extends Authenticatable
 {
@@ -25,7 +26,7 @@ class Staff extends Authenticatable
      */
     protected $fillable = [
         'id',
-        'staff_id',
+        'staff_code',
         'name',
         'affiliation',
         'role_id',
@@ -52,20 +53,8 @@ class Staff extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    // Question Modelとのリレーション
-    public function questions()
-    {
-        return $this->belongsToMany(Question::class, 'question_staff', 'role_id', 'question_id', 'role_id');
-    }
-
-    // Answer Modelとのリレーション
-    public function answers()
-    {
-        return $this->hasMany(Answer::class);
-    }
-
     /**
-     * usersテーブルのデータを全件取得
+     * staffsテーブルのデータを全件取得
      *
      * @return // collection
      */
@@ -76,9 +65,9 @@ class Staff extends Authenticatable
 
     /**
      * 特定のユーザーを取得
-     * @param int $id user_id
+     * @param int $id staff_id
      *
-     * @return App\Models\User
+     * @return App\Models\Staff
      */
     public function getUser(int $id)
     {
@@ -86,26 +75,46 @@ class Staff extends Authenticatable
     }
 
     /**
+     * ログイン中のユーザー情報を取得
+     * @return \Illuminate\Contracts\Auth\Authenticatable|null
+     */
+    public function getAuthUser()
+    {
+        return Auth::user();
+    }
+
+    /**
+     * ログイン中のユーザーの質問を取得→カウント
+     * @param $user_questions
+     * 
+     * @return int
+     */
+    public function countAuthUserQuestions($user_questions)
+    {
+        return count($user_questions);
+    }
+
+    /**
      * ユーザーに関係する質問と回答を取得
-     * @param int $id
+     * @param int $staff_id
      *
      * @return
      */
-    public function getQuestionsAndAnswers(int $id)
+    public function getQuestionsAndAnswers(int $staff_id)
     {
-        $user = $this->find($id);
-        return DB::table('users')
-            ->where('users.id', '=', $id)
-            ->where('answers.user_id', '=', $id)
+        $user = $this->find($staff_id);
+        return DB::table('staffs')
+            ->where('staffs.id', '=', $staff_id)
+            ->where('answers.staff_id', '=', $staff_id)
             ->select(
-                'users.id as user_id',
+                'staffs.id as staff_id',
                 'questions.id as question_id',
                 'questions.content',
                 'questions.category',
                 'answers.id as answer_id',
                 'answers.answer',
             )
-            ->leftJoin('answers', 'users.id', '=', 'answers.user_id')
+            ->leftJoin('answers', 'staffs.id', '=', 'answers.staff_id')
             ->leftJoin('questions', 'questions.id', '=', 'answers.question_id')
             ->get();
     }
@@ -154,12 +163,12 @@ class Staff extends Authenticatable
 
     /**
      * @param mixed $name
-     * @param mixed $staff_id
+     * @param mixed $staff_code
      * @param mixed $affiliation
      * @param int $role_id
      * @return void
      */
-    public function getSearchParameterOfStaff($name, $staff_id, $affiliation, $role_id)
+    public function getSearchParameterOfStaff($name, $staff_code, $affiliation, $role_id)
     {
         $query = $this->query();
 
@@ -170,10 +179,10 @@ class Staff extends Authenticatable
             }
         }
 
-        if (isset($staff_id)) {
-            $staff_id_push_array = $this->spaceConversionAndPushArray($staff_id);
-            foreach ($staff_id_push_array as $word) {
-                $query->where('staff_id', 'LIKE', '%' . self::escape($word) . '%');
+        if (isset($staff_code)) {
+            $staff_code_push_array = $this->spaceConversionAndPushArray($staff_code);
+            foreach ($staff_code_push_array as $word) {
+                $query->where('staff_code', 'LIKE', '%' . self::escape($word) . '%');
             }
         }
 
@@ -203,6 +212,15 @@ class Staff extends Authenticatable
     }
 
     /**
+     * 職員データ保存
+     * @return void
+     */
+    public function saveStaff()
+    {
+        $this->saveOrFail();
+    }
+
+    /**
      * evaluationとtotal_evaluationの削除を実行
      * @return void
      */
@@ -227,11 +245,11 @@ class Staff extends Authenticatable
 
     /**
      * 論理削除済職員復元
-     * @param int $user_id users.id
+     * @param int $staff_id users.id
      */
-    public function exeRestoreSoftDeletedStaff($user_id)
+    public function exeRestoreSoftDeletedStaff($staff_code)
     {
-        $user = $this->onlyTrashed()->whereId($user_id);
+        $user = $this->onlyTrashed()->whereId($staff_code);
         return $user->restore();
     }
 
@@ -250,5 +268,17 @@ class Staff extends Authenticatable
         } else {
             return false;
         }
+    }
+
+    // Question Modelとのリレーション
+    public function questions()
+    {
+        return $this->belongsToMany(Question::class, 'question_staff', 'role_id', 'question_id', 'role_id');
+    }
+
+    // Answer Modelとのリレーション
+    public function answers()
+    {
+        return $this->hasMany(Answer::class);
     }
 }

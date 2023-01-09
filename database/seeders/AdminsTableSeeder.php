@@ -15,7 +15,7 @@ class AdminsTableSeeder extends Seeder
     public function run()
     {
         DB::table('admins')->insert([
-            'staff_id' => '1000',
+            'staff_code' => '1000',
             'name' => 'test_taro',
             'affiliation' => 'X保育園',
             'role_id' => '0',

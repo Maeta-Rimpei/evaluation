@@ -4,7 +4,7 @@
     <div class="container">
         <h2 class="text-center mb-3">{{ $user['name'] . 'さんの回答' }}</h2>
 
-        <x-utility-button href="{{ route('showEditAnswer') }}" class="secondary" icon="fa-solid fa-arrow-left me-2">
+        <x-utility-button href="{{ route('showEditAnswer') }}" class="secondary mb-3" icon="fa-solid fa-arrow-left me-2">
             戻る
         </x-utility-button>
 

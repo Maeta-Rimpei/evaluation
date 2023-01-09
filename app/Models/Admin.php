@@ -15,7 +15,7 @@ class Admin extends Authenticatable
     // 可変項目設定
     protected $fillable = [
         'id',
-        'staff_id',
+        'staff_code',
         'name',
         'affiliation',
         'role_id',
@@ -53,7 +53,7 @@ class Admin extends Authenticatable
      *
      * @return
      */
-    public function getSearchParameterOfAdmin($name, $staff_id, $affiliation, $role_id)
+    public function getSearchParameterOfAdmin($name, $staff_code, $affiliation, $role_id)
     {   
         $query = $this->query();
         
@@ -64,10 +64,10 @@ class Admin extends Authenticatable
             }
         }
         
-        if (isset($staff_id)) {
-            $staff_id_push_array = $this->spaceConversionAndPushArray($staff_id);
-            foreach ($staff_id_push_array as $word) {
-                $query->where('staff_id', 'LIKE', '%' . self::escape($word) . '%');
+        if (isset($staff_code)) {
+            $staff_code_push_array = $this->spaceConversionAndPushArray($staff_code);
+            foreach ($staff_code_push_array as $word) {
+                $query->where('staff_code', 'LIKE', '%' . self::escape($word) . '%');
             }
         }
         

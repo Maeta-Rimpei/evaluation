@@ -15,7 +15,7 @@ class CreateStaffsTable extends Migration
     {
         Schema::create('staffs', function (Blueprint $table) {
             $table->id();
-            $table->string('staff_id')->comment('職員コード');
+            $table->string('staff_code')->comment('職員コード');
             $table->string('name');
             $table->unsignedInteger('role_id')->comment('職位');
             $table->string('affiliation')->comment('所属');

@@ -15,7 +15,7 @@ class CreateAdminsTable extends Migration
     {
         Schema::create('admins', function (Blueprint $table) {
             $table->id();
-            $table->integer('staff_id')->comment('職員コード');
+            $table->integer('staff_code')->comment('職員コード');
             $table->string('name');
             $table->string('affiliation')->comment('所属');
             $table->string('role_id')->comment('職位');

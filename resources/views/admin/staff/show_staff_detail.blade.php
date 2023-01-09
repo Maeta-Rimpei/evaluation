@@ -77,8 +77,8 @@
                     </x-utility-button>
                     {{-- 削除ボタン --}}
                     <x-modal-and-delete-button type="button" buttonClass="outline-danger" data-bs-toggle="modal"
-                        data-bs-target="#{{ 'modal' . $user['staff_id'] }}" icon="fa-solid fa-trash"
-                        id="{{ 'modal' . $user['staff_id'] }}" title="確認：削除しようとしています"
+                        data-bs-target="#{{ 'modal' . $user['staff_code'] }}" icon="fa-solid fa-trash"
+                        id="{{ 'modal' . $user['staff_code'] }}" title="確認：削除しようとしています"
                         body="{{ $user['name'] }}さんへのフィードバックを本当に削除しますか？"
                         href="{{ route('exeDestroyEvaluationStaff', $user['id']) }}">
                     </x-modal-and-delete-button>

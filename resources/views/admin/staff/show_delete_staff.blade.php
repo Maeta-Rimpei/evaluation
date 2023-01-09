@@ -34,7 +34,7 @@
             <tbody>
                 @foreach ($users as $user)
                     <tr>
-                        <th scope="row">{{ $user['staff_id'] }}</th>
+                        <th scope="row">{{ $user['staff_code'] }}</th>
                         <td></td>
                         <td></td>
                         <td>{{ $user['name'] }}</td>
@@ -45,8 +45,8 @@
                         <td> </td>
                         <td>
                             <x-modal-and-delete-button type="button" buttonClass="danger" data-bs-toggle="modal"
-                                data-bs-target="#{{ 'modal' . $user['staff_id'] }}" icon="fa-solid fa-user-minus me-2"
-                                id="{{ 'modal' . $user['staff_id'] }}" title="確認：削除しようとしています"
+                                data-bs-target="#{{ 'modal' . $user['staff_code'] }}" icon="fa-solid fa-user-minus me-2"
+                                id="{{ 'modal' . $user['staff_code'] }}" title="確認：削除しようとしています"
                                 body="{{ $user['name'] }}さんを本当に削除しますか？"
                                 href="{{ route('exeSoftDeleteStaff', $user['id']) }}">
                             </x-modal-and-delete-button>

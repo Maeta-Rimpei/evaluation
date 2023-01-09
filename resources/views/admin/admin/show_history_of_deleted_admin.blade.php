@@ -27,7 +27,7 @@
                 <tbody>
                     @foreach ($admins as $admin)
                         <tr>
-                            <th class="text-center">{{ $admin['staff_id'] }}</th>
+                            <th class="text-center">{{ $admin['staff_code'] }}</th>
                             <td class="text-center">{{ $admin['name'] }}</td>
                             <td class="text-center">{{ $admin['affiliation'] }}</td>
                             <td class="text-center">{{ App\Consts\StaffPositionConsts::STAFF_LIST[$admin['role_id']] }}</td>

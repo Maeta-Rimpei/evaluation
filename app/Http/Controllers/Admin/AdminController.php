@@ -38,7 +38,7 @@ class AdminController extends Controller
     public function login(Request $request)
     {
         try {
-            $credentials = $request->only('staff_id', 'password');
+            $credentials = $request->only('staff_code', 'password');
 
             if (\Auth::guard('admin')->attempt($credentials)) {
                 $request->session()->regenerate();
@@ -94,13 +94,13 @@ class AdminController extends Controller
     {
         try {
             $name = $request->input('name');
-            $staff_id = $request->input('staff_id');
+            $staff_code = $request->input('staff_code');
             $affiliation = $request->input('affiliation');
             $role_id = $request->input('role_id');
 
-            $search_admins = $this->admin->getSearchParameterOfAdmin($name, $staff_id, $affiliation, $role_id)->paginate(10);
+            $search_admins = $this->admin->getSearchParameterOfAdmin($name, $staff_code, $affiliation, $role_id)->paginate(10);
 
-            return view('Admin.admin.search_admin', compact('name', 'staff_id', 'affiliation', 'role_id', 'search_admins'));
+            return view('Admin.admin.search_admin', compact('name', 'staff_code', 'affiliation', 'role_id', 'search_admins'));
         } catch (\Throwable $e) {
             \Log::error($e);
             throw $e;

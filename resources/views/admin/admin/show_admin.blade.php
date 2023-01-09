@@ -37,7 +37,7 @@
         <tbody>
             @foreach ($admins as $admin)
                 <tr>
-                    <th scope="row">{{ $admin['staff_id'] }}</th>
+                    <th scope="row">{{ $admin['staff_code'] }}</th>
                     <td></td>
                     <td></td>
                     <td>{{ $admin['name'] }}</td>

@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
-use App\Models\User;
+use App\Models\Staff;
 use App\Models\Admin;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
@@ -33,6 +33,9 @@ class RegisterController extends Controller
      */
     protected $redirectTo = RouteServiceProvider::HOME;
 
+    private $admin;
+    private $staff;
+
     /**
      * Create a new controller instance.
      *
@@ -41,6 +44,8 @@ class RegisterController extends Controller
     public function __construct()
     {
         $this->middleware('auth:admin');
+        $this->admin = new Admin;
+        $this->staff = new Staff;
     }
 
     /**
@@ -66,8 +71,8 @@ class RegisterController extends Controller
      */
     protected function exeRegisterAdmin(StaffCreateRequest $request)
     {
-        Admin::create([
-            'staff_id' => $request->staff_id,
+        $this->admin->create([
+            'staff_code' => $request->staff_code,
             'name' => $request->name,
             'role_id' => $request->role_id,
             'affiliation' => $request->affiliation,
@@ -85,8 +90,8 @@ class RegisterController extends Controller
      */
     protected function exeRegisterStaff(StaffCreateRequest $request)
     {
-        User::create([
-            'staff_id' => $request->staff_id,
+        $this->staff->create([
+            'staff_code' => $request->staff_code,
             'name' => $request->name,
             'role_id' => $request->role_id,
             'affiliation' => $request->affiliation,
