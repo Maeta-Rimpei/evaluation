@@ -28,6 +28,6 @@ class CreateQuestionStaffTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('question_user');
+        Schema::dropIfExists('question_staff');
     }
 }

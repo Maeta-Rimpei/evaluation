@@ -13,7 +13,7 @@ class AddColumnTotalEvaluationUsers extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table('staffs', function (Blueprint $table) {
             $table->string('total_evaluation')->after('evaluation')->comment('総合評価');
         });
     }
@@ -25,7 +25,7 @@ class AddColumnTotalEvaluationUsers extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table('staffs', function (Blueprint $table) {
             $table->dropColumn('total_evaluation');
         });
     }

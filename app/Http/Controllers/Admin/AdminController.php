@@ -6,14 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Models\Admin;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
-use App\Http\Requests\AnswerRequest;
+use App\Http\Requests\LoginRequest;
 use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
     private $admin;
 
-    private $answer;
     /**
      * Create a new controller instance.
      *
@@ -21,6 +20,7 @@ class AdminController extends Controller
      */
     public function __construct()
     {
+        // $this->middleware('auth');
         $this->admin = new Admin();
     }
 
@@ -35,7 +35,7 @@ class AdminController extends Controller
         return view('admin.login');
     }
 
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
         try {
             $credentials = $request->only('staff_code', 'password');
