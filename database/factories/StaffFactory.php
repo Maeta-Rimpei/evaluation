@@ -5,7 +5,7 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
-class UserFactory extends Factory
+class StaffFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -16,10 +16,16 @@ class UserFactory extends Factory
     {
         return [
             'name' => $this->faker->name(),
-            'email' => $this->faker->unique()->safeEmail(),
-            'email_verified_at' => now(),
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
-            'remember_token' => Str::random(10),
+            'staff_code' => rand(0, 9999),
+            'role_id' => $this->faker->numberBetween(0, 2),
+            'affiliation' => $this->faker->city(),
+            'total_evaluation' => null,
+            'evaluation' => null,
+            'password' => \Hash::make('testtest'),
+            'remember_token' => null,
+            'created_at' => now(),
+            'updated_at' => now(),
+            'deleted_at' => null
         ];
     }
 

@@ -20,40 +20,34 @@ class AdminController extends Controller
      */
     public function __construct()
     {
-        // $this->middleware('auth');
+        // $this->middleware('guest:admin')->except('logout');
         $this->admin = new Admin();
     }
 
     // --------------------認証関係----------------------
-    public function index()
-    {
-        return view('admin.index');
-    }
-
+    
     public function showLogin()
     {
         return view('admin.login');
     }
-
+    
     public function login(LoginRequest $request)
     {
         try {
             $credentials = $request->only('staff_code', 'password');
-
+            
             if (\Auth::guard('admin')->attempt($credentials)) {
                 $request->session()->regenerate();
                 return redirect('admin/index');
             }
-
-            return back()->withErrors([
-                'login_error' => '職員コードかパスワードが間違っています。',
-            ]);
+            
+            return redirect()->route('adminShowLogin')->with('loginErrorMessage', '職員コードかパスワードが間違っています。');
         } catch (\Throwable $e) {
             \Log::error($e);
             throw $e;
         }
     }
-
+    
     public function logout(Request $request)
     {
         try {
@@ -68,6 +62,11 @@ class AdminController extends Controller
     }
 
     // --------------------管理者画面操作関係----------------------
+    public function index()
+    {
+        return view('admin.index');
+    }
+
     /**
      * 管理者一覧画面
      * @return view Admin.admin.show_admin

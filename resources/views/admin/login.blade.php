@@ -2,6 +2,13 @@
 
 @section('content')
     <div class="container">
+
+        @if (session('loginErrorMessage'))
+        <div class="alert alert-danger text-center">
+            {{ session('loginErrorMessage') }}
+        </div>
+        @endif
+
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
@@ -11,8 +18,7 @@
                         <form method="POST" action={{ route('adminLogin') }}>
                             @csrf
                             <div class="row mb-3">
-                                <label for="staff_code"
-                                    class="col-md-4 col-form-label text-md-end">職員コード</label>
+                                <label for="staff_code" class="col-md-4 col-form-label text-md-end">職員コード</label>
                                 <div class="col-md-6">
                                     <input id="staff_code" type="staff_code"
                                         class="form-control @error('staff_code') is-invalid @enderror" name="staff_code"
@@ -27,8 +33,7 @@
                             </div>
 
                             <div class="row mb-3">
-                                <label for="password"
-                                    class="col-md-4 col-form-label text-md-end">パスワード</label>
+                                <label for="password" class="col-md-4 col-form-label text-md-end">パスワード</label>
                                 <div class="col-md-6">
                                     <input id="password" type="password"
                                         class="form-control @error('password') is-invalid @enderror" name="password"
