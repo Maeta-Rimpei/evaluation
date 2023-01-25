@@ -72,4 +72,5 @@
             @endforeach
         </tbody>
     </table>
+    {{ $users->appends(request()->query())->links() }}
 @endsection

@@ -65,14 +65,14 @@ class Question extends Model
     public function getQuestionsByRoleId(int $role_id)
     {
         return DB::table('questions')
-            ->where('question_user.role_id', "=", $role_id)
+            ->where('question_staff.role_id', "=", $role_id)
             ->select(
                 'questions.id as question_id',
                 'questions.content',
                 'questions.category',
-                'question_user.role_id'
+                'question_staff.role_id'
             )
-            ->leftJoin('question_user', 'questions.id', '=', 'question_id')
+            ->leftJoin('question_staff', 'questions.id', '=', 'question_id')
             ->get();
     }
 
@@ -85,14 +85,14 @@ class Question extends Model
     public function getQuestionByQuestionId(int $question_id)
     {
         return DB::table('questions')
-            ->where('question_user.question_id', "=", $question_id)
+            ->where('question_staff.question_id', "=", $question_id)
             ->select(
                 'questions.id as question_id',
                 'questions.content',
                 'questions.category',
-                'question_user.role_id',
+                'question_staff.role_id',
             )
-            ->leftJoin('question_user', 'questions.id', '=', 'question_id')
+            ->leftJoin('question_staff', 'questions.id', '=', 'question_id')
             ->first();
     }
 
@@ -100,7 +100,7 @@ class Question extends Model
      * $question_idに紐づいた$role_idを取得
      * @param int $question_id
      *
-     * @return $role_id App\Models\QuestionUser
+     * @return $role_id App\Models\QuestionStaff
      */
     public function getRoleIdByQuestionId(int $question_id)
     {
@@ -153,12 +153,12 @@ class Question extends Model
      */
     public function joinQuestionsAndQuestionStaff()
     {
-        $query = $this->query()->join('question_user', 'questions.id', '=', 'question_user.question_id')
+        $query = $this->query()->join('question_staff', 'questions.id', '=', 'question_staff.question_id')
             ->select(
                 'questions.id',
                 'questions.content',
                 'questions.category',
-                'question_user.role_id'
+                'question_staff.role_id'
             );
 
         return $query;
@@ -170,7 +170,7 @@ class Question extends Model
      * @param $category
      * @param int $role_id
      */
-    public function getSearchParameterOfQuestion($keyword, $category, int $role_id)
+    public function getSearchParameterOfQuestion($keyword, $category, $role_id)
     {
         $query = $this->joinQuestionsAndQuestionStaff();
 
@@ -197,13 +197,13 @@ class Question extends Model
     // Staff Modelとのリレーション(多対多)
     public function staffs()
     {
-        return $this->belongsToMany(Staff::class, 'question_user', 'question_id', 'role_id',)
+        return $this->belongsToMany(Staff::class, 'question_staff', 'question_id', 'role_id',)
             ->withPivot('role_id', 'question_id')
             ->withTimestamps();
     }
 
     // questionStaff Modelとのリレーション
-    public function questionUser()
+    public function questionStaff()
     {
         return $this->belongsTo(questionStaff::class);
     }

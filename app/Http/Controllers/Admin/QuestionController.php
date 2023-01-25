@@ -162,7 +162,7 @@ class QuestionController extends Controller
                 return redirect()->route('showEditQuestionDetail', $question_role_id->role_id)
                 ->with('deleteMessage', '削除しました。');
             }
-            \Log::error('question_userテーブルのカラムがnullです。');
+            \Log::error('question_staffテーブルのカラムがnullです。');
 
             return redirect()->route('showEditQuestionDetail', $question_role_id->role_id)->with('errorMessage', '予期しないエラーが発生しました。この質問は削除できません。');
         } catch (ModelNotFoundException $e) {

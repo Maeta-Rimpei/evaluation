@@ -29,7 +29,7 @@ class StaffController extends Controller
     public function showStaff()
     {
         try {
-            $users = $this->staff->getAllUsers();
+            $users = $this->staff->orderBy("created_at", "desc")->paginate(10);
             return view('Admin.staff.show_staff', compact('users'));
         } catch (\Throwable $e) {
             \Log::error($e);
@@ -261,7 +261,7 @@ class StaffController extends Controller
             $affiliation = $request->input('affiliation');
             $role_id = $request->input('role_id');
 
-            $search_staffs = $this->staff->getSearchParameterOfStaff($name, $staff_code, $affiliation, $role_id)->paginate(10);
+            $search_staffs = $this->staff->getSearchParameterOfStaff($name, $staff_code, $affiliation, $role_id)->orderBy("created_at", "desc")->paginate(10);
 
             return view('Admin.staff.search_staff', compact('name', 'staff_code', 'affiliation', 'role_id', 'search_staffs'));
         } catch (\Throwable $e) {

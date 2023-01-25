@@ -71,6 +71,17 @@ class RegisterController extends Controller
      */
     protected function exeRegisterAdmin(StaffCreateRequest $request)
     {
+        $inputs = $request->only(['staff_code', 'name', 'role_id', 'affiliation', 'password']);
+        // dd($inputs);
+        $users = $this->staff->getAllUsers();
+        foreach ($inputs as $key => $val) {
+            foreach ($users as $user) {
+                if ($user[$key] == $val){
+                    $common[] = $val;
+                }
+            }
+        }
+        dd($common);
         $this->admin->create([
             'staff_code' => $request->staff_code,
             'name' => $request->name,
