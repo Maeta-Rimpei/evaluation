@@ -14,7 +14,7 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('users')->insert([
+        DB::table('staffs')->insert([
             'staff_code' => '0000',
             'name' => 'taro_test',
             'role_id' => '0',
@@ -23,7 +23,7 @@ class UsersTableSeeder extends Seeder
             'password' => \Hash::make('testtest'),
         ]);
 
-        DB::table('users')->insert([
+        DB::table('staffs')->insert([
             'staff_code' => '1000',
             'name' => '大友',
             'role_id' => '0',
@@ -31,7 +31,7 @@ class UsersTableSeeder extends Seeder
             'password' => \Hash::make('testtest'),
         ]);
 
-        DB::table('users')->insert([
+        DB::table('staffs')->insert([
             'staff_code' => '1100',
             'name' => '採択',
             'role_id' => '1',
@@ -40,7 +40,7 @@ class UsersTableSeeder extends Seeder
             'password' => \Hash::make('testtest'),
         ]);
 
-        DB::table('users')->insert([
+        DB::table('staffs')->insert([
             'staff_code' => '1110',
             'name' => 'のみ',
             'role_id' => '2',

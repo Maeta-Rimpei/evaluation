@@ -25,7 +25,7 @@ class RedirectIfAuthenticated
             if (Auth::guard($guard)->check()) {
 
                 // 管理画面へリダイレクト
-                if ($guard == 'admin' && Auth::guard($guard)->check()) {
+                if ($guard == 'admin') {
                     return redirect(RouteServiceProvider::ADMIN_HOME);
                 }
                 return redirect(RouteServiceProvider::HOME);
