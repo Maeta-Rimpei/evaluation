@@ -152,6 +152,23 @@ class StaffController extends Controller
         }
     }
 
+    // -----------------------職員削除・編集------------------------------
+    /**
+     * 職員情報編集画面
+     * @param int $staff_id
+     */
+    public function showEditStaff($staff_id)
+    {
+        try {
+            $user = $this->staff->getUser($staff_id);
+
+            return view('show_edit_staff', compact($user));
+        } catch (\Throwable $e) {
+            \Log::error($e);
+            throw $e;
+        }
+    }
+
     /**
      * 評価削除実行
      * @param int $staff_id staffs.id
@@ -261,7 +278,7 @@ class StaffController extends Controller
             $affiliation = $request->input('affiliation');
             $role_id = $request->input('role_id');
 
-            $search_staffs = $this->staff->getSearchParameterOfStaff($name, $staff_code, $affiliation, $role_id)->orderBy("created_at", "desc")->paginate(10);
+            $search_staffs = $this->staff->getSearchParameterOfStaff($name, $staff_code, $affiliation, $role_id)->paginate(10);
 
             return view('Admin.staff.search_staff', compact('name', 'staff_code', 'affiliation', 'role_id', 'search_staffs'));
         } catch (\Throwable $e) {

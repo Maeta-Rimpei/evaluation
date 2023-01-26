@@ -104,7 +104,7 @@ class RegisterController extends Controller
                 'password' => Hash::make($request->password),
             ]);
 
-            return redirect()->route('register')->with('createMessage', '職員を登録しました。');
+            return redirect()->route('showRegistrationStaffForm')->with('createMessage', '職員を登録しました。');
         } catch (\Throwable $e) {
             throw $e;
         }

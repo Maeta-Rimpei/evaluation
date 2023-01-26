@@ -25,29 +25,28 @@ class AdminController extends Controller
     }
 
     // --------------------認証関係----------------------
-    
+
     public function showLogin()
     {
         return view('admin.login');
     }
-    
+
     public function login(LoginRequest $request)
     {
         try {
-            
+            $credentials = $request->only('staff_code', 'password');
             if (\Auth::guard('admin')->attempt($credentials)) {
                 $request->session()->regenerate();
                 return redirect('admin/index');
-            $credentials = $request->only('staff_code', 'password');
             }
-            
+
             return redirect()->route('adminShowLogin')->with('loginErrorMessage', '職員コードかパスワードが間違っています。');
         } catch (\Throwable $e) {
             \Log::error($e);
             throw $e;
         }
     }
-    
+
     public function logout(Request $request)
     {
         try {

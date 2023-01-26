@@ -86,7 +86,7 @@ class Staff extends Authenticatable
     /**
      * ログイン中のユーザーの質問を取得→カウント
      * @param $user_questions
-     * 
+     *
      * @return int
      */
     public function countAuthUserQuestions($user_questions)
@@ -187,8 +187,8 @@ class Staff extends Authenticatable
         }
 
         if (isset($affiliation)) {
-            $affiliation_id_push_array = $this->spaceConversionAndPushArray($affiliation);
-            foreach ($affiliation_id_push_array as $word) {
+            $affiliation_push_array = $this->spaceConversionAndPushArray($affiliation);
+            foreach ($affiliation_push_array as $word) {
                 $query->where('affiliation', 'LIKE', '%' . self::escape($word) . '%');
             }
         }
@@ -197,7 +197,7 @@ class Staff extends Authenticatable
             $query->where('role_id', $role_id);
         }
 
-        $search_results = $query->orderBy('users.created_at', 'desc');
+        $search_results = $query->orderBy('staffs.created_at', 'desc');
 
         return $search_results;
     }

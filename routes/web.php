@@ -44,6 +44,9 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::get('/admin/show_registration_staff', [App\Http\Controllers\Auth\RegisterController::class, 'showRegistrationStaffForm'])->name('showRegistrationStaffForm');
     Route::post('/admin/exe_register', [App\Http\Controllers\Auth\RegisterController::class, 'exeRegisterStaff'])->name('exeRegisterStaff');
 
+    // 職員編集
+    Route::get('/admin/show_edit_staff/{staff_id}', [App\Http\Controllers\Admin\AdminController::class, 'showEditStaff'])->name('showEditStaff');
+
     // 職員評価作成
     Route::get('/admin/evaluation_staff/{staff_id}', [App\Http\Controllers\Admin\StaffController::class, 'evaluationStaff'])->name('evaluationStaff');
     Route::post('/admin/exe_evaluation_staff/{staff_id}', [App\Http\Controllers\Admin\StaffController::class, 'exeEvaluationStaff'])->name('exeEvaluationStaff');
