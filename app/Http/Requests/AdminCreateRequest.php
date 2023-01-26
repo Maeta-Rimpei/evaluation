@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StaffCreateRequest extends FormRequest
+class AdminCreateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -16,16 +16,11 @@ class StaffCreateRequest extends FormRequest
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
     public function rules()
     {
         return [
-            'staff_code' => 'required|regex:/\A[a-zA-Z0-9]+\z/u|max:10|unique:staffs,staff_code',
-            'name' => 'required|max:50|not_regex:/\A[a-zA-Z0-9]+\z\s/i|unique:staffs,name',
+            'staff_code' => 'required|regex:/\A[a-zA-Z0-9]+\z/u|max:10|unique:admins,staff_code',
+            'name' => 'required|max:50|not_regex:/\A[a-zA-Z0-9]+\z/i|unique:admins,name',
             'role_id' => 'required|integer',
             'affiliation' => 'required|max:50',
             'password' => 'required|string|regex:/\A([a-zA-Z0-9]{8,})+\z/u|confirmed',

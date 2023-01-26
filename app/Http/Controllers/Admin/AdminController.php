@@ -34,11 +34,11 @@ class AdminController extends Controller
     public function login(LoginRequest $request)
     {
         try {
-            $credentials = $request->only('staff_code', 'password');
             
             if (\Auth::guard('admin')->attempt($credentials)) {
                 $request->session()->regenerate();
                 return redirect('admin/index');
+            $credentials = $request->only('staff_code', 'password');
             }
             
             return redirect()->route('adminShowLogin')->with('loginErrorMessage', '職員コードかパスワードが間違っています。');

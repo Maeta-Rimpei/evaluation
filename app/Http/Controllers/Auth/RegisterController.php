@@ -10,6 +10,7 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\StaffCreateRequest;
+use App\Http\Requests\AdminCreateRequest;
 
 class RegisterController extends Controller
 {
@@ -69,28 +70,21 @@ class RegisterController extends Controller
     /**
      * 管理者登録実行
      */
-    protected function exeRegisterAdmin(StaffCreateRequest $request)
+    protected function exeRegisterAdmin(AdminCreateRequest $request)
     {
-        $inputs = $request->only(['staff_code', 'name', 'role_id', 'affiliation', 'password']);
-        // dd($inputs);
-        $users = $this->staff->getAllUsers();
-        foreach ($inputs as $key => $val) {
-            foreach ($users as $user) {
-                if ($user[$key] == $val){
-                    $common[] = $val;
-                }
-            }
-        }
-        dd($common);
-        $this->admin->create([
-            'staff_code' => $request->staff_code,
-            'name' => $request->name,
-            'role_id' => $request->role_id,
-            'affiliation' => $request->affiliation,
-            'password' => Hash::make($request->password),
-        ]);
+        try {
+            $this->admin->create([
+                'staff_code' => $request->staff_code,
+                'name' => $request->name,
+                'role_id' => $request->role_id,
+                'affiliation' => $request->affiliation,
+                'password' => Hash::make($request->password),
+            ]);
 
-        return redirect()->route('showRegistrationAdminForm')->with('createAdminMessage', '管理者を登録しました。');
+            return redirect()->route('showRegistrationAdminForm')->with('createAdminMessage', '管理者を登録しました。');
+        } catch (\Throwable $e) {
+            throw $e;
+        }
     }
 
     /**
@@ -101,14 +95,18 @@ class RegisterController extends Controller
      */
     protected function exeRegisterStaff(StaffCreateRequest $request)
     {
-        $this->staff->create([
-            'staff_code' => $request->staff_code,
-            'name' => $request->name,
-            'role_id' => $request->role_id,
-            'affiliation' => $request->affiliation,
-            'password' => Hash::make($request->password),
-        ]);
+        try {
+            $this->staff->create([
+                'staff_code' => $request->staff_code,
+                'name' => $request->name,
+                'role_id' => $request->role_id,
+                'affiliation' => $request->affiliation,
+                'password' => Hash::make($request->password),
+            ]);
 
-        return redirect()->route('register')->with('createMessage', '職員を登録しました。');
+            return redirect()->route('register')->with('createMessage', '職員を登録しました。');
+        } catch (\Throwable $e) {
+            throw $e;
+        }
     }
 }
