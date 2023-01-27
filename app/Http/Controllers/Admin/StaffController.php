@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StaffUpdateRequest;
 use Illuminate\Http\Request;
+use App\Request\StaffUpdateRequest;
 use App\Models\Staff;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -162,7 +164,28 @@ class StaffController extends Controller
         try {
             $user = $this->staff->getUser($staff_id);
 
-            return view('show_edit_staff', compact($user));
+            return view('Admin.staff.show_edit_staff', compact('user'));
+        } catch (\Throwable $e) {
+            \Log::error($e);
+            throw $e;
+        }
+    }
+
+
+    public function exeUpdateStaff($staff_id, StaffUpdateRequest $request)
+    {
+        try {
+            $user = $this->staff->getUser($staff_id);
+
+            $inputs = $request->only(['staff_code', 'name', 'role_id', 'affiliation']);
+            $user->staff_code = $inputs['staff_code'];
+            $user->name = $inputs['name'];
+            $user->role_id = $inputs['role_id'];
+            $user->affiliation = $inputs['affiliation'];
+
+            $this->staff->saveStaff();
+
+            return redirect()->route('showStaff')->with('editMesssage', '職員情報を更新しました。');
         } catch (\Throwable $e) {
             \Log::error($e);
             throw $e;

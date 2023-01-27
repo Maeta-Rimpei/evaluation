@@ -41,6 +41,9 @@
                 <th scope="col">所属</th>
                 <th scope="col"></th>
                 <th scope="col"></th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+                <th scope="col"></th>
                 <th scope="col">
                     <x-utility-button href="{{ route('showDestroyAllEvaluationStaff') }}" class="outline-primary"
                         icon="fa-solid fa-list me-2">
@@ -59,6 +62,13 @@
                     <td></td>
                     <td></td>
                     <td>{{ $user['affiliation'] }}</td>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        <x-utility-button href="{{ route('showEditStaff', $user['id']) }}" class="success" icon="fa-regular fa-pen-to-square me-2">
+                            職員情報編集
+                        </x-utility-button>
+                    </td>
                     <td></td>
                     <td></td>
                     <td>

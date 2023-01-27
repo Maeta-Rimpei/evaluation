@@ -45,7 +45,8 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::post('/admin/exe_register', [App\Http\Controllers\Auth\RegisterController::class, 'exeRegisterStaff'])->name('exeRegisterStaff');
 
     // 職員編集
-    Route::get('/admin/show_edit_staff/{staff_id}', [App\Http\Controllers\Admin\AdminController::class, 'showEditStaff'])->name('showEditStaff');
+    Route::get('/admin/show_edit_staff/{staff_id}', [App\Http\Controllers\Admin\StaffController::class, 'showEditStaff'])->name('showEditStaff');
+    Route::patch('/admin/exe_update_staff/{staff_id}', [App\Http\Controllers\Admin\StaffController::class, 'exeUpdateStaff'])->name('exeUpdateStaff');
 
     // 職員評価作成
     Route::get('/admin/evaluation_staff/{staff_id}', [App\Http\Controllers\Admin\StaffController::class, 'evaluationStaff'])->name('evaluationStaff');
@@ -53,7 +54,7 @@ Route::group(['middleware' => ['auth:admin']], function () {
 
     // 職員評価編集
     Route::get('/admin/show_edit_evaluation_staff/{staff_id}', [App\Http\Controllers\Admin\StaffController::class, 'showEditEvaluationStaff'])->name('showEditEvaluationStaff');
-    Route::patch('/admin/exe__evaluation_staff/{staff_id}', [App\Http\Controllers\Admin\StaffController::class, 'exeUpdateEvaluationStaff'])->name('exeUpdateEvaluationStaff');
+    Route::patch('/admin/exe_evaluation_staff/{staff_id}', [App\Http\Controllers\Admin\StaffController::class, 'exeUpdateEvaluationStaff'])->name('exeUpdateEvaluationStaff');
     Route::get('/admin/exe_destroy_evaluation_staff/{staff_id}', [App\Http\Controllers\Admin\StaffController::class, 'exeDestroyEvaluationStaff'])->name('exeDestroyEvaluationStaff');
     Route::get('/admin/show_destroy_all_evaluation_staff', [App\Http\Controllers\Admin\StaffController::class, 'showDestroyAllEvaluationStaff'])->name('showDestroyAllEvaluationStaff');
     Route::get('/admin/exe_destroy_all_evaluation_staff', [App\Http\Controllers\Admin\StaffController::class, 'exeDestroyAllEvaluationStaff'])->name('exeDestroyAllEvaluationStaff');

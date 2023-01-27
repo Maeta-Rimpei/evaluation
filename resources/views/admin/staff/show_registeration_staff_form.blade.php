@@ -3,7 +3,7 @@
 @section('content')
     <div class="container mt-3 justify-content-center">
         <h2 class="text-center">職員登録</h2>
-        
+
         <x-utility-button href="{{ route('showStaff') }}" class="secondary" icon="fa-solid fa-arrow-left me-2">
             戻る
         </x-utility-button>
@@ -25,7 +25,8 @@
                                 <label class="mt-5" for="staff_code">職員コード</label>
                             </th>
                             <td>
-                                <input type="text" class="form-control @error('staff_code') is-invalid @enderror mt-5 ms-5"
+                                <input type="text"
+                                    class="form-control @error('staff_code') is-invalid @enderror mt-5 ms-5"
                                     name="staff_code" value="{{ old('staff_code') }}" id="staff_code">
                                 @error('staff_code')
                                     <span class="invalid-feedback ms-5" role="alert">
@@ -120,11 +121,9 @@
                     </tbody>
                 </table>
         </div>
-
         <div class="text-center">
             <button class="btn btn-primary mt-5 mx-auto" type="submit">登録</button>
         </div>
-
         </form>
     </div>
 @endsection
