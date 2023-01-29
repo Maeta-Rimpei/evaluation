@@ -1,5 +1,6 @@
 @extends('admin.index')
 
+
 @section('content')
     <div class="container mt-3 justify-content-center">
         <h2 class="text-center">職員情報編集</h2>
@@ -16,8 +17,9 @@
         @endif
 
         <div class="form-contents">
-            <form action={{ route('exeRegisterStaff') }} method="post">
+            <form action={{ route('exeUpdateStaff', $user['id']) }} method="post">
                 @csrf
+                @method('patch')
                 <table class="mt-3 mx-auto">
                     <tbody>
                         <tr>
@@ -85,13 +87,12 @@
                         </tr>
                     </tbody>
                 </table>
+                <div class="text-center mt-5">
+                    <x-utility-button type="submit" class="success" icon="fa-regular fa-pen-to-square me-2">
+                        更新
+                    </x-utility-button>
+                </div>
+            </form>
         </div>
-        <div class="text-center mt-5">
-            <x-utility-button type="submit" class="success" icon="fa-regular fa-pen-to-square me-2">
-                更新
-            </x-utility-button>
-        </div>
-
-        </form>
     </div>
 @endsection

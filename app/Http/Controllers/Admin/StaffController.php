@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StaffUpdateRequest;
 use Illuminate\Http\Request;
-use App\Request\StaffUpdateRequest;
 use App\Models\Staff;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -179,13 +178,13 @@ class StaffController extends Controller
 
             $inputs = $request->only(['staff_code', 'name', 'role_id', 'affiliation']);
             $user->staff_code = $inputs['staff_code'];
+            dd($user->staff_code);
             $user->name = $inputs['name'];
             $user->role_id = $inputs['role_id'];
             $user->affiliation = $inputs['affiliation'];
-
             $this->staff->saveStaff();
 
-            return redirect()->route('showStaff')->with('editMesssage', '職員情報を更新しました。');
+            return redirect()->route('showStaff')->with('editMessage', '職員情報を更新しました。');
         } catch (\Throwable $e) {
             \Log::error($e);
             throw $e;

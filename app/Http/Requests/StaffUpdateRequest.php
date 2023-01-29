@@ -26,8 +26,12 @@ class StaffUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'staff_code' => 'required|regex:/\A[a-zA-Z0-9]+\z/u|max:10|unique:staffs,staff_code', Rule::unique('staffs')->ignore($this->id),
-            'name' => 'required|max:50|not_regex:/\A[a-zA-Z0-9]+\z\s/i|unique:staffs,name',
+            'staff_code' => 'required', 'regex:/\A[a-zA-Z0-9]+\z/u', 'max:10', Rule::unique('staffs')->ignore($this->staff->id ?? null)->where(function ($user){
+                return $user->whereNull('deleted');
+            }),
+            'name' => 'required', 'max:50', 'not_regex:/\A[a-zA-Z0-9]+\z\s/i', Rule::unique('staffs')->ignore($this->staff->id ?? null)->where(function ($user){
+                return $user->whereNull('deleted');
+            }),
             'role_id' => 'required|integer',
             'affiliation' => 'required|max:50',
             'password' => 'required|string|regex:/\A([a-zA-Z0-9]{8,})+\z/u|confirmed',
