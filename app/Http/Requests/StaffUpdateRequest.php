@@ -34,8 +34,6 @@ class StaffUpdateRequest extends FormRequest
             }),
             'role_id' => 'required|integer',
             'affiliation' => 'required|max:50',
-            'password' => 'required|string|regex:/\A([a-zA-Z0-9]{8,})+\z/u|confirmed',
-            'password_confirmation' => 'regex:/\A([a-zA-Z0-9]{8,})+\z/u',
         ];
     }
 
@@ -46,8 +44,6 @@ class StaffUpdateRequest extends FormRequest
             'name' => '名前',
             'role_id' => '職位',
             'affiliation' => '職位',
-            'password' => 'パスワード',
-            'password_confirmation' => 'パスワード(確認)',
         ];
     }
 
@@ -66,10 +62,6 @@ class StaffUpdateRequest extends FormRequest
             'role_id.integer' => ':attributeに不正な値が入力されました。管理者に問い合わせてください。',
             'affiliation.required' => ':attributeの入力は必須です。',
             'affiliation.max' => ':attributeは50文字以内で入力してください。',
-            'password.required' => ':attributeの入力は必須です。',
-            'password.regex' => ':attributeは半角英数字8文字以上で入力してください。',
-            'password.confirmed' => ':attributeが不一致です。',
-            'password_confirmation.regex' => ':attributeは半角英数字8文字以上で入力してください。'
         ];
     }
 }

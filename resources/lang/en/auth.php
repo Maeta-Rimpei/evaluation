@@ -13,8 +13,8 @@ return [
     |
     */
 
-    'failed' => 'メールアドレスまたはパスワードが一致しません。',
-    'password' => 'メールアドレスまたはパスワードが一致しません。',
+    'failed' => '職員コードまたはパスワードが一致しません。',
+    'password' => '職員コードまたはパスワードが一致しません。',
     'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
 
 ];

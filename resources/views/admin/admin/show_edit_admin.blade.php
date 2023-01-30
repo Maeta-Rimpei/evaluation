@@ -3,7 +3,7 @@
 @section('content')
 <h2 class="text-center">職員情報編集</h2>
 
-<x-utility-button href="{{ route('showStaff') }}" class="secondary" icon="fa-solid fa-arrow-left me-2">
+<x-utility-button href="{{ route('showAdmin') }}" class="secondary" icon="fa-solid fa-arrow-left me-2">
     戻る
 </x-utility-button>
 
@@ -22,19 +22,19 @@
         </tr>
     </thead>
     <tbody>
-        @foreach ($users as $user)
+        @foreach ($admins as $admin)
             <tr>
-                <th scope="row">{{ $user['staff_code'] }}</th>
+                <th scope="row">{{ $admin['staff_code'] }}</th>
                 <td></td>
                 <td></td>
-                <td>{{ $user['name'] }}</td>
+                <td>{{ $admin['name'] }}</td>
                 <td></td>
                 <td></td>
-                <td>{{ $user['affiliation'] }}</td>
+                <td>{{ $admin['affiliation'] }}</td>
                 <td></td>
                 <td></td>
                 <td>
-                    <a href={{ route('showEditStaffForm', $user['id']) }}>
+                    <a href={{ route('showEditAdminForm', $admin['id']) }}>
                         <x-utility-button class="success" icon="fa-regular fa-pen-to-square me-2">
                             編集
                         </x-utility-button>
@@ -44,5 +44,5 @@
         @endforeach
     </tbody>
 </table>
-{{ $users->links() }} 
+{{ $admins->links() }} 
 @endsection

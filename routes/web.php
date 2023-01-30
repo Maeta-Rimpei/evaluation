@@ -45,7 +45,8 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::post('/admin/exe_register', [App\Http\Controllers\Auth\RegisterController::class, 'exeRegisterStaff'])->name('exeRegisterStaff');
 
     // 職員編集
-    Route::get('/admin/show_edit_staff/{staff_id}', [App\Http\Controllers\Admin\StaffController::class, 'showEditStaff'])->name('showEditStaff');
+    Route::get('/admin/show_edit_staff', [App\Http\Controllers\Admin\StaffController::class, 'showEditStaff'])->name('showEditStaff');
+    Route::get('/admin/show_edit_staff_form/{staff_id}', [App\Http\Controllers\Admin\StaffController::class, 'showEditStaffForm'])->name('showEditStaffForm');
     Route::patch('/admin/exe_update_staff/{staff_id}', [App\Http\Controllers\Admin\StaffController::class, 'exeUpdateStaff'])->name('exeUpdateStaff');
 
     // 職員評価作成
@@ -70,6 +71,11 @@ Route::group(['middleware' => ['auth:admin']], function () {
     // 管理者登録
     Route::get('/admin/admin_register', [App\Http\Controllers\Auth\RegisterController::class, 'showRegistrationAdminForm'])->name('showRegistrationAdminForm');
     Route::post('/admin/exe_register_admin', [App\Http\Controllers\Auth\RegisterController::class, 'exeRegisterAdmin'])->name('exeRegisterAdmin');
+
+    // 職員編集
+    Route::get('/admin/show_edit_admin', [App\Http\Controllers\Admin\AdminController::class, 'showEditAdmin'])->name('showEditAdmin');
+    Route::get('/admin/show_edit_admin_form/{admin_id}', [App\Http\Controllers\Admin\AdminController::class, 'showEditAdminForm'])->name('showEditAdminForm');
+    Route::patch('/admin/exe_update_admin/{admin_id}', [App\Http\Controllers\Admin\AdminController::class, 'exeUpdateAdmin'])->name('exeUpdateAdmin');
 
     // 管理者削除
     Route::get('/admin/show_delete_admin', [App\Http\Controllers\Admin\AdminController::class, 'showSoftDeleteAdmin'])->name('showSoftDeleteAdmin');

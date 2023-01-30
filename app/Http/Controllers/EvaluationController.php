@@ -89,7 +89,7 @@ class EvaluationController extends Controller
      */
     public function showChangePassword()
     {
-        return view('show_change_password');
+        return view('user.show_change_password');
     }
 
     /**
@@ -104,12 +104,12 @@ class EvaluationController extends Controller
             DB::beginTransaction();
             $user =  $this->staff->getAuthUser();
             if (!password_verify($request->current_password, $user->password)) {
-                return redirect()->route('showChangePassword')->with('alertDifferentPassword', 'パスワードが一致しません');
+                return redirect()->route('showChangePassword')->with('alertDifferentPassword', '現在のパスワードが一致しません。ご確認ください。');
             }
-
+            
             $new_password = $request->only(['password']);
             $user->password = bcrypt($new_password['password']);
-            $this->staff->saveStaff();
+            $user->saveStaff();
             DB::commit();
 
             return redirect()->route('showChangePassword')->with('successChangePassword', 'パスワードを変更しました');

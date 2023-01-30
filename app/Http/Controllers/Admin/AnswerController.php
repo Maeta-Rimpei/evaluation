@@ -31,7 +31,7 @@ class AnswerController extends Controller
     public function showEditAnswer()
     {
         try {
-            $users = $this->staff->getAllUsers();
+            $users = $this->staff->orderBy('created_at', 'desc')->paginate(10);
 
             return view('Admin.answer.show_edit_answer', compact('users'));
         } catch (\Throwable $e) {
@@ -59,7 +59,7 @@ class AnswerController extends Controller
 
             $this->answer->deleteAllstaffAnswer($user_answers);
 
-            return redirect()->route('showEditAnswer')->with('deleteAllAnswerMessage', '回答を全て削除しました。');
+            return redirect()->route('showEditAnswer')->with('deleteAllAnswerMessage', '選択した方の回答を全て削除しました。');
         } catch (\Throwable $e) {
             \Log::error($e);
             throw $e;

@@ -12,6 +12,10 @@
             <div class="alert alert-warning text-center">
                 {{ session('destroyErrorMessage') }}
             </div>
+        @elseif (session('destroyAllEvaluationMessage'))
+            <div class="alert alert-danger text-center">
+                {{ session('destroyAllEvaluationMessage') }}
+            </div>
         @endif
 
         <div class="my-3">

@@ -48,29 +48,38 @@ class Admin extends Authenticatable
     }
 
     /**
+     * 管理者データ保存
+     * @return void
+     */
+    public function saveAdmin()
+    {
+        $this->saveOrFail();
+    }
+
+    /**
      * あいまい検索
      * @param string $str
      *
      * @return
      */
     public function getSearchParameterOfAdmin($name, $staff_code, $affiliation, $role_id)
-    {   
+    {
         $query = $this->query();
-        
+
         if (isset($name)) {
             $name_push_array = $this->spaceConversionAndPushArray($name);
             foreach ($name_push_array as $word) {
                 $query->where('name', 'LIKE', '%' . self::escape($word) . '%');
             }
         }
-        
+
         if (isset($staff_code)) {
             $staff_code_push_array = $this->spaceConversionAndPushArray($staff_code);
             foreach ($staff_code_push_array as $word) {
                 $query->where('staff_code', 'LIKE', '%' . self::escape($word) . '%');
             }
         }
-        
+
         if (isset($affiliation)) {
             $affiliation_push_array = $this->spaceConversionAndPushArray($affiliation);
             foreach ($affiliation_push_array as $word) {

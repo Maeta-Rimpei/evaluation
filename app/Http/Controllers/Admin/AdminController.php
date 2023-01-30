@@ -7,6 +7,7 @@ use App\Models\Admin;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Http\Requests\LoginRequest;
+use App\Http\Requests\StaffUpdateRequest;
 use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
@@ -76,6 +77,57 @@ class AdminController extends Controller
             $admins = $this->admin->getAllAdmins();
 
             return view('Admin.admin.show_admin', compact('admins'));
+        } catch (\Throwable $e) {
+            \Log::error($e);
+            throw $e;
+        }
+    }
+
+    /**
+     * 職員情報編集画面
+     * @return view Admin.staff.show_edit_staff
+     */
+    public function showEditAdmin()
+    {
+        try {
+            $admins = $this->admin->paginate(10);
+
+            return view('Admin.admin.show_edit_admin', compact('admins'));
+        } catch (\Throwable $e) {
+            \Log::error($e);
+            throw $e;
+        }
+    }
+
+    /**
+     * 職員情報編集画面
+     * @param int $admin_id
+     */
+    public function showEditAdminForm($admin_id)
+    {
+        try {
+            $admin = $this->admin->getAdmin($admin_id);
+
+            return view('Admin.admin.show_edit_admin_form', compact('admin'));
+        } catch (\Throwable $e) {
+            \Log::error($e);
+            throw $e;
+        }
+    }
+
+    public function exeUpdateAdmin($admin_id, StaffUpdateRequest $request)
+    {
+        try {
+            $admin = $this->admin->getAdmin($admin_id);
+
+            $inputs = $request->only(['staff_code', 'name', 'role_id', 'affiliation']);
+            $admin->staff_code = $inputs['staff_code'];
+            $admin->name = $inputs['name'];
+            $admin->role_id = $inputs['role_id'];
+            $admin->affiliation = $inputs['affiliation'];
+            $admin->saveAdmin();
+
+            return redirect()->route('showAdmin')->with('editAdminMessage', '管理者情報を更新しました。');
         } catch (\Throwable $e) {
             \Log::error($e);
             throw $e;

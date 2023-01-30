@@ -139,7 +139,7 @@ class StaffController extends Controller
             $user = $user = $this->staff->getUser($staff_id);
 
             if (empty($user->evaluation)) {
-                return redirect()->route('showEditEvaluationStaff', $user->id)->with('evaluationUpdateErrorMessage', 'この方のフィードバックはまだありません。');
+                return redirect()->route('showEditEvaluationStaff', $user->id)->with('evaluationUpdateErrorMessage', 'この方へのフィードバックは未実施です。');
             }
 
             $evaluation = $request->only(['evaluation']);
@@ -156,20 +156,35 @@ class StaffController extends Controller
     // -----------------------職員削除・編集------------------------------
     /**
      * 職員情報編集画面
-     * @param int $staff_id
+     * @return view Admin.staff.show_edit_staff
      */
-    public function showEditStaff($staff_id)
+    public function showEditStaff()
     {
         try {
-            $user = $this->staff->getUser($staff_id);
+            $users = $this->staff->paginate(10);
 
-            return view('Admin.staff.show_edit_staff', compact('user'));
+            return view('Admin.staff.show_edit_staff', compact('users'));
         } catch (\Throwable $e) {
             \Log::error($e);
             throw $e;
         }
     }
 
+    /**
+     * 職員情報編集画面
+     * @param int $staff_id
+     */
+    public function showEditStaffForm($staff_id)
+    {
+        try {
+            $user = $this->staff->getUser($staff_id);
+
+            return view('Admin.staff.show_edit_staff_form', compact('user'));
+        } catch (\Throwable $e) {
+            \Log::error($e);
+            throw $e;
+        }
+    }
 
     public function exeUpdateStaff($staff_id, StaffUpdateRequest $request)
     {
@@ -178,11 +193,10 @@ class StaffController extends Controller
 
             $inputs = $request->only(['staff_code', 'name', 'role_id', 'affiliation']);
             $user->staff_code = $inputs['staff_code'];
-            dd($user->staff_code);
             $user->name = $inputs['name'];
             $user->role_id = $inputs['role_id'];
             $user->affiliation = $inputs['affiliation'];
-            $this->staff->saveStaff();
+            $user->saveStaff();
 
             return redirect()->route('showStaff')->with('editMessage', '職員情報を更新しました。');
         } catch (\Throwable $e) {
@@ -258,7 +272,7 @@ class StaffController extends Controller
     public function showSoftDeleteStaff()
     {
         try {
-            $users = $this->staff->getAllUsers();
+            $users = $this->staff->orderBy('created_at', 'desc')->paginate(10);
             return view('Admin.staff.show_delete_staff', compact('users'));
         } catch (\Throwable $e) {
             \Log::error($e);

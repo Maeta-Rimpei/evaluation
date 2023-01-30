@@ -1,4 +1,4 @@
-@extends('home')
+@extends('user.home')
 
 @section('evaluation')
     <div class="container px-0">

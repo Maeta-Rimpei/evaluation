@@ -3,20 +3,27 @@
 @section('content')
     <h2 class="text-center mb-3">職員一覧</h2>
 
-    @if (session('destroyedAllEvaluationMessage'))
-        <div class="alert alert-danger text-center">
-            {{ session('destroyedAllEvaluationMessage') }}
-        </div>
-    @elseif (session('destroyAllEvaluationMessage'))
+    {{-- 全職員評価削除メッセージ --}}
+    @if (session('destroyAllEvaluationMessage'))
         <div class="alert alert-danger text-center">
             {{ session('destroyAllEvaluationMessage') }}
         </div>
+        {{-- 職員情報編集完了メッセージ --}}
+    @elseif (session('editMessage'))
+        <div class="alert alert-success text-center">
+            {{ session('editMessage') }}
+        </div>
     @endif
 
+    {{-- 職員情報操作ボタン --}}
     <div class="btn mt-5">
         <x-utility-button href="{{ route('showRegistrationStaffForm') }}" class="primary mb-3 me-2"
             icon="fa-solid fa-user-plus me-2">
             職員登録
+        </x-utility-button>
+
+        <x-utility-button href="{{ route('showEditStaff') }}" class="success mb-3 me-2" icon="fa-regular fa-pen-to-square me-2">
+            職員情報編集
         </x-utility-button>
 
         <x-utility-button href="{{ route('searchStaff') }}" class="secondary mb-3 me-2"
@@ -39,11 +46,8 @@
                 <th scope="col"></th>
                 <th scope="col"></th>
                 <th scope="col">所属</th>
-                <th scope="col"></th>
-                <th scope="col"></th>
-                <th scope="col"></th>
-                <th scope="col"></th>
-                <th scope="col"></th>
+                <th></th>
+                <th></th>
                 <th scope="col">
                     <x-utility-button href="{{ route('showDestroyAllEvaluationStaff') }}" class="outline-primary"
                         icon="fa-solid fa-list me-2">
@@ -65,13 +69,6 @@
                     <td></td>
                     <td></td>
                     <td>
-                        <x-utility-button href="{{ route('showEditStaff', $user['id']) }}" class="success" icon="fa-regular fa-pen-to-square me-2">
-                            職員情報編集
-                        </x-utility-button>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td>
                         <a href={{ route('showStaffDetail', $user['id']) }}>
                             <x-utility-button class="outline-primary" icon="fa-solid fa-list me-2">
                                 回答結果
@@ -82,5 +79,5 @@
             @endforeach
         </tbody>
     </table>
-    {{ $users->appends(request()->query())->links() }}
+    {{ $users->links() }}
 @endsection

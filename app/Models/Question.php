@@ -175,7 +175,7 @@ class Question extends Model
         $query = $this->joinQuestionsAndQuestionStaff();
 
         if (isset($keyword)) {
-            $keyword_push_array = spaceConversionAndPushArray($keyword);
+            $keyword_push_array = $this->spaceConversionAndPushArray($keyword);
             foreach ($keyword_push_array as $word) {
                 $query->where('content', 'LIKE', '%' . self::escape($word) . '%');
             }
