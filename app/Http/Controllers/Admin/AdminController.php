@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\StaffUpdateRequest;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
@@ -184,9 +185,19 @@ class AdminController extends Controller
         try {
             $admin = $this->admin->getAdmin($admin_id);
 
+            // 管理者が残り一人なら削除させない
             if ($this->admin->checkNumberOfAdmin()) {
-                return redirect()->route('showSoftDeleteAdmin')->with('deleteErrorMessage', '管理者が残り一人です。削除できません。');
+                return redirect()->route('showSoftDeleteAdmin')->with('deleteErrorOneMessage', '管理者が残り一人です。削除できません。');
             }
+
+            // 管理者に自分自身を削除させない
+            $auth_admin_id = Auth::user()->id;
+            dd($admin);
+
+            if ($admin_id == $auth_admin_id) {
+                return redirect()->route('showSoftDeleteAdmin')->with('deleteErrorSelfMessage', 'ご自身を削除することはできません。');
+            }
+            
 
             $admin->deleteAdmin();
 
