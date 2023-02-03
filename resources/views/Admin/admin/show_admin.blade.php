@@ -18,7 +18,7 @@
 
         <x-utility-button href="{{ route('showEditAdmin') }}" class="success mb-3 me-2"
             icon="fa-regular fa-pen-to-square me-2">
-            職員情報編集
+            管理者情報編集
         </x-utility-button>
 
         <x-utility-button href="{{ route('searchAdmin') }}" class="secondary mb-3 me-2"
