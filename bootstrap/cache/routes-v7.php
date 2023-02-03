@@ -84,7 +84,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::XECbhsymY8Wk5uuC',
+            '_route' => 'generated::eCgKoBRtsiK0wYsm',
           ),
           1 => NULL,
           2 => 
@@ -104,7 +104,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::PCHc3llVpJiELmdA',
+            '_route' => 'generated::zsnyWhgzLaDRxI3B',
           ),
           1 => NULL,
           2 => 
@@ -124,7 +124,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::cvXLY2l3UyaKnSMj',
+            '_route' => 'generated::ZnvYBuiqCYUfXCUC',
           ),
           1 => NULL,
           2 => 
@@ -276,6 +276,26 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
+      '/admin/show_edit_staff' => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'showEditStaff',
+          ),
+          1 => NULL,
+          2 => 
+          array (
+            'GET' => 0,
+            'HEAD' => 1,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => false,
+          6 => NULL,
+        ),
+      ),
       '/admin/show_destroy_all_evaluation_staff' => 
       array (
         0 => 
@@ -408,6 +428,26 @@ app('router')->setCompiledRoutes(
           2 => 
           array (
             'POST' => 0,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => false,
+          6 => NULL,
+        ),
+      ),
+      '/admin/show_edit_admin' => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'showEditAdmin',
+          ),
+          1 => NULL,
+          2 => 
+          array (
+            'GET' => 0,
+            'HEAD' => 1,
           ),
           3 => NULL,
           4 => false,
@@ -617,7 +657,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::Ett3qNlqfziylYiF',
+            '_route' => 'generated::RWsQ4MN1HeBbjOJB',
           ),
           1 => NULL,
           2 => 
@@ -672,7 +712,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::59m4gpD297x4XpgD',
+            '_route' => 'generated::i24JQNuK6ttOIPSM',
           ),
           1 => NULL,
           2 => 
@@ -763,7 +803,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::B2skMFzbAoLHWkpy',
+            '_route' => 'generated::0us0Lj5vf8sP6g1Z',
           ),
           1 => NULL,
           2 => 
@@ -937,7 +977,7 @@ app('router')->setCompiledRoutes(
     ),
     2 => 
     array (
-      0 => '{^(?|/_debugbar/c(?|lockwork/([^/]++)(*:39)|ache/([^/]++)(?:/([^/]++))?(*:73))|/admin/(?|s(?|taff_detail/([^/]++)(*:115)|how_edit_(?|staff/([^/]++)(*:149)|evaluation_staff/([^/]++)(*:182)|question_(?|detail/([^/]++)(*:217)|form/([^/]++)(*:238))|part_answer/([^/]++)(*:267)|answer_form/([^/]++)(*:295)))|e(?|xe_(?|update_(?|staff/([^/]++)(*:339)|question/([^/]++)(*:364)|answer/([^/]++)(*:387))|evaluation_staff/([^/]++)(?|(*:424))|de(?|stroy_evaluation_staff/([^/]++)(*:469)|lete_(?|staff/([^/]++)(*:499)|a(?|dmin/([^/]++)(*:524)|ll_answers/([^/]++)(*:551))))|question_destroy/([^/]++)(*:587)|restore_history_of_deleted_(?|staff/([^/]++)(*:639)|admin/([^/]++)(*:661)))|valuation_staff/([^/]++)(*:695)))|/password/reset/([^/]++)(*:729))/?$}sDu',
+      0 => '{^(?|/_debugbar/c(?|lockwork/([^/]++)(*:39)|ache/([^/]++)(?:/([^/]++))?(*:73))|/admin/(?|s(?|taff_detail/([^/]++)(*:115)|how_edit_(?|staff_form/([^/]++)(*:154)|evaluation_staff/([^/]++)(*:187)|a(?|dmin_form/([^/]++)(*:217)|nswer_form/([^/]++)(*:244))|question_(?|detail/([^/]++)(*:280)|form/([^/]++)(*:301))|part_answer/([^/]++)(*:330)))|e(?|xe_(?|update_(?|staff/([^/]++)(*:374)|a(?|dmin/([^/]++)(*:399)|nswer/([^/]++)(*:421))|question/([^/]++)(*:447))|evaluation_staff/([^/]++)(?|(*:484))|de(?|stroy_evaluation_staff/([^/]++)(*:529)|lete_(?|staff/([^/]++)(*:559)|a(?|dmin/([^/]++)(*:584)|ll_answers/([^/]++)(*:611))))|question_destroy/([^/]++)(*:647)|restore_history_of_deleted_(?|staff/([^/]++)(*:699)|admin/([^/]++)(*:721)))|valuation_staff/([^/]++)(*:755)))|/password/reset/([^/]++)(*:789))/?$}sDu',
     ),
     3 => 
     array (
@@ -1011,13 +1051,13 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      149 => 
+      154 => 
       array (
         0 => 
         array (
           0 => 
           array (
-            '_route' => 'showEditStaff',
+            '_route' => 'showEditStaffForm',
           ),
           1 => 
           array (
@@ -1034,7 +1074,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      182 => 
+      187 => 
       array (
         0 => 
         array (
@@ -1063,11 +1103,11 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'showEditQuestionDetail',
+            '_route' => 'showEditAdminForm',
           ),
           1 => 
           array (
-            0 => 'role_id',
+            0 => 'admin_id',
           ),
           2 => 
           array (
@@ -1080,53 +1120,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      238 => 
-      array (
-        0 => 
-        array (
-          0 => 
-          array (
-            '_route' => 'showEditQuestionForm',
-          ),
-          1 => 
-          array (
-            0 => 'question_id',
-          ),
-          2 => 
-          array (
-            'GET' => 0,
-            'HEAD' => 1,
-          ),
-          3 => NULL,
-          4 => false,
-          5 => true,
-          6 => NULL,
-        ),
-      ),
-      267 => 
-      array (
-        0 => 
-        array (
-          0 => 
-          array (
-            '_route' => 'showEditPartAnswer',
-          ),
-          1 => 
-          array (
-            0 => 'staff_id',
-          ),
-          2 => 
-          array (
-            'GET' => 0,
-            'HEAD' => 1,
-          ),
-          3 => NULL,
-          4 => false,
-          5 => true,
-          6 => NULL,
-        ),
-      ),
-      295 => 
+      244 => 
       array (
         0 => 
         array (
@@ -1149,7 +1143,76 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      339 => 
+      280 => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'showEditQuestionDetail',
+          ),
+          1 => 
+          array (
+            0 => 'role_id',
+          ),
+          2 => 
+          array (
+            'GET' => 0,
+            'HEAD' => 1,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => true,
+          6 => NULL,
+        ),
+      ),
+      301 => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'showEditQuestionForm',
+          ),
+          1 => 
+          array (
+            0 => 'question_id',
+          ),
+          2 => 
+          array (
+            'GET' => 0,
+            'HEAD' => 1,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => true,
+          6 => NULL,
+        ),
+      ),
+      330 => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'showEditPartAnswer',
+          ),
+          1 => 
+          array (
+            0 => 'staff_id',
+          ),
+          2 => 
+          array (
+            'GET' => 0,
+            'HEAD' => 1,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => true,
+          6 => NULL,
+        ),
+      ),
+      374 => 
       array (
         0 => 
         array (
@@ -1171,17 +1234,17 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      364 => 
+      399 => 
       array (
         0 => 
         array (
           0 => 
           array (
-            '_route' => 'exeUpdateQuestion',
+            '_route' => 'exeUpdateAdmin',
           ),
           1 => 
           array (
-            0 => 'question_id',
+            0 => 'admin_id',
           ),
           2 => 
           array (
@@ -1193,7 +1256,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      387 => 
+      421 => 
       array (
         0 => 
         array (
@@ -1215,7 +1278,29 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      424 => 
+      447 => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'exeUpdateQuestion',
+          ),
+          1 => 
+          array (
+            0 => 'question_id',
+          ),
+          2 => 
+          array (
+            'PATCH' => 0,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => true,
+          6 => NULL,
+        ),
+      ),
+      484 => 
       array (
         0 => 
         array (
@@ -1256,7 +1341,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      469 => 
+      529 => 
       array (
         0 => 
         array (
@@ -1279,7 +1364,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      499 => 
+      559 => 
       array (
         0 => 
         array (
@@ -1302,7 +1387,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      524 => 
+      584 => 
       array (
         0 => 
         array (
@@ -1325,7 +1410,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      551 => 
+      611 => 
       array (
         0 => 
         array (
@@ -1348,7 +1433,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      587 => 
+      647 => 
       array (
         0 => 
         array (
@@ -1371,7 +1456,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      639 => 
+      699 => 
       array (
         0 => 
         array (
@@ -1394,7 +1479,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      661 => 
+      721 => 
       array (
         0 => 
         array (
@@ -1417,7 +1502,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      695 => 
+      755 => 
       array (
         0 => 
         array (
@@ -1440,7 +1525,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      729 => 
+      789 => 
       array (
         0 => 
         array (
@@ -1667,7 +1752,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::XECbhsymY8Wk5uuC' => 
+    'generated::eCgKoBRtsiK0wYsm' => 
     array (
       'methods' => 
       array (
@@ -1688,7 +1773,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 'web',
         ),
-        'as' => 'generated::XECbhsymY8Wk5uuC',
+        'as' => 'generated::eCgKoBRtsiK0wYsm',
       ),
       'fallback' => false,
       'defaults' => 
@@ -1704,7 +1789,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::PCHc3llVpJiELmdA' => 
+    'generated::zsnyWhgzLaDRxI3B' => 
     array (
       'methods' => 
       array (
@@ -1721,13 +1806,13 @@ app('router')->setCompiledRoutes(
         ),
         'uses' => 'O:47:"Laravel\\SerializableClosure\\SerializableClosure":1:{s:12:"serializable";O:46:"Laravel\\SerializableClosure\\Serializers\\Signed":2:{s:12:"serializable";s:297:"O:46:"Laravel\\SerializableClosure\\Serializers\\Native":5:{s:3:"use";a:0:{}s:8:"function";s:79:"function (\\Illuminate\\Http\\Request $request) {
     return $request->user();
-}";s:5:"scope";s:37:"Illuminate\\Routing\\RouteFileRegistrar";s:4:"this";N;s:4:"self";s:32:"000000001554c18d000000005408de9e";}";s:4:"hash";s:44:"poHccnQw19hIIDUNpjRqcA9qFMrUWWfWwfJTcSCHouA=";}}',
+}";s:5:"scope";s:37:"Illuminate\\Routing\\RouteFileRegistrar";s:4:"this";N;s:4:"self";s:32:"000000003cbac9ef00000000487ecff4";}";s:4:"hash";s:44:"M9wNHSNWIxD1puGjIC4O6poIT8IfxahXLWQPaytThq0=";}}',
         'namespace' => NULL,
         'prefix' => 'api',
         'where' => 
         array (
         ),
-        'as' => 'generated::PCHc3llVpJiELmdA',
+        'as' => 'generated::zsnyWhgzLaDRxI3B',
       ),
       'fallback' => false,
       'defaults' => 
@@ -1743,7 +1828,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::cvXLY2l3UyaKnSMj' => 
+    'generated::ZnvYBuiqCYUfXCUC' => 
     array (
       'methods' => 
       array (
@@ -1759,13 +1844,13 @@ app('router')->setCompiledRoutes(
         ),
         'uses' => 'O:47:"Laravel\\SerializableClosure\\SerializableClosure":1:{s:12:"serializable";O:46:"Laravel\\SerializableClosure\\Serializers\\Signed":2:{s:12:"serializable";s:264:"O:46:"Laravel\\SerializableClosure\\Serializers\\Native":5:{s:3:"use";a:0:{}s:8:"function";s:46:"function () {
     return \\view(\'first\');
-  }";s:5:"scope";s:37:"Illuminate\\Routing\\RouteFileRegistrar";s:4:"this";N;s:4:"self";s:32:"000000001554c18b000000005408de9e";}";s:4:"hash";s:44:"Iki7a4bltafJENWdBRDvWTrf2KHunub1AR/cMVQXOE8=";}}',
+  }";s:5:"scope";s:37:"Illuminate\\Routing\\RouteFileRegistrar";s:4:"this";N;s:4:"self";s:32:"000000003cbac9ed00000000487ecff4";}";s:4:"hash";s:44:"3FN78wo9WppijWxjbFI/2OEFqMBjEwTaFu1HXBYh/SU=";}}',
         'namespace' => NULL,
         'prefix' => '',
         'where' => 
         array (
         ),
-        'as' => 'generated::cvXLY2l3UyaKnSMj',
+        'as' => 'generated::ZnvYBuiqCYUfXCUC',
       ),
       'fallback' => false,
       'defaults' => 
@@ -2090,7 +2175,7 @@ app('router')->setCompiledRoutes(
         0 => 'GET',
         1 => 'HEAD',
       ),
-      'uri' => 'admin/show_edit_staff/{staff_id}',
+      'uri' => 'admin/show_edit_staff',
       'action' => 
       array (
         'middleware' => 
@@ -2106,6 +2191,44 @@ app('router')->setCompiledRoutes(
         array (
         ),
         'as' => 'showEditStaff',
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
+    'showEditStaffForm' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'GET',
+        1 => 'HEAD',
+      ),
+      'uri' => 'admin/show_edit_staff_form/{staff_id}',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'web',
+          1 => 'auth:admin',
+        ),
+        'uses' => 'App\\Http\\Controllers\\Admin\\StaffController@showEditStaffForm',
+        'controller' => 'App\\Http\\Controllers\\Admin\\StaffController@showEditStaffForm',
+        'namespace' => NULL,
+        'prefix' => '',
+        'where' => 
+        array (
+        ),
+        'as' => 'showEditStaffForm',
       ),
       'fallback' => false,
       'defaults' => 
@@ -2634,6 +2757,119 @@ app('router')->setCompiledRoutes(
         array (
         ),
         'as' => 'exeRegisterAdmin',
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
+    'showEditAdmin' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'GET',
+        1 => 'HEAD',
+      ),
+      'uri' => 'admin/show_edit_admin',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'web',
+          1 => 'auth:admin',
+        ),
+        'uses' => 'App\\Http\\Controllers\\Admin\\AdminController@showEditAdmin',
+        'controller' => 'App\\Http\\Controllers\\Admin\\AdminController@showEditAdmin',
+        'namespace' => NULL,
+        'prefix' => '',
+        'where' => 
+        array (
+        ),
+        'as' => 'showEditAdmin',
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
+    'showEditAdminForm' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'GET',
+        1 => 'HEAD',
+      ),
+      'uri' => 'admin/show_edit_admin_form/{admin_id}',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'web',
+          1 => 'auth:admin',
+        ),
+        'uses' => 'App\\Http\\Controllers\\Admin\\AdminController@showEditAdminForm',
+        'controller' => 'App\\Http\\Controllers\\Admin\\AdminController@showEditAdminForm',
+        'namespace' => NULL,
+        'prefix' => '',
+        'where' => 
+        array (
+        ),
+        'as' => 'showEditAdminForm',
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
+    'exeUpdateAdmin' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'PATCH',
+      ),
+      'uri' => 'admin/exe_update_admin/{admin_id}',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'web',
+          1 => 'auth:admin',
+        ),
+        'uses' => 'App\\Http\\Controllers\\Admin\\AdminController@exeUpdateAdmin',
+        'controller' => 'App\\Http\\Controllers\\Admin\\AdminController@exeUpdateAdmin',
+        'namespace' => NULL,
+        'prefix' => '',
+        'where' => 
+        array (
+        ),
+        'as' => 'exeUpdateAdmin',
       ),
       'fallback' => false,
       'defaults' => 
@@ -3443,7 +3679,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::Ett3qNlqfziylYiF' => 
+    'generated::RWsQ4MN1HeBbjOJB' => 
     array (
       'methods' => 
       array (
@@ -3463,7 +3699,7 @@ app('router')->setCompiledRoutes(
         'where' => 
         array (
         ),
-        'as' => 'generated::Ett3qNlqfziylYiF',
+        'as' => 'generated::RWsQ4MN1HeBbjOJB',
       ),
       'fallback' => false,
       'defaults' => 
@@ -3552,7 +3788,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::59m4gpD297x4XpgD' => 
+    'generated::i24JQNuK6ttOIPSM' => 
     array (
       'methods' => 
       array (
@@ -3572,7 +3808,7 @@ app('router')->setCompiledRoutes(
         'where' => 
         array (
         ),
-        'as' => 'generated::59m4gpD297x4XpgD',
+        'as' => 'generated::i24JQNuK6ttOIPSM',
       ),
       'fallback' => false,
       'defaults' => 
@@ -3771,7 +4007,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::B2skMFzbAoLHWkpy' => 
+    'generated::0us0Lj5vf8sP6g1Z' => 
     array (
       'methods' => 
       array (
@@ -3791,7 +4027,7 @@ app('router')->setCompiledRoutes(
         'where' => 
         array (
         ),
-        'as' => 'generated::B2skMFzbAoLHWkpy',
+        'as' => 'generated::0us0Lj5vf8sP6g1Z',
       ),
       'fallback' => false,
       'defaults' => 

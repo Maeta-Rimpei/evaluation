@@ -31,6 +31,8 @@ body * a{
 .wrapper .side-bar {
     box-shadow: 2px 2px 0 2px rgba(0,0,0,0.4);
     width: 200px;
+    height: 1000px;
+    margin-right: 50px;
 }
 
 .wrapper .side-bar .side-bar-item {

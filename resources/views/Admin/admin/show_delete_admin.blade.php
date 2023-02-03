@@ -11,9 +11,13 @@
         <div class="alert alert-danger text-center">
             {{ session('deleteMessage') }}
         </div>
-    @elseif (session('deleteErrorMessage'))
+    @elseif (session('deleteLastErrorMessage'))
         <div class="alert alert-warning text-center">
-            {{ session('deleteErrorMessage') }}
+            {{ session('deleteLastErrorMessage') }}
+        </div>
+    @elseif (session('deleteSelfErrorMessage'))
+        <div class="alert alert-warning text-center">
+            {{ session('deleteSelfErrorMessage') }}
         </div>
     @endif
 
