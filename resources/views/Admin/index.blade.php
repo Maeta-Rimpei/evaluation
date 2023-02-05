@@ -31,6 +31,7 @@
                 <li><a href="{{ route('showEditQuestion') }}">自己評価シート編集</a></li>
                 <li><a href="{{ route('showHistoryOfSoftDeletedStaff') }}">職員削除履歴</a></li>
                 <li><a href="{{ route('showHistoryOfSoftDeletedAdmin')}}">管理者削除履歴</a></li>
+                <li><a href="{{ route('showChangeAdminPassword') }}">パスワード変更</a></li>
             </ul>
         </div>
 

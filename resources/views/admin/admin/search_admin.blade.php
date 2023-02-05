@@ -13,14 +13,14 @@
             <table class="mt-5 mx-auto">
                 <tbody>
 
-                <x-searchBox label="管理者名" name="name" value="{{ $name }}"></x-searchBox>
+                <x-search-box label="管理者名" name="name" value="{{ $name }}"></x-search-box>
 
-                <x-searchBox label="職員コード" name="staff_code" value="{{ $staff_code }}"></x-searchBox>
-                
-                <x-searchBox label="所属" name="affiliation" value="{{ $affiliation }}"></x-searchBox>
+                <x-search-box label="職員コード" name="staff_code" value="{{ $staff_code }}"></x-search-box>
+
+                <x-search-box label="所属" name="affiliation" value="{{ $affiliation }}"></x-search-box>
 
                 <x-selectBox name="role_id" label="職位" :options="App\Consts\StaffPositionConsts::STAFF_LIST"></x-selectBox>
-                    
+
                 </tbody>
             </table>
     </div>

@@ -14,7 +14,7 @@
                 <table class="mt-5 mx-auto">
                     <tbody>
 
-                        <x-searchBox label="キーワード" name="keyword" value="{{ $keyword }}"></x-searchBox>
+                        <x-search-box label="キーワード" name="keyword" value="{{ $keyword }}"></x-search-box>
 
                         <x-selectBox label="カテゴリー" name="category" :options="App\Consts\CategoryConsts::CATEGORY_LIST"></x-selectBox>
 

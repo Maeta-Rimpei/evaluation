@@ -7,6 +7,7 @@ use App\Models\Admin;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Http\Requests\LoginRequest;
+use App\Http\Requests\PasswordRequest;
 use App\Http\Requests\StaffUpdateRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -191,12 +192,11 @@ class AdminController extends Controller
             }
 
             // 管理者に自分自身を削除させない
-            $auth_admin_id = Auth::user()->id;
+            $auth_admin_id = $this->admin->getAuthAdmin()->id;
 
             if ($admin_id == $auth_admin_id) {
                 return redirect()->route('showSoftDeleteAdmin')->with('deleteSelfErrorMessage', 'ご自身を削除することはできません。');
             }
-
 
             $admin->deleteAdmin();
 
@@ -229,5 +229,33 @@ class AdminController extends Controller
         $this->admin->exeRestoreSoftDeletedAdmin($admin_id);
 
         return redirect()->route('showHistoryOfSoftDeletedAdmin')->with('restoreAdminMessage', '管理者の復元に成功しました。');
+    }
+
+    public function showChangeAdminPassword()
+    {
+        return view('Admin.admin.show_change_admin_password');
+    }
+
+    public function exeChangeAdminPassword(PasswordRequest $request)
+    {
+        try {
+            DB::beginTransaction();
+            $admin =  $this->admin->getAuthAdmin();
+
+            if (!password_verify($request->current_password, $admin->password)) {
+                return redirect()->route('showChangeAdminPassword')->with('alertDifferentPassword', '現在のパスワードが一致しません。ご確認ください。');
+            }
+
+            $new_password = $request->only(['password']);
+            $admin->password = bcrypt($new_password['password']);
+            $admin->saveAdmin();
+            DB::commit();
+
+            return redirect()->route('showChangeAdminPassword')->with('successChangePassword', 'パスワードを変更しました');
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            \Log::error($e);
+            throw $e;
+        }
     }
 }

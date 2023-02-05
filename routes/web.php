@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('first');
-  });
+});
 
 // ログイン前の処理
 Route::group(['middleware' => ['guest:admin']], function () {
@@ -105,6 +105,10 @@ Route::group(['middleware' => ['auth:admin']], function () {
     // 管理者削除履歴
     Route::get('/admin/show_history_deleted_admin', [App\Http\Controllers\Admin\AdminController::class, 'showHistoryOfSoftDeletedAdmin'])->name('showHistoryOfSoftDeletedAdmin');
     Route::get('/admin/exe_restore_history_of_deleted_admin/{admin_id}', [App\Http\Controllers\Admin\AdminController::class, 'exeRestoreHistoryOfSoftDeletedAdmin'])->name('exeRestoreHistoryOfSoftDeletedAdmin');
+
+    // 管理者パスワード変更
+    Route::get('/admin/show_change_password', [App\Http\Controllers\Admin\AdminController::class, 'showChangeAdminPassword'])->name('showChangeAdminPassword');
+    Route::post('/admin/exe_change_password', [App\Http\Controllers\Admin\AdminController::class, 'exeChangeAdminPassword'])->name('exeChangeAdminPassword');
 
     // ログアウト処理
     Route::get('/admin/logout', [App\Http\Controllers\Admin\AdminController::class, 'logout'])->name('adminLogout');
